@@ -22,9 +22,20 @@ inspectors = sorted(inspectors)
 rotas = load_json("rotas.json", default={})
 
 # Sidebar layout
-from PIL import Image
-logo = Image.open("assets/logo.png")
-st.sidebar.image(logo, width=160)
+import base64
+from pathlib import Path
+
+def get_base64_image(path):
+    with open(path, "rb") as img_file:
+        return base64.b64encode(img_file.read()).decode()
+
+logo_b64 = get_base64_image("assets/logo.png")
+st.sidebar.markdown(
+    f"<div style='text-align: center; padding: 0.5em 0;'>"
+    f"<img src='data:image/png;base64,{logo_b64}' width='160'>"
+    f"</div>",
+    unsafe_allow_html=True
+)
 st.sidebar.markdown("---")
 
 with st.sidebar.expander("📘 How to Use", expanded=False):
