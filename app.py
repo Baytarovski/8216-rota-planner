@@ -56,6 +56,9 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     else:
         is_admin = False
 
+st.sidebar.markdown("---")
+st.sidebar.caption("Version 0.1.5 Beta — © 2025 Doğukan Dağ")
+
 # Date selection
 st.subheader("1️⃣ Select Friday Before the Target Week")
 selected_friday = st.date_input("Select Friday before target week", value=datetime.today())
