@@ -108,31 +108,6 @@ validation_passed = all(
     for day in days
 )
 
-# Admin: Backup & Restore
-if is_admin:
-    st.markdown("---")
-    st.subheader("🛠️ Admin Tools: Backup & Restore")
-
-    # Download backup
-    st.markdown("**📤 Download All Rotas**")
-    backup_data = json.dumps(rotas, indent=2)
-    st.download_button("Download rotas.json", backup_data, file_name="rotas.json", mime="application/json")
-
-    # Upload backup
-    st.markdown("**📁 Restore Rotas from File**")
-    uploaded = st.file_uploader("Upload rotas.json", type=["json"], key="restore_file")
-    if uploaded is not None:
-        try:
-            new_data = json.load(uploaded)
-            if isinstance(new_data, dict):
-                rotas.update(new_data)
-                save_json("rotas.json", rotas)
-                st.success("✅ Rotas restored successfully.")
-            else:
-                st.error("❌ Uploaded file format is invalid.")
-        except Exception as e:
-            st.error(f"❌ Error while loading file: {e}")
-
 # Generate Rota
 st.markdown("---")
 st.subheader("3️⃣ Generate the Weekly Rota")
@@ -155,3 +130,28 @@ if st.button("Generate Rota", disabled=not validation_passed):
 
     rotas[week_key] = rota_result
     save_json("rotas.json", rotas)
+
+    # Admin: Backup & Restore
+    if is_admin:
+        st.markdown("---")
+        st.subheader("🛠️ Admin Tools: Backup & Restore")
+
+        # Download backup
+        st.markdown("**📤 Download All Rotas**")
+        backup_data = json.dumps(rotas, indent=2)
+        st.download_button("Download rotas.json", backup_data, file_name="rotas.json", mime="application/json")
+
+        # Upload backup
+        st.markdown("**📁 Restore Rotas from File**")
+        uploaded = st.file_uploader("Upload rotas.json", type=["json"], key="restore_file")
+        if uploaded is not None:
+            try:
+                new_data = json.load(uploaded)
+                if isinstance(new_data, dict):
+                    rotas.update(new_data)
+                    save_json("rotas.json", rotas)
+                    st.success("✅ Rotas restored successfully.")
+                else:
+                    st.error("❌ Uploaded file format is invalid.")
+            except Exception as e:
+                st.error(f"❌ Error while loading file: {e}")
