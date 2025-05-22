@@ -1,83 +1,38 @@
 # 8216 ABP Yetminster Weekly Rota Planner
 
-A professional rota assignment tool designed for fair weekly planning of inspector shifts. Built with Streamlit.
+A custom rota planning tool for meat hygiene inspection teams at ABP Yetminster.  
+Designed to ensure fair and balanced shift assignments for inspectors across weekly schedules.
 
 ---
 
-## ⚙️ Features
+## ✅ Features
 
-✅ 6 daily roles (CAR1, HEAD, CAR2, OFFAL, FCI, OFFLINE)  
-✅ Manual selection of inspectors for each weekday  
-✅ HEAD selected manually; others assigned fairly  
-✅ Fairness rules based on weekly and historical participation  
-✅ Priority given to those with higher workload  
-✅ FCI/OFFLINE balancing across 4 weeks  
-✅ 4+ day workers guaranteed one FCI or OFFLINE role  
-✅ No same person same role in a week (if avoidable)  
-✅ Auto-save of rota history in `rotas.json`
+- 📅 Weekly rota generation with inspector selection
+- 🧠 Fair distribution of FCI and OFFLINE roles (based on last 4 weeks)
+- 🔐 Admin panel for editing, backup and restore
+- 🚫 Prevents duplicate rota generation
+- 📂 Export/restore weekly rota history
+- 🧾 Changelog and version display
 
 ---
 
-## 🚀 Live Demo
+## 🛠️ How to Use
 
-If deployed on Streamlit Cloud:  
-📎 https://your-app-name.streamlit.app
-
----
-
-## 🛠️ Installation
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/8216-rota-planner.git
-cd 8216-rota-planner
-```
-
-### 2. Install Requirements
-
-```bash
-pip install -r requirements.txt
-```
+1. Select the **Monday** of the week to plan
+2. Assign exactly **6 inspectors per day**, including **1 HEAD**
+3. Click **Generate Rota** to auto-assign all positions
+4. Admin users can edit or restore previous rotas
 
 ---
 
-## ▶️ Run Locally
+## 🔐 Admin Access
 
-```bash
-streamlit run app.py
-```
-
----
-
-## ☁️ Deploy to Streamlit Cloud
-
-1. Push this repo to GitHub.
-2. Visit [streamlit.io/cloud](https://streamlit.io/cloud)
-3. Click **New app**.
-4. Connect your GitHub repo and choose `app.py` as the main file.
-5. Click **Deploy**.
+Default password: `1234`  
+(Admin tools include rota editing, backup/export, and deletion)
 
 ---
 
-## 📁 File Structure
+## 📦 Version
 
-```
-├── app.py                # Main Streamlit app
-├── core/
-│   ├── algorithm.py      # Role assignment logic
-│   └── data_utils.py     # JSON and date helpers
-├── inspectors.json       # List of inspectors
-├── rotas.json            # Weekly rota history
-├── assets/
-│   └── logo.png          # Your company logo (optional)
-├── requirements.txt
-└── README.md
-```
-
----
-
-## 🧑‍💼 Author
-
-Developed by **Doğukan Dağ (Marco)**  
-MIT License — 2025
+**Current Version:** `1.1.0 Stable`  
+© 2025 Doğukan Dağ
