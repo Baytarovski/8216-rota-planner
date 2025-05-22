@@ -84,12 +84,6 @@ if auto_fill_enabled:
         daily_workers[day] = [w for w in full_list if w != head]
         st.success(f"{day} Auto-filled: HEAD = `{head}`, Workers = `{', '.join(daily_workers[day])}`")
 
-    for day in days:
-        sampled = random.sample(inspectors, 6)
-        head = random.choice(sampled)
-        daily_workers[day] = sampled
-        daily_heads[day] = head
-        st.success(f"{day} Auto-filled: HEAD = `{head}`, Workers = `{', '.join(sampled)}`")
 else:
     for i, day in enumerate(days):
         st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
