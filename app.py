@@ -99,9 +99,10 @@ else:
 
 # Validation
 validation_passed = all(
-    len(daily_workers.get(day, [])) == 6 and daily_heads.get(day) in daily_workers.get(day, [])
+    len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
     for day in days
 )
+
 
 # Generate Rota
 st.markdown("---")
