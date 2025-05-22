@@ -41,7 +41,23 @@ with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
    3. Had fewer FCI/OFFLINE roles in the past 4 weeks (if still tied)  
 - **Dual FCI/OFFLINE Allowed**: Same person may be assigned both if no better alternative exists.
 """)
+    
 st.sidebar.markdown("---")
+
+# --- Admin Panel Access ---
+with st.sidebar.expander("🔐 Admin Access", expanded=False):
+    admin_input = st.text_input("Enter admin password:", type="1234")
+    if admin_input == "1234":  # Sabit admin şifresi
+        st.success("Access granted. Admin panel is now visible.")
+        is_admin = True
+    elif admin_input != "":
+        st.error("Incorrect password.")
+        is_admin = False
+    else:
+        is_admin = False
+
+st.sidebar.markdown("---")
+
 st.sidebar.caption("Version 0.1.5 Beta — © 2025 Doğukan Dağ")
 
 # --- Date selection ---
