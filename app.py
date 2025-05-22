@@ -149,13 +149,14 @@ if not rota_already_exists:
     daily_heads = {}
 
     for i, day in enumerate(days):
-        st.markdown(f"**{day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }**")
+        st.markdown(f"🔹 <strong>{day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }</strong>", unsafe_allow_html=True)
         cols = st.columns(2)
         with cols[0]:
             selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
+        st.markdown("<hr style='border:0.5px solid #eee;'>", unsafe_allow_html=True)
 
         if len(set(selected)) != 6:
             st.caption("ℹ️ Select exactly 6 unique inspectors.")
@@ -179,6 +180,9 @@ if not rota_already_exists:
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
 <h4>3️⃣ Generate the Weekly Rota</h4>
 """, unsafe_allow_html=True)
+
+    if validation_passed:
+        st.info("✅ Ready to generate rota!")
 
     if st.button("Generate Rota", disabled=not validation_passed):
         rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
