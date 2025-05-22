@@ -108,24 +108,14 @@ st.subheader("3️⃣ Generate the Weekly Rota")
 
 # --- Validation ---
 validation_passed = True
-validation_errors = []
 
 for day in days:
     workers = daily_workers.get(day, [])
     head = daily_heads.get(day)
 
-    if len(workers) != 6:
+    if len(workers) != 6 or not head or head.strip() == "":
         validation_passed = False
-        validation_errors.append(f"{day}: Exactly 6 workers must be selected.")
-
-    if not head or head.strip() == "":
-        validation_passed = False
-        validation_errors.append(f"{day}: HEAD must be selected.")
-
-# Hataları kullanıcıya göster
-if not validation_passed:
-    for err in validation_errors:
-        st.error(err)
+        break  # Bir eksik varsa kontrolü sonlandırmak yeterli
 
 # --- Buton ve rota üretimi ---
 if st.button("Generate Rota", disabled=not validation_passed):
@@ -142,5 +132,3 @@ if st.button("Generate Rota", disabled=not validation_passed):
     # Kaydet
     rotas[week_key] = rota_result
     save_json("rotas.json", rotas)
-
-
