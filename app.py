@@ -31,8 +31,6 @@ with st.sidebar.expander("📘 How to Use", expanded=False):
 4. The rota will be saved automatically.
 """)
 
-st.sidebar.markdown("---")
-
 with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
     st.markdown("""
 - **Different Role Daily**: No one gets the same position twice in a week (unless unavoidable).  
