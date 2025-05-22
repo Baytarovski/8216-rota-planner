@@ -56,8 +56,9 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     else:
         is_admin = False
 
+# Build Info and Creator
 st.sidebar.markdown("---")
-st.sidebar.caption("Version 0.1.5 Beta — © 2025 Doğukan Dağ")
+st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 0.1.5 Beta — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
 # Date selection
 st.subheader("1️⃣ Select Friday Before the Target Week")
