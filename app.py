@@ -96,8 +96,8 @@ with st.sidebar.expander("📚 Changelog History", expanded=False):
 - Initial stable interface with calendar-based selection
 """)
 
-# Date selection
-st.subheader("1️⃣ Select Friday Before the Target Week")
+# Step 1: Date selection
+st.markdown("<h3 style='margin-top: 0;'>1️⃣ Select Friday Before the Target Week</h3>", unsafe_allow_html=True)
 selected_friday = st.date_input("Select Friday before target week", value=datetime.today())
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 week_start = get_week_start_date(selected_friday)
@@ -122,9 +122,9 @@ if week_key in rotas:
     else:
         rota_already_exists = True
 
-# Daily selection
-if not rota_already_exists:
-    st.subheader("2️⃣ Select Inspectors for Each Day")
+# Step 2: Daily selection
+if not rota_already_exists and selected_friday:
+    st.markdown("<h3 style='margin-top: 2em;'>2️⃣ Select Inspectors for Each Day</h3>", unsafe_allow_html=True)
     daily_workers = {}
     daily_heads = {}
 
@@ -150,9 +150,9 @@ if not rota_already_exists:
         for day in days
     )
 
-    # Generate Rota
+    # Step 3: Generate Rota
     st.markdown("---")
-    st.subheader("3️⃣ Generate the Weekly Rota")
+    st.markdown("<h3 style='margin-top: 2em;'>3️⃣ Generate the Weekly Rota</h3>", unsafe_allow_html=True)
 
     if st.button("Generate Rota", disabled=not validation_passed):
         rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
