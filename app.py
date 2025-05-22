@@ -110,8 +110,33 @@ if not rota_already_exists:
             daily_heads[day] = head
 
     # Validation
-    
+    validation_passed = all(
+        len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
+        for day in days
+    )
 
+    # Generate Rota
+    st.markdown("---")
+    st.subheader("3️⃣ Generate the Weekly Rota")
+
+    if st.button("Generate Rota", disabled=not validation_passed):
+        rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
+        st.success("Rota generated successfully!")
+
+        # Display rota
+        rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
+        rota_df = rota_df.reindex(days)
+        expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+        missing_columns = [col for col in expected_columns if col not in rota_df.columns]
+        if missing_columns:
+            st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
+        else:
+            rota_df = rota_df[expected_columns]
+
+        st.dataframe(rota_df)
+
+        rotas[week_key] = rota_result
+        save_json("rotas.json", rotas)
 
 
 # Admin: Backup, Restore & Edit Saved Rotas
