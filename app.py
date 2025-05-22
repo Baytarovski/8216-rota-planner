@@ -56,7 +56,7 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     else:
         is_admin = False
 
-# Build Info and Creator
+  # Build Info and Creator
 st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 0.1.5 Beta — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
@@ -107,6 +107,31 @@ validation_passed = all(
     len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
     for day in days
 )
+
+# Admin: Backup & Restore
+if is_admin:
+    st.markdown("---")
+    st.subheader("🛠️ Admin Tools: Backup & Restore")
+
+    # Download backup
+    st.markdown("**📤 Download All Rotas**")
+    backup_data = json.dumps(rotas, indent=2)
+    st.download_button("Download rotas.json", backup_data, file_name="rotas.json", mime="application/json")
+
+    # Upload backup
+    st.markdown("**📁 Restore Rotas from File**")
+    uploaded = st.file_uploader("Upload rotas.json", type=["json"], key="restore_file")
+    if uploaded is not None:
+        try:
+            new_data = json.load(uploaded)
+            if isinstance(new_data, dict):
+                rotas.update(new_data)
+                save_json("rotas.json", rotas)
+                st.success("✅ Rotas restored successfully.")
+            else:
+                st.error("❌ Uploaded file format is invalid.")
+        except Exception as e:
+            st.error(f"❌ Error while loading file: {e}")
 
 # Generate Rota
 st.markdown("---")
