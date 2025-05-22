@@ -49,7 +49,13 @@ st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
 week_key = week_start.strftime("%Y-%m-%d")
 if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
-    st.dataframe(rotas[week_key])
+
+    existing_rota = rotas[week_key]
+    existing_df = pd.DataFrame.from_dict(existing_rota, orient="index")
+    existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+    existing_df = existing_df[["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]]
+
+    st.dataframe(existing_df)
     st.stop()
 
 # --- Daily inspector selection ---
