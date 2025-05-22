@@ -82,12 +82,15 @@ st.subheader("3️⃣ Generate the Weekly Rota")
 if st.button("Generate Rota") and validation_passed:
     rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
     st.success("Rota generated successfully!")
-# --- Generate Rota ---
-st.markdown("---")
-st.subheader("3️⃣ Generate the Weekly Rota")
-if st.button("Generate Rota") and validation_passed:
-    rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
-    st.success("Rota generated successfully!")
-    st.dataframe(rota_result)
+
+    # Rota'yı günler satırda, pozisyonlar sütunda olacak şekilde düzenle
+    rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
+    rota_df = rota_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+    rota_df = rota_df[["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]]
+
+    st.dataframe(rota_df)
+
+    # Kaydet
     rotas[week_key] = rota_result
     save_json("rotas.json", rotas)
+
