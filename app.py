@@ -73,10 +73,23 @@ with st.sidebar.expander("📝 What's New in 1.1.0", expanded=False):
 
 with st.sidebar.expander("📚 Changelog History", expanded=False):
     st.markdown("""
-### 📝 Version 1.1.0 Beta (2025-05-22)
+### 📝 Version 1.1.0 Beta
+**Features:**
 - Admin panel with rota editing, backup, and warning system
+- Editable rota tables with inline data editor
 
-### 📝 Version 1.0.0 Beta (2025-05-20)
+**Fixes & Improvements:**
+- Improved error messages when inspector selection is incomplete
+- Prevented duplicate rota generation for existing weeks
+
+**UX Enhancements:**
+- Sidebar changelog and version info display
+- Conditional hiding of input sections when rota exists
+
+---
+
+### 📝 Version 1.0.0 Beta
+**Features:**
 - First working rota generation algorithm
 - Inspector selection and HEAD assignment UI
 - Position assignment logic, validation, and saving system
