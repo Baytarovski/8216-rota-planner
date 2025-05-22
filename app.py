@@ -82,6 +82,12 @@ st.subheader("3️⃣ Generate the Weekly Rota")
 if st.button("Generate Rota") and validation_passed:
     rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
     st.success("Rota generated successfully!")
+# --- Generate Rota ---
+st.markdown("---")
+st.subheader("3️⃣ Generate the Weekly Rota")
+if st.button("Generate Rota") and validation_passed:
+    rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
+    st.success("Rota generated successfully!")
     st.dataframe(rota_result)
     rotas[week_key] = rota_result
     save_json("rotas.json", rotas)
