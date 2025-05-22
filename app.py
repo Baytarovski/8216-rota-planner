@@ -58,9 +58,9 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 
   # Build Info and Creator
 st.sidebar.markdown("---")
-st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 0.2.0 Beta — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
+st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Beta — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
-with st.sidebar.expander("📝 What's New in 0.2.0", expanded=False):
+with st.sidebar.expander("📝 What's New in 1.1.0", expanded=False):
     st.markdown("""
 **New in this version:**
 
@@ -69,6 +69,18 @@ with st.sidebar.expander("📝 What's New in 0.2.0", expanded=False):
 - 📤 Full rota backup download and 📁 restore support
 - ⚠️ Duplicate week detection and view-only warning
 - 🧠 Smarter inspector selection validation and cleaner UI
+""")
+
+with st.sidebar.expander("📚 Changelog History", expanded=False):
+    st.markdown("""
+### 📝 Version 1.1.0 Beta (2025-05-22)
+- Admin panel with rota editing, backup, and warning system
+
+### 📝 Version 1.0.0 Beta (2025-05-20)
+- First working rota generation algorithm
+- Inspector selection and HEAD assignment UI
+- Position assignment logic, validation, and saving system
+- Initial stable interface with calendar-based selection
 """)
 
 # Date selection
