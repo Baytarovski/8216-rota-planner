@@ -46,7 +46,7 @@ st.sidebar.markdown("---")
 
 # --- Admin Panel Access ---
 with st.sidebar.expander("🔐 Admin Access", expanded=False):
-    admin_input = st.text_input("Enter admin password:", type="1234")
+    admin_input = st.text_input("Enter admin password:", type="password")
     if admin_input == "1234":  # Sabit admin şifresi
         st.success("Access granted. Admin panel is now visible.")
         is_admin = True
