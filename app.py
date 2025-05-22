@@ -79,7 +79,9 @@ if week_key in rotas:
     if not missing_cols:
         existing_df = existing_df[expected_columns]
     st.dataframe(existing_df)
-    st.stop()
+
+    if not is_admin:
+        st.stop()
 
 # Daily selection
 st.subheader("2️⃣ Select Inspectors for Each Day")
