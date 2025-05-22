@@ -85,7 +85,6 @@ if week_key in rotas:
         st.stop()
     else:
         rota_already_exists = True
-        st.stop()
 
 # Daily selection
 if not rota_already_exists:
