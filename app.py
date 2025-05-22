@@ -121,7 +121,6 @@ if selected_monday.weekday() != 0:
     st.stop()
 week_start = selected_monday
 
-st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
 st.markdown("</div>", unsafe_allow_html=True)
 
 # Check for existing rota
