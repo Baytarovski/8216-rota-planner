@@ -41,8 +41,6 @@ with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
    3. Had fewer FCI/OFFLINE roles in the past 4 weeks (if still tied)  
 - **Dual FCI/OFFLINE Allowed**: Same person may be assigned both if no better alternative exists.
 """)
-    
-st.sidebar.markdown("---")
 
 # --- Admin Panel Access ---
 with st.sidebar.expander("🔐 Admin Access", expanded=False):
