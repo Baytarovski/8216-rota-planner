@@ -71,7 +71,7 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 
   # Build Info and Creator
 st.sidebar.markdown("---")
-st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Beta — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
+st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
 with st.sidebar.expander("📝 What's New in 1.1.0", expanded=False):
     st.markdown("""
@@ -86,7 +86,7 @@ with st.sidebar.expander("📝 What's New in 1.1.0", expanded=False):
 
 with st.sidebar.expander("📚 Changelog History", expanded=False):
     st.markdown("""
-### 📝 Version 1.1.0 Beta
+### 📝 Version 1.1.0 Stable
 **Features:**
 - Admin panel with rota editing, backup, and warning system
 - Editable rota tables with inline data editor
