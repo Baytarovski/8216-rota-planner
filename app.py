@@ -58,7 +58,18 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 
   # Build Info and Creator
 st.sidebar.markdown("---")
-st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 0.1.5 Beta — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
+st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 0.2.0 Beta — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
+
+with st.sidebar.expander("📝 What's New in 0.2.0", expanded=False):
+    st.markdown("""
+**New in this version:**
+
+- 🔐 Admin panel with backup, restore, edit, and delete tools
+- 🗂️ Saved weekly rotas can now be edited and updated
+- 📤 Full rota backup download and 📁 restore support
+- ⚠️ Duplicate week detection and view-only warning
+- 🧠 Smarter inspector selection validation and cleaner UI
+""")
 
 # Date selection
 st.subheader("1️⃣ Select Friday Before the Target Week")
