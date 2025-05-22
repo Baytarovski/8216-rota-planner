@@ -23,16 +23,23 @@ rotas = load_json("rotas.json", default={})
 # Sidebar layout
 st.sidebar.image("assets/logo.png", use_container_width=True)
 st.sidebar.markdown("---")
-st.sidebar.subheader("📘 How to Use")
-st.sidebar.markdown("1. Select the **Friday** before the week you want to plan.\n2. For each weekday, choose exactly **6 unique inspectors**, one of whom is the **HEAD**.\n3. Click **Generate Rota** to assign positions fairly.\n4. The rota will be saved automatically.")
+with st.sidebar.expander("📘 How to Use", expanded=False):
+    st.markdown("""
+1. Select the **Friday** before the week you want to plan.  
+2. For each weekday, choose exactly **6 unique inspectors**, one of whom is the **HEAD**.  
+3. Click **Generate Rota** to assign positions fairly.  
+4. The rota will be saved automatically.
+""")
+
 st.sidebar.markdown("---")
-st.sidebar.subheader("⚖️ How Fair Assignment Works")
-st.sidebar.markdown("""
+
+with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
+    st.markdown("""
 - **Different Role Daily**: No one gets the same position twice in a week (unless unavoidable).  
 - **4+ Days Rule**: Workers scheduled for 4+ days **must** get at least 1 FCI or OFFLINE.  
-- **FCI/OFFLINE Priority**: Preference given to those who:
-   1. Worked more (last 4 weeks + this week)
-   2. Worked more this week (if tied)
+- **FCI/OFFLINE Priority**: Preference given to those who:  
+   1. Worked more (last 4 weeks + this week)  
+   2. Worked more this week (if tied)  
    3. Had fewer FCI/OFFLINE roles in the past 4 weeks (if still tied)  
 - **Dual FCI/OFFLINE Allowed**: Same person may be assigned both if no better alternative exists.
 """)
