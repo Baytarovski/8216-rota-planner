@@ -37,8 +37,10 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
         for day in all_days:
             day_workers = daily_workers[day][:]
             head = daily_heads[day]
-            day_workers.remove(head)
+            if head in day_workers:
+                day_workers.remove(head)
             random.shuffle(day_workers)
+
 
             def sort_key(w):
                 return (
