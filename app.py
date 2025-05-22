@@ -149,17 +149,18 @@ if not rota_already_exists:
     daily_heads = {}
 
     for i, day in enumerate(days):
-        st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
+        st.markdown(f"**{day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }**")
         cols = st.columns(2)
         with cols[0]:
             selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
+        st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
 
         if len(set(selected)) != 6:
-            st.markdown("<span style='color:#e39f00'>ℹ️ Select exactly 6 unique inspectors.</span>", unsafe_allow_html=True)
+            st.caption("ℹ️ Select exactly 6 unique inspectors.")
         elif head not in selected:
-            st.markdown("<span style='color:#e39f00'>ℹ️ HEAD must be one of the selected inspectors.</span>", unsafe_allow_html=True)
+            st.caption("ℹ️ HEAD must be one of the selected inspectors.")
         else:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
