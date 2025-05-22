@@ -1,4 +1,3 @@
-
 # app.py
 # Main Streamlit Application Entry Point
 
@@ -65,11 +64,23 @@ week_start = get_week_start_date(selected_friday)
 
 st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
 
+# ⚠️ Check for existing rota
+week_key = week_start.strftime("%Y-%m-%d")
+if week_key in rotas:
+    st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
+    existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
+    existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+    expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+    missing_cols = [c for c in expected_columns if c not in existing_df.columns]
+    if not missing_cols:
+        existing_df = existing_df[expected_columns]
+    st.dataframe(existing_df)
+    st.stop()
+
 # Auto-Fill checkbox (only for admin)
 auto_fill_enabled = False
 if is_admin:
     auto_fill_enabled = st.checkbox("🧪 Auto-Fill Test (Admin only)", key="auto_fill")
-
 
 # Daily selection
 st.subheader("2️⃣ Select Inspectors for Each Day")
@@ -83,7 +94,6 @@ if auto_fill_enabled:
         daily_heads[day] = head
         daily_workers[day] = [w for w in full_list if w != head]
         st.success(f"{day} Auto-filled: HEAD = `{head}`, Workers = `{', '.join(daily_workers[day])}`")
-
 else:
     for i, day in enumerate(days):
         st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
@@ -94,7 +104,7 @@ else:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
         if len(set(selected)) == 6 and head in selected:
-            daily_workers[day] = selected
+            daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
 
 # Validation
@@ -103,13 +113,12 @@ validation_passed = all(
     for day in days
 )
 
-
 # Generate Rota
 st.markdown("---")
 st.subheader("3️⃣ Generate the Weekly Rota")
 
 if st.button("Generate Rota", disabled=not validation_passed):
-    rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_start.strftime("%Y-%m-%d"))
+    rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
     st.success("Rota generated successfully!")
 
     # Display rota
@@ -124,5 +133,5 @@ if st.button("Generate Rota", disabled=not validation_passed):
 
     st.dataframe(rota_df)
 
-    rotas[week_start.strftime("%Y-%m-%d")] = rota_result
+    rotas[week_key] = rota_result
     save_json("rotas.json", rotas)
