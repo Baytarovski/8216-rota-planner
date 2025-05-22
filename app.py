@@ -156,8 +156,6 @@ if not rota_already_exists:
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
-        st.markdown("<hr style='border:0.5px solid #eee;'>", unsafe_allow_html=True)
-
         if len(set(selected)) != 6:
             st.caption("ℹ️ Select exactly 6 unique inspectors.")
         elif head not in selected:
