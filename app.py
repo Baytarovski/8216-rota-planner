@@ -22,7 +22,11 @@ inspectors = sorted(inspectors)
 rotas = load_json("rotas.json", default={})
 
 # Sidebar layout
-st.sidebar.image("assets/logo.png", width=160)
+st.sidebar.markdown("""
+<div style='text-align: center;'>
+  <img src='assets/logo.png' width='160'>
+</div>
+""", unsafe_allow_html=True)
 st.sidebar.markdown("---")
 
 with st.sidebar.expander("📘 How to Use", expanded=False):
