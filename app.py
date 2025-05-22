@@ -70,12 +70,20 @@ auto_fill_enabled = False
 if is_admin:
     auto_fill_enabled = st.checkbox("🧪 Auto-Fill Test (Admin only)", key="auto_fill")
 
+
 # Daily selection
 st.subheader("2️⃣ Select Inspectors for Each Day")
 daily_workers = {}
 daily_heads = {}
 
 if auto_fill_enabled:
+    for day in days:
+        full_list = random.sample(inspectors, 6)
+        head = random.choice(full_list)
+        daily_heads[day] = head
+        daily_workers[day] = [w for w in full_list if w != head]
+        st.success(f"{day} Auto-filled: HEAD = `{head}`, Workers = `{', '.join(daily_workers[day])}`")
+
     for day in days:
         sampled = random.sample(inspectors, 6)
         head = random.choice(sampled)
