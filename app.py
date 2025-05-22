@@ -156,9 +156,7 @@ if not rota_already_exists:
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
-        
-        
-        else:
+        if len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
 
