@@ -64,6 +64,11 @@ selected_friday = st.date_input("Select Friday before target week", value=dateti
 week_start = get_week_start_date(selected_friday)
 st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
 
+# Auto-fill checkbox (only for admin)
+auto_fill_enabled = False
+if is_admin:
+    auto_fill_enabled = st.checkbox("🧪 Auto-Fill Test (Admin only)")
+
 # --- Existing rota check ---
 week_key = week_start.strftime("%Y-%m-%d")
 if week_key in rotas:
@@ -82,25 +87,31 @@ st.subheader("2️⃣ Select Inspectors for Each Day")
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 daily_workers = {}
 daily_heads = {}
-validation_passed = True
 
 for i, day in enumerate(days):
     st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
-    cols = st.columns(2)
-    with cols[0]:
-        selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
-    with cols[1]:
-        head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
-    if len(set(selected)) != 6:
-        st.error(f"❌ {day}: Exactly 6 unique inspectors must be selected.")
-        validation_passed = False
-    elif head not in selected:
-        st.error(f"❌ {day}: HEAD must be one of the 6 selected inspectors.")
-        validation_passed = False
-    else:
+    if auto_fill_enabled:
+        # Rastgele 6 kişi seç
+        selected = random.sample(inspectors, 6)
+        head = random.choice(selected)
         daily_workers[day] = selected
         daily_heads[day] = head
+        st.success(f"Auto-filled: HEAD = `{head}`, Workers = `{', '.join(selected)}`")
+    else:
+        cols = st.columns(2)
+        with cols[0]:
+            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
+        with cols[1]:
+            head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
+
+        if len(set(selected)) != 6:
+            validation_passed = False
+        elif head not in selected:
+            validation_passed = False
+        else:
+            daily_workers[day] = selected
+            daily_heads[day] = head
 
 # --- Generate Rota ---
 st.markdown("---")
