@@ -110,12 +110,16 @@ with st.sidebar.expander("📚 Changelog History", expanded=False):
 """)
 
 # Date selection
-st.subheader("1️⃣ Select Friday Before the Target Week")
+st.markdown("""
+<div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
+<h4>1️⃣ Select Friday Before the Target Week</h4>
+""", unsafe_allow_html=True)
 selected_friday = st.date_input("Select Friday before target week", value=datetime.today())
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 week_start = get_week_start_date(selected_friday)
 
 st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Check for existing rota
 week_key = week_start.strftime("%Y-%m-%d")
@@ -137,7 +141,10 @@ if week_key in rotas:
 
 # Daily selection
 if not rota_already_exists:
-    st.subheader("2️⃣ Select Inspectors for Each Day")
+    st.markdown("""
+<div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
+<h4>2️⃣ Select Inspectors for Each Day</h4>
+""", unsafe_allow_html=True)
     daily_workers = {}
     daily_heads = {}
 
@@ -157,6 +164,8 @@ if not rota_already_exists:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
 
+    st.markdown("</div>", unsafe_allow_html=True)
+
     # Validation
     validation_passed = all(
         len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
@@ -165,7 +174,10 @@ if not rota_already_exists:
 
     # Generate Rota
     st.markdown("---")
-    st.subheader("3️⃣ Generate the Weekly Rota")
+    st.markdown("""
+<div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
+<h4>3️⃣ Generate the Weekly Rota</h4>
+""", unsafe_allow_html=True)
 
     if st.button("Generate Rota", disabled=not validation_passed):
         rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
@@ -182,6 +194,7 @@ if not rota_already_exists:
             rota_df = rota_df[expected_columns]
 
         st.dataframe(rota_df)
+        st.markdown("</div>", unsafe_allow_html=True)
 
         rotas[week_key] = rota_result
         save_json("rotas.json", rotas)
