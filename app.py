@@ -137,9 +137,15 @@ if not rota_already_exists:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
         if len(set(selected)) != 6:
-            st.markdown("<span style='color:#e39f00'>ℹ️ Select exactly 6 unique inspectors.</span>", unsafe_allow_html=True)
+            if st.session_state.get("Generate Rota"):
+                st.warning("Select exactly 6 unique inspectors.")
+            else:
+                st.caption("⚠ Select exactly 6 inspectors.")
         elif head not in selected:
-            st.markdown("<span style='color:#e39f00'>ℹ️ HEAD must be one of the selected inspectors.</span>", unsafe_allow_html=True)
+            if st.session_state.get("Generate Rota"):
+                st.warning("HEAD must be chosen from selected inspectors.")
+            else:
+                st.caption("⚠ HEAD must be one of the selected inspectors.")
         else:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
