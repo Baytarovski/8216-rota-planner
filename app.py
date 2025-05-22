@@ -8,6 +8,7 @@ from core.data_utils import load_json, save_json, get_week_start_date
 import os
 import json
 import pandas as pd
+import random
 
 # Page setup
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
