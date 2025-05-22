@@ -134,12 +134,21 @@ if st.button("Generate Rota", disabled=not validation_passed):
     rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
     st.success("Rota generated successfully!")
 
-    # Rota'yı günler satırda, pozisyonlar sütunda olacak şekilde düzenle
-    rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
-    rota_df = rota_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
-    rota_df = rota_df[["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]]
+# Rota'yı günler satırda, pozisyonlar sütunda olacak şekilde düzenle
+rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
+rota_df = rota_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
 
-    st.dataframe(rota_df)
+# Beklenen pozisyonlar
+expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+missing_columns = [col for col in expected_columns if col not in rota_df.columns]
+
+# Uyarı ver ama çökmesin
+if missing_columns:
+    st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
+else:
+    rota_df = rota_df[expected_columns]
+
+st.dataframe(rota_df)
 
     # Kaydet
     rotas[week_key] = rota_result
