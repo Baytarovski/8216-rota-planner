@@ -70,6 +70,7 @@ st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
 
 # Check for existing rota
 week_key = week_start.strftime("%Y-%m-%d")
+rota_already_exists = False
 if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
@@ -82,29 +83,60 @@ if week_key in rotas:
 
     if not is_admin:
         st.stop()
+    else:
+        rota_already_exists = True
+        st.stop()
 
 # Daily selection
-st.subheader("2️⃣ Select Inspectors for Each Day")
-daily_workers = {}
-daily_heads = {}
+if not rota_already_exists:
+    st.subheader("2️⃣ Select Inspectors for Each Day")
+    daily_workers = {}
+    daily_heads = {}
 
-for i, day in enumerate(days):
-    st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
-    cols = st.columns(2)
-    with cols[0]:
-        selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
-    with cols[1]:
-        head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
+    for i, day in enumerate(days):
+        st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
+        cols = st.columns(2)
+        with cols[0]:
+            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
+        with cols[1]:
+            head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
-    if len(set(selected)) != 6:
-        st.error("❌ Exactly 6 unique inspectors must be selected.")
-    elif head not in selected:
-        st.error("❌ HEAD must be one of the 6 selected inspectors.")
-    else:
-        daily_workers[day] = [w for w in selected if w != head]
-        daily_heads[day] = head
+        if len(set(selected)) != 6:
+            st.error("❌ Exactly 6 unique inspectors must be selected.")
+        elif head not in selected:
+            st.error("❌ HEAD must be one of the 6 selected inspectors.")
+        else:
+            daily_workers[day] = [w for w in selected if w != head]
+            daily_heads[day] = head
 
-# Validation
+    # Validation
+    validation_passed = all(
+        len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
+        for day in days
+    )
+
+    # Generate Rota
+    st.markdown("---")
+    st.subheader("3️⃣ Generate the Weekly Rota")
+
+    if st.button("Generate Rota", disabled=not validation_passed):
+        rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
+        st.success("Rota generated successfully!")
+
+        # Display rota
+        rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
+        rota_df = rota_df.reindex(days)
+        expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+        missing_columns = [col for col in expected_columns if col not in rota_df.columns]
+        if missing_columns:
+            st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
+        else:
+            rota_df = rota_df[expected_columns]
+
+        st.dataframe(rota_df)
+
+        rotas[week_key] = rota_result
+        save_json("rotas.json", rotas)
 validation_passed = all(
     len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
     for day in days
