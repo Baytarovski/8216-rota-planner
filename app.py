@@ -77,35 +77,28 @@ if week_key in rotas:
     st.dataframe(existing_df)
     st.stop()
 
-# Auto-Fill checkbox (only for admin)
-auto_fill_enabled = False
-if is_admin:
-    auto_fill_enabled = st.checkbox("🧪 Auto-Fill Test (Admin only)", key="auto_fill")
-
 # Daily selection
 st.subheader("2️⃣ Select Inspectors for Each Day")
 daily_workers = {}
 daily_heads = {}
 
-if auto_fill_enabled:
-    for day in days:
-        full_list = random.sample(inspectors, 6)
-        head = random.choice(full_list)
-        daily_heads[day] = head
-        daily_workers[day] = [w for w in full_list if w != head]
-        st.success(f"{day} Auto-filled: HEAD = `{head}`, Workers = `{', '.join(daily_workers[day])}`")
-else:
-    for i, day in enumerate(days):
-        st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
-        cols = st.columns(2)
-        with cols[0]:
-            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
-        with cols[1]:
-            head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
+for i, day in enumerate(days):
+    st.markdown(f"### {day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }")
+    cols = st.columns(2)
+    with cols[0]:
+        selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
+    with cols[1]:
+        head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
-        if len(set(selected)) == 6 and head in selected:
-            daily_workers[day] = [w for w in selected if w != head]
-            daily_heads[day] = head
+    if len(set(selected)) != 6:
+        st.error(f"❌ {day}: Exactly 6 unique inspectors must be selected.")
+        validation_passed = False
+    elif head not in selected:
+        st.error(f"❌ {day}: HEAD must be one of the 6 selected inspectors.")
+        validation_passed = False
+    else:
+        daily_workers[day] = selected
+        daily_heads[day] = head
 
 # Validation
 validation_passed = all(
