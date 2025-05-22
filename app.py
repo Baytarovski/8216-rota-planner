@@ -64,7 +64,7 @@ week_start = get_week_start_date(selected_friday)
 
 st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
 
-# ⚠️ Check for existing rota
+# Check for existing rota
 week_key = week_start.strftime("%Y-%m-%d")
 if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
@@ -91,9 +91,9 @@ for i, day in enumerate(days):
         head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
     if len(set(selected)) != 6:
-        st.error(f"❌ {day}: Exactly 6 unique inspectors must be selected.")
+        st.error("❌ Exactly 6 unique inspectors must be selected.")
     elif head not in selected:
-        st.error(f"❌ {day}: HEAD must be one of the 6 selected inspectors.")
+        st.error("❌ HEAD must be one of the 6 selected inspectors.")
     else:
         daily_workers[day] = [w for w in selected if w != head]
         daily_heads[day] = head
