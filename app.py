@@ -131,7 +131,7 @@ if st.button("Generate Rota", disabled=not validation_passed):
     rotas[week_key] = rota_result
     save_json("rotas.json", rotas)
 
-# Admin: Backup & Restore
+# Admin: Backup, Restore & Edit Saved Rotas
 if is_admin:
     st.markdown("---")
     st.subheader("🛠️ Admin Tools: Backup & Restore")
@@ -155,5 +155,25 @@ if is_admin:
                 st.error("❌ Uploaded file format is invalid.")
         except Exception as e:
             st.error(f"❌ Error while loading file: {e}")
+
+    # Edit saved rotas
+    st.markdown("**📅 Saved Weekly Rotas**")
+    week_list = sorted(rotas.keys())
+    for wk in week_list:
+        with st.expander(f"📆 {wk}"):
+            rota_data = rotas[wk]
+            rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
+            edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
+            col1, col2 = st.columns([1,1])
+            with col1:
+                if st.button("💾 Save Changes", key=f"save_{wk}"):
+                    rotas[wk] = edited_df.to_dict(orient="index")
+                    save_json("rotas.json", rotas)
+                    st.success("Changes saved successfully.")
+            with col2:
+                if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
+                    rotas.pop(wk)
+                    save_json("rotas.json", rotas)
+                    st.warning(f"Rota for {wk} deleted.")
 
 
