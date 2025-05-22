@@ -112,11 +112,14 @@ with st.sidebar.expander("📚 Changelog History", expanded=False):
 # Date selection
 st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
-<h4>1️⃣ Select Friday Before the Target Week</h4>
+<h4>1️⃣ Select the Week to Plan</h4>
 """, unsafe_allow_html=True)
-selected_friday = st.date_input("Select Friday before target week", value=datetime.today())
+selected_monday = st.date_input("Select the Monday of the week you want to plan", value=datetime.today())
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-week_start = get_week_start_date(selected_friday)
+if selected_monday.weekday() != 0:
+    st.error("Please select a Monday.")
+    st.stop()
+week_start = selected_monday
 
 st.markdown(f"**Rota Week Starting:** `{week_start.strftime('%A, %d %B %Y')}`")
 st.markdown("</div>", unsafe_allow_html=True)
