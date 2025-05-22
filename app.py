@@ -20,7 +20,7 @@ inspectors = sorted(inspectors)
 rotas = load_json("rotas.json", default={})
 
 # Sidebar layout
-st.sidebar.image("assets/logo.png", use_column_width=True)
+st.sidebar.image("assets/logo.png", use_container_width=True)
 st.sidebar.markdown("---")
 st.sidebar.subheader("📘 How to Use")
 st.sidebar.markdown("1. Select the **Friday** before the week you want to plan.\n2. For each weekday, choose exactly **6 unique inspectors**, one of whom is the **HEAD**.\n3. Click **Generate Rota** to assign positions fairly.\n4. The rota will be saved automatically.")
