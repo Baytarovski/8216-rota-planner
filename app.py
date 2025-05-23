@@ -189,7 +189,7 @@ if not rota_already_exists:
         st.success("Rota generated successfully!")
         skipped_days = [day for day in days if day not in active_days]
         if skipped_days:
-    st.info(f"⏭️ Skipped non-working days: {', '.join(skipped_days)}")
+            st.info(f"⏭️ Skipped non-working days: {', '.join(skipped_days)}")
 
         # Display rota
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
