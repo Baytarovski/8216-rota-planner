@@ -157,7 +157,10 @@ if not rota_already_exists:
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
-        if len(set(selected)) == 6 and head in selected:
+        if "Bank Holiday / No Work" in selected:
+            daily_workers[day] = []
+            daily_heads[day] = None
+        elif len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
 
@@ -165,7 +168,7 @@ if not rota_already_exists:
 
     # Validation
     validation_passed = all(
-        len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
+        (len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)) or (daily_heads.get(day) is None and daily_workers.get(day) == [])
         for day in days
     )
 
@@ -185,6 +188,9 @@ if not rota_already_exists:
 
         # Display rota
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
+        for day in days:
+            if day not in rota_df.index:
+                rota_df.loc[day] = {col: "No Work" for col in ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]}
         rota_df = rota_df.reindex(days)
         expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
