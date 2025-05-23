@@ -163,7 +163,7 @@ if not rota_already_exists:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
         if len(set(selected)) == 6 and head in selected:
-            daily_workers[day] = [w for w in selected if w != head]
+            daily_workers[day] = selected
             daily_heads[day] = head
 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -249,5 +249,4 @@ if is_admin:
                     rotas.pop(wk)
                     save_json("rotas.json", rotas)
                     st.warning(f"Rota for {wk} deleted.")
-
 
