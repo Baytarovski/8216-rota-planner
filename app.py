@@ -208,7 +208,6 @@ if not rota_already_exists:
                 rota_result[day] = {col: "No Work" for col in ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]}
 
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
-                rota_df.loc[day] = {col: "No Work" for col in ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]}
         rota_df = rota_df.reindex(days)
         expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
