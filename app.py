@@ -16,6 +16,7 @@ st.title("8216 ABP Yetminster Weekly Rota Planner")
 
 # Load inspectors
 inspectors = load_json("inspectors.json", default=[])
+inspectors.append("Bank Holiday / No Work")
 inspectors = sorted(inspectors)
 
 # Load existing rotas
@@ -129,7 +130,7 @@ if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
     existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
-    expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+    expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     missing_cols = [c for c in expected_columns if c not in existing_df.columns]
     if not missing_cols:
         existing_df = existing_df[expected_columns]
@@ -157,7 +158,10 @@ if not rota_already_exists:
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
-        if len(set(selected)) == 6 and head in selected:
+        if "Bank Holiday / No Work" in selected:
+            daily_workers[day] = []
+            daily_heads[day] = None
+        elif len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
 
@@ -186,12 +190,16 @@ if not rota_already_exists:
         # Display rota
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
         rota_df = rota_df.reindex(days)
-        expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+        expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
         if missing_columns:
             st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
         else:
-            rota_df = rota_df[expected_columns]
+            for day in days:
+            if day not in rota_df.index:
+                rota_df.loc[day] = {col: "No Work" for col in expected_columns}
+
+        rota_df = rota_df[expected_columns]
 
         st.dataframe(rota_df)
         st.markdown("</div>", unsafe_allow_html=True)
@@ -244,5 +252,4 @@ if is_admin:
                     rotas.pop(wk)
                     save_json("rotas.json", rotas)
                     st.warning(f"Rota for {wk} deleted.")
-
 
