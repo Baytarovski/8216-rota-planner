@@ -153,7 +153,11 @@ if not rota_already_exists:
         st.markdown(f"🔹 <strong>{day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }</strong>", unsafe_allow_html=True)
         cols = st.columns(2)
         with cols[0]:
-            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
+            if "No Work / Bank Holiday" in st.session_state.get(day, []):
+                selected = st.multiselect(f"Select 6 inspectors for {day}", ["No Work / Bank Holiday"], key=day, max_selections=1)
+            else:
+                options = [i for i in inspectors if i != "No Work / Bank Holiday"]
+                selected = st.multiselect(f"Select 6 inspectors for {day}", options, key=day, max_selections=6)
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
