@@ -203,9 +203,11 @@ if not rota_already_exists:
         st.success("Rota generated successfully!")
 
         # Display rota
-        rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
         for day in days:
-            if day not in rota_df.index:
+            if day not in rota_result:
+                rota_result[day] = {col: "No Work" for col in ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]}
+
+        rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
                 rota_df.loc[day] = {col: "No Work" for col in ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]}
         rota_df = rota_df.reindex(days)
         expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
