@@ -193,6 +193,8 @@ if not rota_already_exists:
 
         # Display rota
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
+        for skipped in skipped_days:
+            rota_df.loc[skipped] = ["Not Working"] * len(expected_columns)
         rota_df = rota_df.reindex(days)
         expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
