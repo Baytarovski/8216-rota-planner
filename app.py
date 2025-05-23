@@ -164,10 +164,11 @@ if not rota_already_exists:
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Validation
-    validation_passed = all(
-        len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
-        for day in days
-    )
+    active_days = [
+        day for day in days
+        if len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
+    ]
+validation_passed = len(active_days) > 0
 
     # Generate Rota
     st.markdown("---")
@@ -180,8 +181,15 @@ if not rota_already_exists:
         st.info("✅ Ready to generate rota!")
 
     if st.button("Generate Rota", disabled=not validation_passed):
-        rota_result = generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key)
+        rota_result = generate_rota(
+            {day: daily_workers[day] for day in active_days},
+            {day: daily_heads[day] for day in active_days},
+            rotas, inspectors, week_key
+        )
         st.success("Rota generated successfully!")
+skipped_days = [day for day in days if day not in active_days]
+if skipped_days:
+    st.info(f"⏭️ Skipped non-working days: {', '.join(skipped_days)}")
 
         # Display rota
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
