@@ -37,8 +37,18 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
         for day in all_days:
             day_workers = daily_workers[day][:]
             head = daily_heads[day]
+
+            # DEBUG
+            print(f"DEBUG — {day}:")
+            print(f"  HEAD = {head}")
+            print(f"  Workers = {day_workers}")
+
+            if head not in day_workers:
+                raise ValueError(f"❌ {head} not found in workers list for {day}. Please ensure the HEAD is also included in the daily worker list.")
+
             day_workers.remove(head)
             random.shuffle(day_workers)
+
 
             def sort_key(w):
                 return (
