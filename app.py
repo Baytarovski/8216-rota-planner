@@ -169,7 +169,7 @@ if not rota_already_exists:
         if "No Work / Bank Holiday" in selected:
             if len(selected) > 1:
                 daily_workers[day] = None
-                daily_heads[day] = None
+                daily_heads[day] = "NO_WORK"
             else:
                 daily_workers[day] = []
                 daily_heads[day] = None
