@@ -154,6 +154,8 @@ if not rota_already_exists:
         cols = st.columns(2)
         with cols[0]:
             selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day, max_selections=6)
+            if len(selected) > 6:
+                st.warning("⚠️ You can only select up to 6 inspectors.")
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
