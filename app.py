@@ -172,7 +172,7 @@ if not rota_already_exists:
                 daily_heads[day] = "NO_WORK"
             else:
                 daily_workers[day] = []
-                daily_heads[day] = None
+                daily_heads[day] = "NO_WORK"
         elif len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
