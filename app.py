@@ -207,7 +207,18 @@ if not rota_already_exists:
         st.dataframe(rota_df)
         st.markdown("</div>", unsafe_allow_html=True)
 
-        rotas[week_key] = rota_result
+                # Add skipped days as 'Not Working' to saved rota
+        full_rota = rota_result.copy()
+        for skipped in skipped_days:
+            full_rota[skipped] = {
+                "CAR1": "Not Working",
+                "HEAD": "Not Working",
+                "CAR2": "Not Working",
+                "OFFAL": "Not Working",
+                "FCI": "Not Working",
+                "OFFLINE": "Not Working"
+            }
+        rotas[week_key] = full_rota
         save_json("rotas.json", rotas)
 
 # Admin: Backup, Restore & Edit Saved Rotas
