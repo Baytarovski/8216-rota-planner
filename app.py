@@ -165,11 +165,6 @@ if not rota_already_exists:
                 st.warning("Only 'No Work / Bank Holiday' can be selected for that day.")
                 st.session_state[day] = ["No Work / Bank Holiday"]
                 selected = ["No Work / Bank Holiday"]
-                f"Select 6 inspectors for {day}",
-                options,
-                key=day,
-                max_selections=max_limit
-            )
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
