@@ -117,7 +117,6 @@ st.markdown("""
 selected_monday = st.date_input("Select the Monday of the week you want to plan", value=datetime.today())
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 if selected_monday.weekday() != 0:
-    ##st.error("Please select a Monday.")
     st.stop()
 week_start = selected_monday
 
