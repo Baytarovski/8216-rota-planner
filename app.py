@@ -168,7 +168,7 @@ if not rota_already_exists:
         day for day in days
         if len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
     ]
-validation_passed = len(active_days) > 0
+    validation_passed = len(active_days) > 0
 
     # Generate Rota
     st.markdown("---")
@@ -187,8 +187,8 @@ validation_passed = len(active_days) > 0
             rotas, inspectors, week_key
         )
         st.success("Rota generated successfully!")
-skipped_days = [day for day in days if day not in active_days]
-if skipped_days:
+        skipped_days = [day for day in days if day not in active_days]
+        if skipped_days:
     st.info(f"⏭️ Skipped non-working days: {', '.join(skipped_days)}")
 
         # Display rota
