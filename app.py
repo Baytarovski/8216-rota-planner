@@ -178,7 +178,7 @@ if not rota_already_exists:
     active_days = valid_days
     validation_passed = len(valid_days) > 0 and len(invalid_days) == 0
 
-        if invalid_days:
+            if invalid_days:
         st.warning(f"⚠️ Incomplete or invalid selections for: {', '.join(invalid_days)}")
 
     # Generate Rota
