@@ -129,7 +129,7 @@ if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
     existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
-    expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+    expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     missing_cols = [c for c in expected_columns if c not in existing_df.columns]
     if not missing_cols:
         existing_df = existing_df[expected_columns]
@@ -199,7 +199,6 @@ if not rota_already_exists:
         rotas[week_key] = rota_result
         save_json("rotas.json", rotas)
 
-
 # Admin: Backup, Restore & Edit Saved Rotas
 if is_admin:
     st.markdown("---")
@@ -244,5 +243,3 @@ if is_admin:
                     rotas.pop(wk)
                     save_json("rotas.json", rotas)
                     st.warning(f"Rota for {wk} deleted.")
-
-
