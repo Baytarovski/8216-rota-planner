@@ -192,6 +192,7 @@ if not rota_already_exists:
             st.info(f"⏭️ Skipped non-working days: {', '.join(skipped_days)}")
 
         # Display rota
+        expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
         for skipped in skipped_days:
             rota_df.loc[skipped] = ["Not Working"] * len(expected_columns)
