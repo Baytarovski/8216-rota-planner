@@ -148,6 +148,8 @@ if not rota_already_exists:
 """, unsafe_allow_html=True)
     daily_workers = {}
     daily_heads = {}
+    daily_raw_selected = {}
+    daily_raw_head = {}
 
     for i, day in enumerate(days):
         st.markdown(f"🔹 <strong>{day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }</strong>", unsafe_allow_html=True)
@@ -156,6 +158,8 @@ if not rota_already_exists:
             selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
+        daily_raw_selected[day] = selected
+        daily_raw_head[day] = head
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
         if len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
@@ -168,9 +172,9 @@ if not rota_already_exists:
     invalid_days = []
 
     for day in days:
-        selected = daily_workers.get(day, [])
-        head = daily_heads.get(day)
-        if len(selected) == 5 and head and head not in selected:
+        selected = daily_raw_selected.get(day, [])
+        head = daily_raw_head.get(day)
+        if len(set(selected)) == 6 and head and head in selected:
             valid_days.append(day)
         elif len(selected) > 0 or head:
             invalid_days.append(day)
