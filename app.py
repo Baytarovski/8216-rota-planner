@@ -129,7 +129,7 @@ if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
     existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
-    expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+    expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     missing_cols = [c for c in expected_columns if c not in existing_df.columns]
     if not missing_cols:
         existing_df = existing_df[expected_columns]
@@ -153,38 +153,19 @@ if not rota_already_exists:
         st.markdown(f"🔹 <strong>{day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }</strong>", unsafe_allow_html=True)
         cols = st.columns(2)
         with cols[0]:
-            selected = st.multiselect(
-                f"Select 6 inspectors for {day}",
-                inspectors,
-                key=day,
-                max_selections=6
-            )
-
-            # Force No Work selection to be exclusive
-            if "No Work / Bank Holiday" in selected and len(selected) > 1:
-                st.warning("Only 'No Work / Bank Holiday' can be selected for that day.")
+            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
-        if "No Work / Bank Holiday" in selected:
-            if len(selected) > 1:
-                daily_workers[day] = None
-                daily_heads[day] = "NO_WORK"
-            else:
-                daily_workers[day] = []
-                daily_heads[day] = "NO_WORK"
-        elif len(set(selected)) == 6 and head in selected:
+        if len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
-        else:
-            daily_workers[day] = None
-            daily_heads[day] = None
 
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Validation
     validation_passed = all(
-        daily_workers.get(day) is not None and daily_heads.get(day) is not None
+        len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
         for day in days
     )
 
@@ -203,13 +184,9 @@ if not rota_already_exists:
         st.success("Rota generated successfully!")
 
         # Display rota
-        for day in days:
-            if day not in rota_result:
-                rota_result[day] = {col: "No Work" for col in ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]}
-
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
         rota_df = rota_df.reindex(days)
-        expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+        expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
         if missing_columns:
             st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
@@ -267,4 +244,5 @@ if is_admin:
                     rotas.pop(wk)
                     save_json("rotas.json", rotas)
                     st.warning(f"Rota for {wk} deleted.")
+
 
