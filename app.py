@@ -1,3 +1,7 @@
+# MIT License
+# © 2025 Doğukan Dağ
+# See LICENSE file for full details.
+
 # app.py
 # Main Streamlit Application Entry Point
 
@@ -117,6 +121,7 @@ st.markdown("""
 selected_monday = st.date_input("Select the Monday of the week you want to plan", value=datetime.today())
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 if selected_monday.weekday() != 0:
+    st.error("Please select a Monday.")
     st.stop()
 week_start = selected_monday
 
@@ -129,7 +134,7 @@ if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
     existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
-    expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+    expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     missing_cols = [c for c in expected_columns if c not in existing_df.columns]
     if not missing_cols:
         existing_df = existing_df[expected_columns]
@@ -153,9 +158,7 @@ if not rota_already_exists:
         st.markdown(f"🔹 <strong>{day} — { (week_start + timedelta(days=i)).strftime('%d %b %Y') }</strong>", unsafe_allow_html=True)
         cols = st.columns(2)
         with cols[0]:
-            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day, max_selections=6)
-            if len(selected) > 6:
-                st.warning("⚠️ You can only select up to 6 inspectors.")
+            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
@@ -188,7 +191,7 @@ if not rota_already_exists:
         # Display rota
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
         rota_df = rota_df.reindex(days)
-        expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+        expected_columns = ["HEAD", "CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
         if missing_columns:
             st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
@@ -246,3 +249,5 @@ if is_admin:
                     rotas.pop(wk)
                     save_json("rotas.json", rotas)
                     st.warning(f"Rota for {wk} deleted.")
+
+
