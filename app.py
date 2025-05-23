@@ -164,11 +164,22 @@ if not rota_already_exists:
     st.markdown("</div>", unsafe_allow_html=True)
 
     # Validation
-    active_days = [
-        day for day in days
-        if len(daily_workers.get(day, [])) == 5 and daily_heads.get(day)
-    ]
-    validation_passed = len(active_days) > 0
+    valid_days = []
+    invalid_days = []
+
+    for day in days:
+        selected = daily_workers.get(day, [])
+        head = daily_heads.get(day)
+        if len(selected) == 5 and head and head not in selected:
+            valid_days.append(day)
+        elif len(selected) > 0 or head:
+            invalid_days.append(day)
+
+    active_days = valid_days
+    validation_passed = len(valid_days) > 0 and len(invalid_days) == 0
+
+        if invalid_days:
+        st.warning(f"⚠️ Incomplete or invalid selections for: {', '.join(invalid_days)}")
 
     # Generate Rota
     st.markdown("---")
