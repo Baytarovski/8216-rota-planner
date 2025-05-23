@@ -35,15 +35,9 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
         success = True
 
         for day in all_days:
-            # Skip if it's a No Work / Bank Holiday day
-            if daily_heads[day] is None and daily_workers[day] == []:
-                rota_table[day] = {pos: "No Work" for pos in ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]}
-                continue
-
             day_workers = daily_workers[day][:]
             head = daily_heads[day]
-            if head in day_workers:
-                day_workers.remove(head)
+            day_workers.remove(head)
             random.shuffle(day_workers)
 
             def sort_key(w):
