@@ -158,7 +158,7 @@ if not rota_already_exists:
                 options = ["No Work / Bank Holiday"]
                 max_limit = 1
             else:
-                options = [i for i in inspectors if i != "No Work / Bank Holiday"]
+                options = inspectors
                 max_limit = 6
 
             selected = st.multiselect(
