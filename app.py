@@ -89,7 +89,7 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     if admin_input == "1234":
         st.success("Access granted. Admin panel is now visible.")
         is_admin = True
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("**📅 Saved Weekly Rotas**")
     elif admin_input != "":
         st.error("Incorrect password.")
         is_admin = False
@@ -102,7 +102,6 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 
 if is_admin:
     with st.expander("🛠️ Admin Panel", expanded=True):
-        st.markdown("**📅 Saved Weekly Rotas**")
         week_list = sorted(rotas.keys())
     for wk in week_list:
         with st.expander(f"📆 {wk}"):
