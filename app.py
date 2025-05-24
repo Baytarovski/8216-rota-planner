@@ -88,7 +88,8 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     admin_input = st.text_input("Enter admin password:", type="password")
     if admin_input == "1234":
         st.success("Access granted. Admin panel is now visible.")
-        elif admin_input != "":
+        is_admin = True
+    elif admin_input != "":
         st.error("Incorrect password.")
         is_admin = False
     else:
