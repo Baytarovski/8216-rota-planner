@@ -29,12 +29,7 @@ else:
     inspectors = []
 inspectors = sorted(inspectors)
 
-# Load rota only when a date is selected
-rotas = {}
-week_key = datetime.today().strftime("%Y-%m-%d")
-if "week_key_loaded" not in st.session_state or st.session_state["week_key_loaded"] != week_key:
-    rotas = load_rotas()
-    st.session_state["week_key_loaded"] = week_key
+
 
 # Helper function to save all rotas to Google Sheets
 def save_all_rotas():
@@ -145,6 +140,12 @@ if include_weekend:
 if selected_monday.weekday() != 0:
     st.stop()
 week_start = selected_monday
+week_key = week_start.strftime("%Y-%m-%d")
+if "week_key_loaded" not in st.session_state or st.session_state["week_key_loaded"] != week_key:
+    rotas = load_rotas()
+    st.session_state["week_key_loaded"] = week_key
+else:
+    rotas = st.session_state.get("rotas", {})
 
 st.markdown("</div>", unsafe_allow_html=True)
 
