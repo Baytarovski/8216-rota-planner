@@ -20,6 +20,10 @@ st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout=
 st.title("8216 ABP Yetminster Weekly Rota Planner")
 
 
+@st.cache_data(ttl=60)
+def cached_load_rotas():
+    return load_rotas()
+
 # Load inspectors
 inspectors_file = "inspectors.json"
 if os.path.exists(inspectors_file):
@@ -141,12 +145,7 @@ if selected_monday.weekday() != 0:
     st.stop()
 week_start = selected_monday
 week_key = week_start.strftime("%Y-%m-%d")
-if "week_key_loaded" not in st.session_state or st.session_state["week_key_loaded"] != week_key:
-    rotas = load_rotas()
-    st.session_state["week_key_loaded"] = week_key
-    st.session_state["rotas"] = rotas
-else:
-    rotas = st.session_state.get("rotas", {})
+rotas = cached_load_rotas()
 
 st.markdown("</div>", unsafe_allow_html=True)
 
