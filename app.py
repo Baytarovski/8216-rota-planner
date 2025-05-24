@@ -269,32 +269,6 @@ if not rota_already_exists:
         save_rotas(week_key, rota_result)
 
         
-
-# Admin: Backup, Restore & Edit Saved Rotas
-if is_admin:
-    st.markdown("---")
-    st.subheader("🛠️ Admin Tools: Backup & Restore")
-
-    # Download backup
-    st.markdown("**📤 Download All Rotas**")
-    backup_data = json.dumps(rotas, indent=2)
-    st.download_button("Download rotas.json", backup_data, file_name="rotas.json", mime="application/json")
-
-    # Upload backup
-    st.markdown("**📁 Restore Rotas from File**")
-    uploaded = st.file_uploader("Upload rotas.json", type=["json"], key="restore_file")
-    if uploaded is not None:
-        try:
-            new_data = json.load(uploaded)
-            if isinstance(new_data, dict):
-                rotas.update(new_data)
-                # save_json removed: replaced with save_rotas or delete_rota connected to Google Sheets
-                st.success("✅ Rotas restored successfully.")
-            else:
-                st.error("❌ Uploaded file format is invalid.")
-        except Exception as e:
-            st.error(f"❌ Error while loading file: {e}")
-
     # Edit saved rotas
     st.markdown("**📅 Saved Weekly Rotas**")
     week_list = sorted(rotas.keys())
