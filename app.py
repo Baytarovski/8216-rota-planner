@@ -22,6 +22,10 @@ inspectors = sorted(inspectors)
 # Load existing rotas
 rotas = load_json("rotas.json", default={})
 
+# Helper function to save all rotas
+def save_rotas():
+    save_json("rotas.json", rotas)
+
 # Sidebar layout
 import base64
 from pathlib import Path
@@ -230,9 +234,7 @@ if not rota_already_exists:
         # Display rota
         expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
-        
         rota_df = rota_df.reindex(days)
-        expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
         if missing_columns:
             st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
@@ -242,9 +244,9 @@ if not rota_already_exists:
         st.dataframe(rota_df)
         st.markdown("</div>", unsafe_allow_html=True)
 
-                # Save generated rota directly
         rotas[week_key] = rota_result
-        save_json("rotas.json", rotas)
+        save_rotas()
+        
 
 # Admin: Backup, Restore & Edit Saved Rotas
 if is_admin:
