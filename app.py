@@ -101,12 +101,13 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 # Build Info and Creator
 
 if is_admin:
-    st.markdown("""
-    <div style='border:2px solid #007BFF; padding:1.2em; border-radius:10px; background:#f0f8ff; margin-top:1.5em;'>
-    <h4 style='margin-bottom:0.8em;'>🛠️ <strong>Admin Panel</strong></h4>
-    <p><strong>📅 Saved Weekly Rotas</strong></p>
-    """, unsafe_allow_html=True)
-    week_list = sorted(rotas.keys())
+    with st.container():
+        st.markdown("""
+        <div style='border:2px solid #007BFF; padding:1.2em; border-radius:10px; background:#f0f8ff; margin-top:1.5em;'>
+        <h4 style='margin-bottom:0.8em;'>🛠️ <strong>Admin Panel</strong></h4>
+        <p><strong>📅 Saved Weekly Rotas</strong></p>
+        """, unsafe_allow_html=True)
+        week_list = sorted(rotas.keys())
     for wk in week_list:
         with st.expander(f"📆 {wk}"):
             rota_data = rotas[wk]
