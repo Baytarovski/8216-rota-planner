@@ -41,6 +41,8 @@ def save_rotas(week_key: str, rota_dict: Dict[str, Dict[str, str]]):
         row = [week_key, day] + [roles.get(pos, "") for pos in POSITIONS]
         sheet.append_row(row)
 
+from datetime import datetime
+
 def load_rotas():
     sheet = get_sheet()
     rows = sheet.get_all_values()
@@ -50,10 +52,16 @@ def load_rotas():
         return all_rotas
 
     for row in rows[1:]:
+        if len(row) < 3:
+            continue  # skip incomplete rows
         week, day, *assignments = row
-        if week not in all_rotas:
-            all_rotas[week] = {}
-        all_rotas[week][day] = dict(zip(POSITIONS, assignments))
+        try:
+            parsed_week = datetime.strptime(week.strip(), "%Y-%m-%d").strftime("%Y-%m-%d")
+        except:
+            parsed_week = week.strip()
+        if parsed_week not in all_rotas:
+            all_rotas[parsed_week] = {}
+        all_rotas[parsed_week][day] = dict(zip(POSITIONS, assignments))
 
     return all_rotas
 
