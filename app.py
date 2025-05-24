@@ -101,37 +101,35 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 # Build Info and Creator
 
 if is_admin:
-    with st.container():
+    with st.expander("🛠️ Admin Panel", expanded=True):
         st.markdown("""
-        <div style='border:2px solid #007BFF; padding:1.2em; border-radius:10px; background:#f0f8ff; margin-top:1.5em;'>
-        <h4 style='margin-bottom:0.8em;'>🛠️ <strong>Admin Panel</strong></h4>
         <p><strong>📅 Saved Weekly Rotas</strong></p>
         """, unsafe_allow_html=True)
         week_list = sorted(rotas.keys())
-        for wk in week_list:
-            with st.expander(f"📆 {wk}"):
-                rota_data = rotas[wk]
-                rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
-                day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-                display_days = [d for d in day_order if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
-                rota_df = rota_df.reindex(display_days)
-                rota_df = rota_df[["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]].fillna("")
-                edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
-                col1, col2 = st.columns([1,1])
-                with col1:
-                    if st.button("💾 Save Changes", key=f"save_{wk}"):
-                        rotas[wk] = edited_df.to_dict(orient="index")
-                        save_rotas(wk, rotas[wk])
-                        st.session_state["feedback"] = f"✅ Rota for {wk} updated."
-                        st.cache_data.clear()
-                        st.rerun()
-                with col2:
-                    if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
-                        rotas.pop(wk)
-                        delete_rota(wk)
-                        st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
-                        st.cache_data.clear()
-                        st.rerun()
+    for wk in week_list:
+        with st.expander(f"📆 {wk}"):
+            rota_data = rotas[wk]
+            rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
+            day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+            display_days = [d for d in day_order if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
+            rota_df = rota_df.reindex(display_days)
+            rota_df = rota_df[["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]].fillna("")
+            edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
+            col1, col2 = st.columns([1,1])
+            with col1:
+                if st.button("💾 Save Changes", key=f"save_{wk}"):
+                    rotas[wk] = edited_df.to_dict(orient="index")
+                    save_rotas(wk, rotas[wk])
+                    st.session_state["feedback"] = f"✅ Rota for {wk} updated."
+                    st.cache_data.clear()
+                    st.rerun()
+            with col2:
+                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
+                    rotas.pop(wk)
+                    delete_rota(wk)
+                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
+                    st.cache_data.clear()
+                    st.rerun()
 
     st.markdown("</div>", unsafe_allow_html=True)
 
