@@ -102,8 +102,8 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 if is_admin:
     st.markdown("### 🛠️ Admin Panel")
     st.markdown("**📅 Saved Weekly Rotas**")
-    week_list = sorted(rotas.keys())
-        for wk in week_list:
+        week_list = sorted(rotas.keys())
+    for wk in week_list:
           with st.expander(f"📆 {wk}"):
               rota_data = rotas[wk]
               rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
