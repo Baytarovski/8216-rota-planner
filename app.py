@@ -122,7 +122,7 @@ if is_admin:
                     st.cache_data.clear()
                     st.rerun()
             with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final"):
+                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
                     rotas.pop(wk)
                     delete_rota(wk)
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
@@ -131,14 +131,7 @@ if is_admin:
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-    with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final"):
-                    rotas.pop(wk)
-                    delete_rota(wk)
-                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
-                    st.cache_data.clear()
-                    st.rerun()
-    
+        
 st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
