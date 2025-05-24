@@ -115,7 +115,11 @@ st.markdown("""
 <h4>1️⃣ Select the Week to Plan</h4>
 """, unsafe_allow_html=True)
 selected_monday = st.date_input("Select the Monday of the week you want to plan", value=datetime.today())
+include_weekend = st.checkbox("Include Saturday and Sunday in this week's rota", value=False)
+
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+if include_weekend:
+        days.extend(["Saturday", "Sunday"])
 if selected_monday.weekday() != 0:
     st.stop()
 week_start = selected_monday
@@ -128,7 +132,7 @@ rota_already_exists = False
 if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
-    existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+    existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
     expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     missing_cols = [c for c in expected_columns if c not in existing_df.columns]
     if not missing_cols:
@@ -140,7 +144,9 @@ if week_key in rotas:
     else:
         rota_already_exists = True
 
-# Daily selection
+
+
+    # Daily selection
 if not rota_already_exists:
     st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
@@ -267,7 +273,7 @@ if is_admin:
         with st.expander(f"📆 {wk}"):
             rota_data = rotas[wk]
             rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
-            rota_df = rota_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+            rota_df = rota_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
             rota_df = rota_df[["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]].fillna("")
             edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
             col1, col2 = st.columns([1,1])
