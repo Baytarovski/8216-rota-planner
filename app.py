@@ -89,13 +89,14 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     if admin_input == "1234":
         st.success("Access granted. Admin panel is now visible.")
         is_admin = True
+        st.markdown("</div>", unsafe_allow_html=True)
     elif admin_input != "":
         st.error("Incorrect password.")
         is_admin = False
     else:
         is_admin = False
 
-      st.markdown("</div>", unsafe_allow_html=True)
+      
 
 # Build Info and Creator
 
