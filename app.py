@@ -278,7 +278,7 @@ if not rota_already_exists:
         )
 
         for day in days:
-            if day not in rota_result:
+            if not isinstance(rota_result.get(day), dict):
                 rota_result[day] = {
                     "CAR1": "Not Working",
                     "HEAD": "Not Working",
