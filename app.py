@@ -100,7 +100,7 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 if is_admin:
     st.markdown("""
     <div style='border:2px solid #007BFF; padding:1.2em; border-radius:10px; background:#f0f8ff; margin-top:1.5em;'>
-    <h4 style='margin-bottom:0.8em;'>🛠️ <strong>Admin Panel</strong></h4>""", unsafe_allow_html=True)
+    <h4 style='margin-bottom:0.8em;'>🛠️ <strong>Admin Panel</strong></h4>
     """, unsafe_allow_html=True)
     st.markdown("**📅 Saved Weekly Rotas**")
     week_list = sorted(rotas.keys())
@@ -128,6 +128,8 @@ if is_admin:
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
                     st.cache_data.clear()
                     st.rerun()
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
                 if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
