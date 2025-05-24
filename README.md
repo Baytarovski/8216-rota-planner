@@ -1,3 +1,6 @@
+> ⚠️ This project is protected by copyright. Unauthorized use, copying, or distribution is strictly prohibited.
+> Contact for licensing: ticked.does-7c@icloud.com
+
 # 8216 ABP Yetminster Weekly Rota Planner
 
 A custom rota planning tool for meat hygiene inspection teams at ABP Yetminster.  
