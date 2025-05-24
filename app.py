@@ -14,6 +14,7 @@ import random
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
 st.title("8216 ABP Yetminster Weekly Rota Planner")
 
+
 # Load inspectors
 inspectors = load_json("inspectors.json", default=[])
 inspectors = sorted(inspectors)
@@ -109,7 +110,9 @@ with st.sidebar.expander("📚 Changelog History", expanded=False):
 - Initial stable interface with calendar-based selection
 """)
 
-# Date selection
+# ─────────────────────────────────────────────────────────────
+# 🔹 Step 1: Select the Week to Plan
+# ─────────────────────────────────────────────────────────────
 st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
 <h4>1️⃣ Select the Week to Plan</h4>
@@ -146,7 +149,9 @@ if week_key in rotas:
 
 
 
-    # Daily selection
+    # ─────────────────────────────────────────────────────────────
+# 🔹 Step 2: Select Inspectors for Each Day
+# ─────────────────────────────────────────────────────────────
 if not rota_already_exists:
     st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
@@ -190,7 +195,9 @@ if not rota_already_exists:
     if invalid_days:
         st.warning(f"⚠️ Incomplete or invalid selections for: {', '.join(invalid_days)}")
 
-    # Generate Rota
+    # ─────────────────────────────────────────────────────────────
+# 🔹 Step 3: Generate the Weekly Rota
+# ─────────────────────────────────────────────────────────────
     st.markdown("---")
     st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
@@ -206,16 +213,24 @@ if not rota_already_exists:
             {day: daily_heads[day] for day in active_days},
             rotas, inspectors, week_key
         )
-        st.success("Rota generated successfully!")
-        skipped_days = [day for day in days if day not in active_days]
-        if skipped_days:
-            st.info(f"⏭️ Skipped non-working days: {', '.join(skipped_days)}")
+
+        for day in days:
+            if day not in rota_result:
+                rota_result[day] = {
+                    "CAR1": "Not Working",
+                    "HEAD": "Not Working",
+                    "CAR2": "Not Working",
+                    "OFFAL": "Not Working",
+                    "FCI": "Not Working",
+                    "OFFLINE": "Not Working"
+                }
+        st.success("🎉 Rota saved successfully and added to rota history.")
+        
 
         # Display rota
         expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
-        for skipped in skipped_days:
-            rota_df.loc[skipped] = ["Not Working"] * len(expected_columns)
+        
         rota_df = rota_df.reindex(days)
         expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
         missing_columns = [col for col in expected_columns if col not in rota_df.columns]
@@ -227,18 +242,8 @@ if not rota_already_exists:
         st.dataframe(rota_df)
         st.markdown("</div>", unsafe_allow_html=True)
 
-                # Add skipped days as 'Not Working' to saved rota
-        full_rota = rota_result.copy()
-        for skipped in skipped_days:
-            full_rota[skipped] = {
-                "CAR1": "Not Working",
-                "HEAD": "Not Working",
-                "CAR2": "Not Working",
-                "OFFAL": "Not Working",
-                "FCI": "Not Working",
-                "OFFLINE": "Not Working"
-            }
-        rotas[week_key] = full_rota
+                # Save generated rota directly
+        rotas[week_key] = rota_result
         save_json("rotas.json", rotas)
 
 # Admin: Backup, Restore & Edit Saved Rotas
