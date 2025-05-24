@@ -139,7 +139,9 @@ rota_already_exists = False
 if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
-    existing_df = existing_df.reindex(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+    day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    display_days = [d for d in day_order if d in rotas[week_key].keys() or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
+    existing_df = existing_df.reindex(display_days)
     expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     missing_cols = [c for c in expected_columns if c not in existing_df.columns]
     if not missing_cols:
