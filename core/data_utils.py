@@ -31,7 +31,7 @@ def save_rotas(week_key: str, rota_dict: Dict[str, Dict[str, str]]):
         sheet.append_row(header)
 
     # Eski haftayı sil
-    rows_to_keep = [row for row in existing if row[0] != week_key or row[0] == "week_start"]
+    rows_to_keep = [row for row in existing if len(row) >= 1 and (row[0] != week_key or row[0] == "week_start")]
     sheet.clear()
     for row in rows_to_keep:
         sheet.append_row(row)
