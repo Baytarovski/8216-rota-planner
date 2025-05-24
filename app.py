@@ -9,7 +9,7 @@
 import streamlit as st
 from datetime import datetime, timedelta
 from core.algorithm import generate_rota
-from core.data_utils import load_json, save_json, get_week_start_date
+from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
 import os
 import json
 import pandas as pd
@@ -21,15 +21,21 @@ st.title("8216 ABP Yetminster Weekly Rota Planner")
 
 
 # Load inspectors
-inspectors = load_json("inspectors.json", default=[])
+inspectors_file = "inspectors.json"
+if os.path.exists(inspectors_file):
+    with open(inspectors_file, "r") as f:
+        inspectors = json.load(f)
+else:
+    inspectors = []
 inspectors = sorted(inspectors)
 
 # Load existing rotas
-rotas = load_json("rotas.json", default={})
+rotas = load_rotas()
 
-# Helper function to save all rotas
-def save_rotas():
-    save_json("rotas.json", rotas)
+# Helper function to save all rotas to Google Sheets
+def save_all_rotas():
+    for week_key, data in rotas.items():
+        save_rotas(week_key, data)
 
 # Sidebar layout
 import base64
