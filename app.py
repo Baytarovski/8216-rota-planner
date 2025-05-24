@@ -76,6 +76,9 @@ with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
 - **Dual FCI/OFFLINE Allowed**: Same person may be assigned both if no better alternative exists.
 """)
 
+if "feedback" in st.session_state:
+    st.success(st.session_state.pop("feedback"))
+
 # Admin Panel Access
 with st.sidebar.expander("🔐 Admin Access", expanded=False):
     admin_input = st.text_input("Enter admin password:", type="password")
@@ -309,11 +312,13 @@ if is_admin:
                 if st.button("💾 Save Changes", key=f"save_{wk}"):
                     rotas[wk] = edited_df.to_dict(orient="index")
                     save_rotas(wk, rotas[wk])
+                    st.session_state["feedback"] = f"✅ Rota for {wk} updated."
                     st.cache_data.clear()
                     st.rerun()
             with col2:
                 if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
                     rotas.pop(wk)
                     delete_rota(wk)
+                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
                     st.cache_data.clear()
                     st.rerun()
