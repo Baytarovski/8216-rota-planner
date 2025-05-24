@@ -79,6 +79,8 @@ with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
 
+rotas = cached_load_rotas()
+
 # Admin Panel Access
 with st.sidebar.expander("🔐 Admin Access", expanded=False):
     admin_input = st.text_input("Enter admin password:", type="password")
