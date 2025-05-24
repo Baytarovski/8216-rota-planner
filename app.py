@@ -100,8 +100,8 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 # Build Info and Creator
 
 if is_admin:
-    with st.expander("🛠️ Admin Panel", expanded=True):
-        st.markdown("**📅 Saved Weekly Rotas**")
+    st.markdown("### 🛠️ Admin Panel")
+    st.markdown("**📅 Saved Weekly Rotas**")
         week_list = sorted(rotas.keys())
         for wk in week_list:
           with st.expander(f"📆 {wk}"):
