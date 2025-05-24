@@ -178,7 +178,6 @@ if selected_monday.weekday() != 0:
     st.stop()
 week_start = selected_monday
 week_key = week_start.strftime("%Y-%m-%d")
-rotas = cached_load_rotas()
 
 st.markdown("</div>", unsafe_allow_html=True)
 
