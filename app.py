@@ -55,7 +55,7 @@ st.sidebar.markdown(
     f"</div>",
     unsafe_allow_html=True
 )
-st.markdown("</div>", unsafe_allow_html=True)
+
 
 st.sidebar.markdown("---")
 
@@ -95,7 +95,9 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     else:
         is_admin = False
 
-  # Build Info and Creator
+      st.markdown("</div>", unsafe_allow_html=True)
+
+# Build Info and Creator
 
 if is_admin:
     st.markdown("""
