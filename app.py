@@ -144,6 +144,7 @@ week_key = week_start.strftime("%Y-%m-%d")
 if "week_key_loaded" not in st.session_state or st.session_state["week_key_loaded"] != week_key:
     rotas = load_rotas()
     st.session_state["week_key_loaded"] = week_key
+    st.session_state["rotas"] = rotas
 else:
     rotas = st.session_state.get("rotas", {})
 
