@@ -285,7 +285,7 @@ if is_admin:
             new_data = json.load(uploaded)
             if isinstance(new_data, dict):
                 rotas.update(new_data)
-                save_json("rotas.json", rotas)
+                # save_json removed: replaced with save_rotas or delete_rota connected to Google Sheets
                 st.success("✅ Rotas restored successfully.")
             else:
                 st.error("❌ Uploaded file format is invalid.")
