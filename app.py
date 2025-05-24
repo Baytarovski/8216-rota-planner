@@ -276,9 +276,15 @@ if not rota_already_exists:
             {day: daily_heads[day] for day in active_days},
             rotas, inspectors, week_key
         )
+        st.write("🧪 Rota Result (Raw):", rota_result)
+        if not rota_result:
+            st.error("❌ Rota could not be generated. Please review your selections.")
+            st.stop()
+
+        rota_result = {day: roles for day, roles in rota_result.items() if isinstance(roles, dict)}
 
         for day in days:
-            if not isinstance(rota_result.get(day), dict):
+            if day not in rota_result:
                 rota_result[day] = {
                     "CAR1": "Not Working",
                     "HEAD": "Not Working",
