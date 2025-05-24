@@ -102,9 +102,7 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 
 if is_admin:
     with st.expander("🛠️ Admin Panel", expanded=True):
-        st.markdown("""
-        <p><strong>📅 Saved Weekly Rotas</strong></p>
-        """, unsafe_allow_html=True)
+        st.markdown("**📅 Saved Weekly Rotas**")
         week_list = sorted(rotas.keys())
     for wk in week_list:
         with st.expander(f"📆 {wk}"):
