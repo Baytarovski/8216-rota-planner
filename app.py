@@ -29,8 +29,12 @@ else:
     inspectors = []
 inspectors = sorted(inspectors)
 
-# Load existing rotas
-rotas = load_rotas()
+# Load rota only when a date is selected
+rotas = {}
+week_key = datetime.today().strftime("%Y-%m-%d")
+if "week_key_loaded" not in st.session_state or st.session_state["week_key_loaded"] != week_key:
+    rotas = load_rotas()
+    st.session_state["week_key_loaded"] = week_key
 
 # Helper function to save all rotas to Google Sheets
 def save_all_rotas():
@@ -303,10 +307,10 @@ if is_admin:
             with col1:
                 if st.button("💾 Save Changes", key=f"save_{wk}"):
                     rotas[wk] = edited_df.to_dict(orient="index")
-                    save_json("rotas.json", rotas)
+                    save_rotas(wk, rotas[wk])
                     st.success("Changes saved successfully.")
             with col2:
                 if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
                     rotas.pop(wk)
-                    save_json("rotas.json", rotas)
+                    delete_rota(wk)
                     st.warning(f"Rota for {wk} deleted.")
