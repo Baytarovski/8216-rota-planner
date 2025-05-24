@@ -67,8 +67,6 @@ def load_rotas():
 
     return all_rotas
 
-    return all_rotas
-
 def delete_rota(week_key: str):
     sheet = get_sheet()
     rows = sheet.get_all_values()
