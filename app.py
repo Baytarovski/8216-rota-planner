@@ -309,9 +309,11 @@ if is_admin:
                 if st.button("💾 Save Changes", key=f"save_{wk}"):
                     rotas[wk] = edited_df.to_dict(orient="index")
                     save_rotas(wk, rotas[wk])
-                    st.success("Changes saved successfully.")
+                    st.cache_data.clear()
+                    st.rerun()
             with col2:
                 if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
                     rotas.pop(wk)
                     delete_rota(wk)
-                    st.warning(f"Rota for {wk} deleted.")
+                    st.cache_data.clear()
+                    st.rerun()
