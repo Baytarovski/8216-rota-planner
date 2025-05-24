@@ -55,6 +55,8 @@ st.sidebar.markdown(
     f"</div>",
     unsafe_allow_html=True
 )
+st.markdown("</div>", unsafe_allow_html=True)
+
 st.sidebar.markdown("---")
 
 with st.sidebar.expander("📘 How to Use", expanded=False):
@@ -98,7 +100,7 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 if is_admin:
     st.markdown("""
     <div style='border:2px solid #007BFF; padding:1.2em; border-radius:10px; background:#f0f8ff; margin-top:1.5em;'>
-    <h4 style='margin-bottom:0.8em;'>🛠️ <strong>Admin Panel</strong></h4>
+    <h4 style='margin-bottom:0.8em;'>🛠️ <strong>Admin Panel</strong></h4>""", unsafe_allow_html=True)
     """, unsafe_allow_html=True)
     st.markdown("**📅 Saved Weekly Rotas**")
     week_list = sorted(rotas.keys())
@@ -119,6 +121,13 @@ if is_admin:
                     st.session_state["feedback"] = f"✅ Rota for {wk} updated."
                     st.cache_data.clear()
                     st.rerun()
+            with col2:
+                if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
+                    rotas.pop(wk)
+                    delete_rota(wk)
+                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
+                    st.cache_data.clear()
+                    st.rerun()
 
     with col2:
                 if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
@@ -127,7 +136,7 @@ if is_admin:
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
                     st.cache_data.clear()
                     st.rerun()
-    st.markdown("</div>", unsafe_allow_html=True)
+    
 st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
