@@ -7,6 +7,7 @@ import gspread
 from google.oauth2.service_account import Credentials
 import streamlit as st
 from typing import Dict
+from datetime import datetime
 
 # Google Sheets bağlantısı
 SHEET_NAME = "rota_data"
@@ -53,15 +54,18 @@ def load_rotas():
 
     for row in rows[1:]:
         if len(row) < 3:
-            continue  # skip incomplete rows
+            continue
         week, day, *assignments = row
         try:
+            # Normalize week format
             parsed_week = datetime.strptime(week.strip(), "%Y-%m-%d").strftime("%Y-%m-%d")
         except:
             parsed_week = week.strip()
         if parsed_week not in all_rotas:
             all_rotas[parsed_week] = {}
-        all_rotas[parsed_week][day] = dict(zip(POSITIONS, assignments))
+        all_rotas[parsed_week][day] = dict(zip(["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"], assignments))
+
+    return all_rotas
 
     return all_rotas
 
