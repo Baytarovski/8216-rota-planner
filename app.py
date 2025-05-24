@@ -103,7 +103,7 @@ if is_admin:
     with st.expander("🛠️ Admin Panel", expanded=True):
         st.markdown("**📅 Saved Weekly Rotas**")
         week_list = sorted(rotas.keys())
-      for wk in week_list:
+        for wk in week_list:
           with st.expander(f"📆 {wk}"):
               rota_data = rotas[wk]
               rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
