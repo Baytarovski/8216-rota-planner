@@ -122,7 +122,7 @@ if is_admin:
                     st.cache_data.clear()
                     st.rerun()
             with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
+                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final"):
                     rotas.pop(wk)
                     delete_rota(wk)
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
@@ -132,7 +132,7 @@ if is_admin:
     st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}"):
+                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final"):
                     rotas.pop(wk)
                     delete_rota(wk)
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
