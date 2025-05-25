@@ -192,7 +192,7 @@ if week_key in rotas:
     
     display_days = [d for d in DAYS_FULL if d in rotas[week_key].keys() or d in DAYS_FULL[:5]]
     existing_df = existing_df.reindex(display_days)
-                missing_cols = [c for c in POSITIONS if c not in existing_df.columns]
+                    missing_cols = [c for c in POSITIONS if c not in existing_df.columns]
     if not missing_cols:
         existing_df = existing_df[POSITIONS]
     st.dataframe(existing_df)
