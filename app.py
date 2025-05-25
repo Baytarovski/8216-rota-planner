@@ -398,6 +398,24 @@ if not rota_already_exists:
                     "OFFLINE": "Not Working"
                 }
         st.success("🎉 Rota saved successfully and added to rota history.")
+
+        rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
+        rota_df = rota_df.reindex(days)
+        if all(pos in rota_df.columns for pos in POSITIONS):
+            rota_df = rota_df[POSITIONS]
+        else:
+            st.warning("⚠️ Missing positions in generated rota")
+    
+        st.dataframe(rota_df)
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+        # 💾 SAVE ROTAS
+        rotas[week_key] = rota_result
+        save_rotas(week_key, rota_result)
+    
+        # 🔄 CLEAR CACHE + RELOAD
+        st.cache_data.clear()
+        st.rerun()
         
 
         # Display rota
