@@ -432,8 +432,6 @@ if not rota_already_exists:
         st.markdown("</div>", unsafe_allow_html=True)
 
         rota_result = {day: roles for day, roles in rota_result.items() if isinstance(roles, dict)}
-        rotas[week_key] = rota_result
-        save_rotas(week_key, rota_result)
 
         
     
