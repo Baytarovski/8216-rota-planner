@@ -277,6 +277,13 @@ if not rota_already_exists:
             rotas, inspectors, week_key
         )
         st.write("🧪 Rota Result (Raw):", rota_result)
+        if isinstance(rota_result, dict) and "error" in rota_result:
+            st.error(f"❌ {rota_result['error']}")
+            st.stop()
+        if not rota_result or not isinstance(rota_result, dict):
+            st.error("❌ Rota could not be generated. Please review your selections.")
+            st.stop()
+        st.write("🧪 Rota Result (Raw):", rota_result)
         if not rota_result:
             st.error("❌ Rota could not be generated. Please review your selections.")
             st.stop()
