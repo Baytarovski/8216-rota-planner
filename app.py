@@ -143,34 +143,34 @@ if is_admin:
                     st.rerun()
 
     with st.expander("📈 Monthly Summary", expanded=False):
-    st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+        st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
-    available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
-    selected_month = st.selectbox("📅 Select Month for Summary", available_months)
+        available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
+        selected_month = st.selectbox("📅 Select Month for Summary", available_months)
 
-    summary = {}
-    for week_key, week_data in rotas.items():
-        week_dt = datetime.strptime(week_key, "%Y-%m-%d")
-        if week_dt.strftime("%B %Y") != selected_month:
-            continue
-        for day, roles in week_data.items():
-            for role, person in roles.items():
-                if person == "Not Working":
-                    continue
-                if person not in summary:
-                    summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                summary[person]["Total Days"] += 1
-                if role == "FCI":
-                    summary[person]["FCI"] += 1
-                elif role == "OFFLINE":
-                    summary[person]["OFFLINE"] += 1
-
-    if summary:
-        df_summary = pd.DataFrame.from_dict(summary, orient="index")
-        df_summary = df_summary.sort_values(by="Total Days", ascending=False)
-        st.dataframe(df_summary, use_container_width=True)
-
-    st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
+        summary = {}
+        for week_key, week_data in rotas.items():
+            week_dt = datetime.strptime(week_key, "%Y-%m-%d")
+            if week_dt.strftime("%B %Y") != selected_month:
+                continue
+            for day, roles in week_data.items():
+                for role, person in roles.items():
+                    if person == "Not Working":
+                        continue
+                    if person not in summary:
+                        summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
+                    summary[person]["Total Days"] += 1
+                    if role == "FCI":
+                        summary[person]["FCI"] += 1
+                    elif role == "OFFLINE":
+                        summary[person]["OFFLINE"] += 1
+    
+        if summary:
+            df_summary = pd.DataFrame.from_dict(summary, orient="index")
+            df_summary = df_summary.sort_values(by="Total Days", ascending=False)
+            st.dataframe(df_summary, use_container_width=True)
+    
+        st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
