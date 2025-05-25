@@ -74,6 +74,8 @@ with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
 
+DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 rotas = cached_load_rotas()
 
 # Admin Panel Access
@@ -100,10 +102,9 @@ if is_admin:
           with st.expander(f"📆 {wk}"):
               rota_data = rotas[wk]
               rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
-              day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-              display_days = [d for d in day_order if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
+                            display_days = [d for d in DAYS_FULL if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
               rota_df = rota_df.reindex(display_days)
-              rota_df = rota_df[["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]].fillna("")
+              rota_df = rota_df[POSITIONS].fillna("")
               edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
               col1, col2 = st.columns([1,1])
               with col1:
@@ -188,13 +189,12 @@ rota_already_exists = False
 if week_key in rotas:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
-    day_order = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    display_days = [d for d in day_order if d in rotas[week_key].keys() or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
+    
+    display_days = [d for d in DAYS_FULL if d in rotas[week_key].keys() or d in DAYS_FULL[:5]]
     existing_df = existing_df.reindex(display_days)
-    expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
-    missing_cols = [c for c in expected_columns if c not in existing_df.columns]
+        missing_cols = [c for c in POSITIONS if c not in existing_df.columns]
     if not missing_cols:
-        existing_df = existing_df[expected_columns]
+        existing_df = existing_df[POSITIONS]
     st.dataframe(existing_df)
 
     if not is_admin:
@@ -291,14 +291,14 @@ if not rota_already_exists:
         
 
         # Display rota
-        expected_columns = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+        
         rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
         rota_df = rota_df.reindex(days)
-        missing_columns = [col for col in expected_columns if col not in rota_df.columns]
+        missing_columns = [col for col in POSITIONS if col not in rota_df.columns]
         if missing_columns:
             st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
         else:
-            rota_df = rota_df[expected_columns]
+            rota_df = rota_df[POSITIONS]
 
         st.dataframe(rota_df)
         st.markdown("</div>", unsafe_allow_html=True)
