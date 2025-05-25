@@ -142,6 +142,8 @@ if is_admin:
                     st.cache_data.clear()
                     st.rerun()
 
+        st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
+    
     with st.expander("📈 Monthly Summary", expanded=False):
         st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
