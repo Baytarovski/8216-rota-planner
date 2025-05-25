@@ -171,7 +171,7 @@ if is_admin:
             df_summary = df_summary.sort_values(by="Total Days", ascending=False)
             st.dataframe(df_summary, use_container_width=True)
     
-        st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
