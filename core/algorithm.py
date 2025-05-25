@@ -7,7 +7,7 @@ import random
 from collections import defaultdict
 
 POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
-DEFAULT_ATTEMPTS = 100
+DEFAULT_ATTEMPTS = 500
 
 def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
     all_days = list(daily_workers.keys())
