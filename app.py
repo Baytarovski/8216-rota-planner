@@ -175,52 +175,52 @@ if is_admin:
     st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.2.0 — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
-st.sidebar.markdown(f"<span style='font-size: 0.85rem; color: #888;'>Last updated: {datetime.today().strftime('%d %b %Y')}</span>", unsafe_allow_html=True)
+st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.2.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
 with st.sidebar.expander("📝 What's New in 1.2.0", expanded=False):
     st.markdown("""
-**🔄 Structural & Functional Updates**
-- Cloud Saving: All rota records are now stored and retrieved from Google Sheets.
-- Revised Rota Algorithm:
-  - One person may hold both FCI and OFFLINE in the same week.
-  - Removed the forced rule for 4+ day workers to get FCI/OFFLINE.
-  - Increased rota generation attempts to 500.
+**🔄 Cloud Integration**
+- All rota records are now stored and retrieved from **Google Sheets** instead of local files.
+- Automatic caching added to minimize Google API quota usage.
+
+**🧠 Algorithm Improvements**
+- One person can now be assigned both **FCI** and **OFFLINE** in the same week if needed.
+- Removed mandatory rule for 4+ day workers to receive FCI/OFFLINE.
+- Increased rota generation attempts from 100 → 500.
 
 **📋 Weekly Rota Summary**
-- Automatically shows current week's rota on homepage.
-- Hides when generating or selecting another week.
+- Automatically shows the latest rota on homepage.
+- Hides when user selects a different week.
 
 **📈 Monthly Overview**
-- Collapsible view for FCI/OFFLINE role counts.
+- Monthly view of FCI and OFFLINE counts per inspector.
+- Collapsible interface under the admin panel.
 
 **🗂️ Saved Weekly Rotas**
-- Each week now collapsible.
-- Editable via data editor.
+- Each week is now collapsible.
+- Editable directly from the panel.
 
 **🎨 Design Enhancements**
-- Cleaner header layout.
-- Dates shown more clearly under weekdays.
-- Polished spacing and panel dividers.
+- Stylish header and cleaner overall layout.
+- Weekday planner dates displayed more clearly.
+- Dividers improved for better visual structure.
 
-**📘 Updated Instructions**
-- Reflects Monday-based week selection and role assignment logic.
-""")
-
-
-with st.sidebar.expander("📝 What's New in 1.1.0", expanded=False):
-    st.markdown("""
-**New in this version:**
-
-- 🔐 Admin panel with backup, restore, edit, and delete tools
-- 🗂️ Saved weekly rotas can now be edited and updated
-- 📤 Full rota backup download and 📁 restore support
-- ⚠️ Duplicate week detection and view-only warning
-- 🧠 Smarter inspector selection validation and cleaner UI
+**📘 Instruction Updates**
+- Sidebar "How to Use" and "Fair Assignment" updated.
+- Reflects new logic and week selection starting from Monday.
 """)
 
 with st.sidebar.expander("📚 Changelog History", expanded=False):
     st.markdown("""
+
+### 📝 Version 1.2.0 Stable
+- Google Sheets integration for live rota saving
+- Algorithm updated (more flexible FCI/OFFLINE rules)
+- Automatic rota summary on homepage
+- Monthly FCI/OFFLINE overview panel
+- Redesigned UI with improved layout and spacing
+- Updated instructions and weekly planning logic
+
 ### 📝 Version 1.1.0 Stable
 **Features:**
 - Admin panel with rota editing, backup, and warning system
