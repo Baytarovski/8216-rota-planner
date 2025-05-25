@@ -16,19 +16,32 @@ import pandas as pd
 
 # Page setup
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
+
+# Page Heading and Subtitle
 st.markdown("""
-<div style='
-    background-color: #e9f1f7;
-    border: 2px solid #c7d8e2;
-    border-radius: 12px;
-    padding: 1.5em;
-    text-align:center;
-    margin-bottom: 2em;
-'>
+<div style='margin-bottom: 1em;'>
     <h1 style='margin-bottom: 0.2em; font-size: 2.4em; color: #1a2b44;'>Weekly Rota Management</h1>
     <p style='font-size: 1.15em; color: #3c4c5d;'>8216 ABP Yetminster • Fair & Automated Inspector Scheduling</p>
 </div>
 """, unsafe_allow_html=True)
+
+# Inject custom CSS for dark/light theme compatibility
+def inject_custom_css():
+    st.markdown("""
+    <style>
+        html, body, [class*="css"] {
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        .custom-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+inject_custom_css()
 
 
 @st.cache_data(ttl=120)
@@ -277,8 +290,11 @@ st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
 <h4>1️⃣ Select the Week to Plan</h4>
 """, unsafe_allow_html=True)
+
 selected_monday = st.date_input("Select the Monday of the week you want to plan", value=datetime.today())
 include_weekend = st.checkbox("Include Saturday and Sunday in this week's rota", value=False)
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 if include_weekend:
@@ -318,12 +334,16 @@ if not rota_already_exists:
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
 <h4>2️⃣ Select Inspectors for Each Day</h4>
 """, unsafe_allow_html=True)
+
     week_range = f"{week_start.strftime('%d %b')} – {(week_start + timedelta(days=4)).strftime('%d %b %Y')}"
     st.markdown(f"<div style='text-align:right; color:#444; font-size:1.05em; margin-top:0.5em; margin-bottom:1em;'>🗓️ Planning Week: <strong>{week_range}</strong></div>", unsafe_allow_html=True)
+
     daily_workers = {}
     daily_heads = {}
     daily_raw_selected = {}
     daily_raw_head = {}
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
     for i, day in enumerate(days):
         date_str = (week_start + timedelta(days=i)).strftime('%d %b %Y')
@@ -364,7 +384,7 @@ if not rota_already_exists:
 # 🔹 Step 3: Generate the Weekly Rota
 # ─────────────────────────────────────────────────────────────
     st.markdown("---")
-    st.markdown("""
+      st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
 <h4>3️⃣ Generate the Weekly Rota</h4>
 """, unsafe_allow_html=True)
