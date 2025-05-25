@@ -142,8 +142,9 @@ if is_admin:
                     st.cache_data.clear()
                     st.rerun()
 
-    
-    with st.expander("📈 Monthly Summary", expanded=False):
+    st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
+
+    with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
         st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
         available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
