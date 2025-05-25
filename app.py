@@ -31,7 +31,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-@st.cache_data(ttl=120)
+@st.cache_data(ttl=60)
 def cached_load_rotas():
     return load_rotas()
 
