@@ -18,15 +18,15 @@ import pandas as pd
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
 st.markdown("""
 <div style='
-    background-color: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 1.2em;
+    background-color: #e9f1f7;
+    border: 2px solid #c7d8e2;
+    border-radius: 12px;
+    padding: 1.5em;
     text-align:center;
-    margin-bottom: 1.5em;
+    margin-bottom: 2em;
 '>
-    <h1 style='margin-bottom: 0.3em; font-size: 2.2em; color: #2c3e50;'>Rota Management</h1>
-    <p style='font-size: 1.1em; color: #6c757d;'>8216 ABP Yetminster • Fair & Automated Weekly Scheduling</p>
+    <h1 style='margin-bottom: 0.2em; font-size: 2.4em; color: #1a2b44;'>🗂️ Weekly Rota Management</h1>
+    <p style='font-size: 1.15em; color: #3c4c5d;'>8216 ABP Yetminster • Fair & Automated Inspector Scheduling</p>
 </div>
 """, unsafe_allow_html=True)
 
