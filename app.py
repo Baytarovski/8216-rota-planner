@@ -185,6 +185,28 @@ with st.sidebar.expander("📚 Changelog History", expanded=False):
 """)
 
 # ─────────────────────────────────────────────────────────────
+# ⬇️ Show Latest Rota
+# ─────────────────────────────────────────────────────────────
+latest_week = max(rotas.keys()) if rotas else None
+today = datetime.today().date()
+
+if (
+    latest_week
+    and datetime.strptime(latest_week, "%Y-%m-%d").date() >= today
+    and "selected_monday" not in st.session_state
+):
+    st.markdown("""
+    <div style='border:1px solid #d1e7dd; background:#f1fdf7; padding:1em; border-radius:10px; margin-bottom:1.5em;'>
+        <p style='margin:0 0 0.5em; font-weight:500;'>📋 This week's rota summary is shown below.</p>
+    """, unsafe_allow_html=True)
+
+    summary_df = pd.DataFrame.from_dict(rotas[latest_week], orient="index")
+    summary_df = summary_df.reindex(DAYS_FULL[:5])  # Mon–Fri
+    summary_df = summary_df[POSITIONS].fillna("")
+    st.dataframe(summary_df, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# ─────────────────────────────────────────────────────────────
 # 🔹 Step 1: Select the Week to Plan
 # ─────────────────────────────────────────────────────────────
 st.markdown("""
