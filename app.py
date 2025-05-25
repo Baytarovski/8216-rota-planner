@@ -105,7 +105,7 @@ if is_admin:
     st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     week_list = sorted(rotas.keys())
     for wk in week_list:
-          with st.expander(f"📆 {wk}"):
+          with st.expander(f"📆 {wk}"):
               rota_data = rotas[wk]
               rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
               display_days = [d for d in DAYS_FULL if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
@@ -125,6 +125,7 @@ if is_admin:
                       rotas.pop(wk)
                       delete_rota(wk)
                       st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
+    st.markdown("<hr style='margin-top:1em; margin-bottom:1em; border: 2px solid #ccc;'>", unsafe_allow_html=True)
                       st.cache_data.clear()
                       st.rerun()
 
