@@ -18,7 +18,7 @@ import pandas as pd
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
 st.markdown("""
 <div style='text-align:center; padding: 0.5em 0; border-bottom: 2px solid #ddd; margin-bottom: 1em;'>
-    <h1 style='margin-bottom: 0.2em; font-size: 2.2em; color: #2c3e50;'>8216 Rota Management</h1>
+    <h1 style='margin-bottom: 0.2em; font-size: 2.2em; color: #2c3e50;'>Rota Management</h1>
     <p style='font-size: 1.1em; color: #6c757d;'>ABP Yetminster • Fair & Automated Weekly Scheduling</p>
 </div>
 """, unsafe_allow_html=True)
