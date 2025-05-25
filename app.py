@@ -233,7 +233,7 @@ if not rota_already_exists:
 <h4>2️⃣ Select Inspectors for Each Day</h4>
 """, unsafe_allow_html=True)
     week_range = f"{week_start.strftime('%d %b')} – {(week_start + timedelta(days=4)).strftime('%d %b %Y')}"
-    st.markdown(f"<div style='text-align:left; color:#666; font-size:1.5em; margin-top:-1em; margin-bottom:1em;'>🗓️ Planning Week: <strong>{week_range}</strong></div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='text-align:right; color:#444; font-size:1.05em; margin-top:0.5em; margin-bottom:1em;'>🗓️ Planning Week: <strong>{week_range}</strong></div>", unsafe_allow_html=True)
     daily_workers = {}
     daily_heads = {}
     daily_raw_selected = {}
