@@ -13,7 +13,6 @@ from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_
 import os
 import json
 import pandas as pd
-import random
 
 # Page setup
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
@@ -35,14 +34,8 @@ inspectors = sorted(inspectors)
 
 
 
-# Helper function to save all rotas to Google Sheets
-def save_all_rotas():
-    for week_key, data in rotas.items():
-        save_rotas(week_key, data)
-
 # Sidebar layout
 import base64
-from pathlib import Path
 
 def get_base64_image(path):
     with open(path, "rb") as img_file:
@@ -186,7 +179,6 @@ if include_weekend:
 if selected_monday.weekday() != 0:
     st.stop()
 week_start = selected_monday
-week_key = week_start.strftime("%Y-%m-%d")
 
 st.markdown("</div>", unsafe_allow_html=True)
 
@@ -280,9 +272,6 @@ if not rota_already_exists:
             st.error(f"❌ {rota_result['error']}")
             st.stop()
         if not rota_result or not isinstance(rota_result, dict):
-            st.error("❌ Rota could not be generated. Please review your selections.")
-            st.stop()
-        
             st.error("❌ Rota could not be generated. Please review your selections.")
             st.stop()
 
