@@ -171,30 +171,6 @@ if is_admin:
 
     st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
-    # DEBUG: Display rota count summary for conflict diagnosis
-    st.markdown("<details><summary style='cursor:pointer; font-weight:500;'>🛠️ Show Assignment Frequency Debug</summary>", unsafe_allow_html=True)
-    debug_summary = {}
-    for week_key, week_data in rotas.items():
-        for day, roles in week_data.items():
-            for role, person in roles.items():
-                if person == "Not Working":
-                    continue
-                if person not in debug_summary:
-                    debug_summary[person] = {"FCI": 0, "OFFLINE": 0, "Total": 0}
-                debug_summary[person]["Total"] += 1
-                if role == "FCI":
-                    debug_summary[person]["FCI"] += 1
-                elif role == "OFFLINE":
-                    debug_summary[person]["OFFLINE"] += 1
-
-    if debug_summary:
-        debug_df = pd.DataFrame.from_dict(debug_summary, orient="index")
-        debug_df = debug_df.sort_values(by="Total", ascending=False)
-        st.dataframe(debug_df)
-    st.markdown("</details>", unsafe_allow_html=True)
-
-
-
 st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.1.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
