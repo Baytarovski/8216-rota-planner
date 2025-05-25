@@ -33,7 +33,7 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
                 elif pos == "OFFLINE":
                     recent_offline[name] += 1
 
-    for _ in range(DEFAULT_ATTEMPTS):
+    for attempt in range(DEFAULT_ATTEMPTS):
         used = defaultdict(list)
         rota_table = {}
         fci_offline_count = defaultdict(int)
@@ -45,7 +45,6 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
             if head in day_workers:
                 day_workers.remove(head)
             random.shuffle(day_workers)
-
 
             def sort_key(w):
                 return (
@@ -62,6 +61,8 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
             for pos in POSITIONS:
                 for candidate in sorted_workers:
                     if candidate in available and pos not in used[candidate]:
+                        if pos in ["FCI", "OFFLINE"] and fci_offline_count[candidate] >= 1:
+                            continue  # Soft constraint: Try not to give both
                         assignments[pos] = candidate
                         used[candidate].append(pos)
                         if pos in ["FCI", "OFFLINE"]:
@@ -84,4 +85,4 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
         if success:
             return rota_table
 
-    return {"error": "Could not generate rota without conflicts after 100 attempts."}
+    return {"error": f"Could not generate rota without conflicts after {DEFAULT_ATTEMPTS} attempts."}
