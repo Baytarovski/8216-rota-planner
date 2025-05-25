@@ -1,41 +1,51 @@
 > ⚠️ This project is protected by copyright. Unauthorized use, copying, or distribution is strictly prohibited.
 > Contact for licensing: ticked.does-7c@icloud.com
 
-# 8216 ABP Yetminster Weekly Rota Planner
+# 🗂️ 8216 Weekly Rota Planner
 
-A custom rota planning tool for meat hygiene inspection teams at ABP Yetminster.  
-Designed to ensure fair and balanced shift assignments for inspectors across weekly schedules.
+A smart, fair, and fully automated rota management system designed for ABP Yetminster's inspector scheduling. Built with Streamlit and integrated with Google Sheets.
 
----
+## 🔧 Features
 
-## ✅ Features
+- ✅ **Live Google Sheets Integration**
+- 🎯 **Smart Role Assignment (FCI/OFFLINE logic)**
+- 📆 **Weekly Rota Generator (Mon–Fri + Weekend Optional)**
+- 📋 **Current Week Summary Panel**
+- 📈 **Monthly FCI/OFFLINE Overview**
+- 🗂️ **Editable & Collapsible Saved Weekly Rotas**
+- 🎨 **Modern UI with Auto Validation & Warnings**
 
-- 📅 Weekly rota generation with inspector selection
-- 🧠 Fair distribution of FCI and OFFLINE roles (based on last 4 weeks)
-- 🔐 Admin panel for editing, backup and restore
-- 🚫 Prevents duplicate rota generation
-- 📂 Export/restore weekly rota history
-- 🧾 Changelog and version display
+## 🚀 Version 1.2.0 (Stable)
 
----
+> Release Date: 25 May 2025
 
-## 🛠️ How to Use
+**What's New:**
+- Live cloud storage (Google Sheets)
+- Updated role assignment algorithm
+- Weekly summary auto panel
+- Monthly overview for performance insights
+- Fully redesigned interface
+- Improved instructions and validation logic
 
-1. Select the **Monday** of the week to plan
-2. Assign exactly **6 inspectors per day**, including **1 HEAD**
-3. Click **Generate Rota** to auto-assign all positions
-4. Admin users can edit or restore previous rotas
+## 📸 Screenshots
 
----
+| Main Page | Weekly Selector | Monthly Overview |
+|-----------|-----------------|------------------|
+| ![main](assets/screens/main.png) | ![select](assets/screens/select.png) | ![monthly](assets/screens/monthly.png) |
 
-## 🔐 Admin Access
+## 🛠️ Tech Stack
 
-Default password: `1234`  
-(Admin tools include rota editing, backup/export, and deletion)
+- `Python 3.9+`
+- `Streamlit`
+- `Pandas`
+- `Gspread` + `Google API`
+- `Google Sheets`
 
----
+## 📦 Installation
 
-## 📦 Version
+```bash
+git clone https://github.com/YOUR_USERNAME/8216-rota-planner.git
+cd 8216-rota-planner
+pip install -r requirements.txt
+streamlit run app.py
 
-**Current Version:** `1.1.0 Stable`  
-© 2025 Doğukan Dağ
