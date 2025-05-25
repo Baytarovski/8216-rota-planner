@@ -142,7 +142,8 @@ if is_admin:
                     st.cache_data.clear()
                     st.rerun()
 
-    st.markdown("<h4 style='margin-top:0;'>📈 Monthly Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+    with st.expander("📈 Monthly Summary", expanded=False):
+    st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
     available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
     selected_month = st.selectbox("📅 Select Month for Summary", available_months)
