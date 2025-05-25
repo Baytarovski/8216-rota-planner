@@ -241,7 +241,8 @@ if not rota_already_exists:
 
     for i, day in enumerate(days):
         date_str = (week_start + timedelta(days=i)).strftime('%d %b %Y')
-        st.markdown(f"<span style='font-size:1.05em;'>🔹 <strong>{day}</strong> <span style='color:#666;'>({date_str})</span></span>", unsafe_allow_html=True)
+        date_str = (week_start + timedelta(days=i)).strftime('%d %b %Y')
+        st.markdown(f"<span style='font-size:1.05em;'>🔹 <strong>{day}</strong> <span style='color:#666; font-size:0.9em;'>({date_str})</span></span>", unsafe_allow_html=True)
         cols = st.columns(2)
         with cols[0]:
             selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
