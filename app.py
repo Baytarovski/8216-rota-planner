@@ -14,6 +14,23 @@ import os
 import json
 import pandas as pd
 
+def inject_custom_css():
+    st.markdown("""
+    <style>
+        html, body, [class*="css"] {
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+        .custom-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+inject_custom_css()
+
 # Page setup
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
 st.markdown("""
