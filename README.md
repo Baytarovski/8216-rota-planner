@@ -27,12 +27,6 @@ A smart, fair, and fully automated rota management system designed for ABP Yetmi
 - Fully redesigned interface
 - Improved instructions and validation logic
 
-## 📸 Screenshots
-
-| Main Page | Weekly Selector | Monthly Overview |
-|-----------|-----------------|------------------|
-| ![main](assets/screens/main.png) | ![select](assets/screens/select.png) | ![monthly](assets/screens/monthly.png) |
-
 ## 🛠️ Tech Stack
 
 - `Python 3.9+`
