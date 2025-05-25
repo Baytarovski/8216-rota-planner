@@ -68,21 +68,21 @@ st.sidebar.markdown("---")
 
 with st.sidebar.expander("📘 How to Use", expanded=False):
     st.markdown("""
-1. Select the **Friday** before the week you want to plan.  
+1. Select the **Monday** of the week you want to plan.  
 2. For each weekday, choose exactly **6 unique inspectors**, one of whom is the **HEAD**.  
-3. Click **Generate Rota** to assign positions fairly.  
-4. The rota will be saved automatically.
+3. Press **Generate Rota** to assign roles fairly and save the rota automatically.  
+4. You can view the current week's rota summary directly on the homepage.  
 """)
 
 with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
     st.markdown("""
-- **Different Role Daily**: No one gets the same position twice in a week (unless unavoidable).  
-- **4+ Days Rule**: Workers scheduled for 4+ days **must** get at least 1 FCI or OFFLINE.  
-- **FCI/OFFLINE Priority**: Preference given to those:  
-   1. Worked more (last 4 weeks + this week)  
-   2. Worked more this week (if tied)  
-   3. Had fewer FCI/OFFLINE roles in the past 4 weeks (if still tied)  
-- **Dual FCI/OFFLINE Allowed**: Same person may be assigned both if no better alternative exists.
+- **Different Role Daily**: No one gets the same position twice in a week (unless unavoidable).
+- **FCI/OFFLINE Priority**: These roles are assigned fairly using:
+   1. Total recent workload (past 4 weeks + current week)
+   2. Weekly workload (this week)
+   3. Fewer past FCI/OFFLINE roles (if tied)
+- **FCI & OFFLINE Combination Allowed**: One person may be given both roles in the same week if needed.
+- **Flexible Rule**: Workers with heavier weekly shifts are more likely to get FCI or OFFLINE, but it's not mandatory.
 """)
 
 if "feedback" in st.session_state:
