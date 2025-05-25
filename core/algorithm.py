@@ -9,6 +9,7 @@ from collections import defaultdict
 POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DEFAULT_ATTEMPTS = 500
 
+
 def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
     all_days = list(daily_workers.keys())
     worker_days = defaultdict(int)
@@ -48,9 +49,9 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
 
             def sort_key(w):
                 return (
-                    -(worker_days[w] + recent_total[w]),
-                    -worker_days[w],
+                    -int(worker_days[w] >= 4 and fci_offline_count[w] == 0),  # force priority for 4+ day workers missing FCI/OFFLINE
                     recent_fci[w] + recent_offline[w],
+                    worker_days[w],
                     random.random()
                 )
 
@@ -62,7 +63,7 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
                 for candidate in sorted_workers:
                     if candidate in available and pos not in used[candidate]:
                         if pos in ["FCI", "OFFLINE"] and fci_offline_count[candidate] >= 1:
-                            continue  # Soft constraint: Try not to give both
+                            continue  # soft constraint
                         assignments[pos] = candidate
                         used[candidate].append(pos)
                         if pos in ["FCI", "OFFLINE"]:
@@ -75,12 +76,8 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
 
             if not success:
                 break
-            rota_table[day] = assignments
 
-        for worker, days in worker_days.items():
-            if days >= 4 and fci_offline_count[worker] == 0:
-                success = False
-                break
+            rota_table[day] = assignments
 
         if success:
             return rota_table
