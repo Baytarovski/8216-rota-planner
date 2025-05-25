@@ -102,7 +102,7 @@ if is_admin:
           with st.expander(f"📆 {wk}"):
               rota_data = rotas[wk]
               rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
-                            display_days = [d for d in DAYS_FULL if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
+              display_days = [d for d in DAYS_FULL if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
               rota_df = rota_df.reindex(display_days)
               rota_df = rota_df[POSITIONS].fillna("")
               edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
