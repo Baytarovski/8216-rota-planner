@@ -195,9 +195,12 @@ if (
     and datetime.strptime(latest_week, "%Y-%m-%d").date() >= today
     and "selected_monday" not in st.session_state
 ):
-    st.markdown("""
+    latest_week_start = datetime.strptime(latest_week, "%Y-%m-%d")
+    week_label = f"{latest_week_start.strftime('%d %b')} – {(latest_week_start + timedelta(days=4)).strftime('%d %b %Y')}"
+
+    st.markdown(f"""
     <div style='border:1px solid #d1e7dd; background:#f1fdf7; padding:1em; border-radius:10px; margin-bottom:1.5em;'>
-        <p style='margin:0 0 0.5em; font-weight:500;'>📋 This week's rota summary is shown below.</p>
+        <p style='margin:0 0 0.5em; font-weight:500;'>📋 <strong>{week_label} Weekly Rota</strong></p>
     """, unsafe_allow_html=True)
 
     summary_df = pd.DataFrame.from_dict(rotas[latest_week], orient="index")
@@ -205,6 +208,7 @@ if (
     summary_df = summary_df[POSITIONS].fillna("")
     st.dataframe(summary_df, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
+
 
 # ─────────────────────────────────────────────────────────────
 # 🔹 Step 1: Select the Week to Plan
