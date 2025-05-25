@@ -25,7 +25,7 @@ st.markdown("""
     text-align:center;
     margin-bottom: 2em;
 '>
-    <h1 style='margin-bottom: 0.2em; font-size: 2.4em; color: #1a2b44;'>🗂️ Weekly Rota Management</h1>
+    <h1 style='margin-bottom: 0.2em; font-size: 2.4em; color: #1a2b44;'>Weekly Rota Management</h1>
     <p style='font-size: 1.15em; color: #3c4c5d;'>8216 ABP Yetminster • Fair & Automated Inspector Scheduling</p>
 </div>
 """, unsafe_allow_html=True)
