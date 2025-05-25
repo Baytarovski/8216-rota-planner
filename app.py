@@ -101,7 +101,7 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
 # ─────────────────────────────────────────────────────────────
 
 if is_admin:
-    st.markdown("<h3 style='margin-bottom:0.5em; border-bottom: 3px solid black; padding-bottom: 0.3em;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='margin-bottom:0.5em;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
     st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     week_list = sorted(rotas.keys())
     for wk in week_list:
