@@ -169,71 +169,10 @@ st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.2.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
 
 with st.sidebar.expander("📝 What's New in 1.2.0", expanded=False):
-    st.markdown("""
-**🔄 Cloud Integration**
-- All rota records are now stored and retrieved from **Google Sheets** instead of local files.
-- Automatic caching added to minimize Google API quota usage.
-
-**🧠 Algorithm Improvements**
-- One person can now be assigned both **FCI** and **OFFLINE** in the same week if needed.
-- Removed mandatory rule for 4+ day workers to receive FCI/OFFLINE.
-- Increased rota generation attempts from 100 → 500.
-
-**📋 Weekly Rota Summary**
-- Automatically shows the latest rota on homepage.
-- Hides when user selects a different week.
-
-**📈 Monthly Overview**
-- Monthly view of FCI and OFFLINE counts per inspector.
-- Collapsible interface under the admin panel.
-
-**🗂️ Saved Weekly Rotas**
-- Each week is now collapsible.
-- Editable directly from the panel.
-
-**🎨 Design Enhancements**
-- Stylish header and cleaner overall layout.
-- Weekday planner dates displayed more clearly.
-- Dividers improved for better visual structure.
-
-**📘 Instruction Updates**
-- Sidebar "How to Use" and "Fair Assignment" updated.
-- Reflects new logic and week selection starting from Monday.
-""")
+    st.markdown(WHATS_NEW)
 
 with st.sidebar.expander("📚 Changelog History", expanded=False):
-    st.markdown("""
-
-### 📝 Version 1.2.0 Stable
-- Google Sheets integration for live rota saving
-- Algorithm updated (more flexible FCI/OFFLINE rules)
-- Automatic rota summary on homepage
-- Monthly FCI/OFFLINE overview panel
-- Redesigned UI with improved layout and spacing
-- Updated instructions and weekly planning logic
-
-### 📝 Version 1.1.0 Stable
-**Features:**
-- Admin panel with rota editing, backup, and warning system
-- Editable rota tables with inline data editor
-
-**Fixes & Improvements:**
-- Improved error messages when inspector selection is incomplete
-- Prevented duplicate rota generation for existing weeks
-
-**UX Enhancements:**
-- Sidebar changelog and version info display
-- Conditional hiding of input sections when rota exists
-
----
-
-### 📝 Version 1.0.0 Beta
-**Features:**
-- First working rota generation algorithm
-- Inspector selection and HEAD assignment UI
-- Position assignment logic, validation, and saving system
-- Initial stable interface with calendar-based selection
-""")
+    st.markdown(CHANGELOG_HISTORY)
 
 # ─────────────────────────────────────────────────────────────
 # ⬇️ Show Latest Rota
