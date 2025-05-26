@@ -72,15 +72,18 @@ def render_sidebar():
     with st.sidebar.expander("📚 Changelog History", expanded=False):
         st.markdown(CHANGELOG_HISTORY)
 
+# 📌 Admin Login Block
+
 def admin_login():
     with st.sidebar.expander("🔐 Admin Access", expanded=False):
-        admin_input = st.text_input("Enter admin password:", type="password")
+        admin_input = st.text_input("Enter admin password:", type="password", key="admin_password")
         if admin_input == "1234":
             st.success("Access granted. Admin panel is now visible.")
             st.session_state["is_admin"] = True
         elif admin_input:
             st.error("Incorrect password.")
             st.session_state["is_admin"] = False
+
 
 # ─────────────────────────────────────────────
 # 🔄 Display Latest Rota
