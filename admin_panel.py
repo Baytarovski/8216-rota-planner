@@ -2,29 +2,46 @@
 # This file is protected by copyright law.
 # Unauthorized use, copying, modification, or distribution is strictly prohibited.
 # Contact: ticked.does-7c@icloud.com
+# © 2025 Doğukan Dağ. All rights reserved.
+# This file is protected by copyright law.
+# Unauthorized use, copying, modification, or distribution is strictly prohibited.
+# Contact: ticked.does-7c@icloud.com
 
 import json
 from datetime import datetime
-import os
 import streamlit as st
 import pandas as pd
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 
-LOG_FILE = "data/change_logs.json"
 POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
-# Google Sheets setup
+# Google Sheets secrets-based setup (Streamlit Cloud compatible)
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-CREDS_FILE = "service_account.json"
-SHEET_NAME = "change_logs"
+
+creds_dict = {
+    "type": st.secrets["type"],
+    "project_id": st.secrets["project_id"],
+    "private_key_id": st.secrets["private_key_id"],
+    "private_key": st.secrets["private_key"].replace("\\n", "\n"),
+    "client_email": st.secrets["client_email"],
+    "client_id": st.secrets["client_id"],
+    "auth_uri": st.secrets["auth_uri"],
+    "token_uri": st.secrets["token_uri"],
+    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+    "client_x509_cert_url": st.secrets["client_x509_cert_url"]
+}
+
+creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)
+gspread_client = gspread.authorize(creds)
+
+
+# Append single log row to Google Sheets
 
 def append_to_google_sheet(log_entry):
     try:
-        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
-        client = gspread.authorize(creds)
-        sheet = client.open(SHEET_NAME).sheet1
+        sheet = gspread_client.open("change_logs").sheet1
         sheet.append_row([
             log_entry["timestamp"],
             log_entry["admin_id"],
@@ -36,6 +53,18 @@ def append_to_google_sheet(log_entry):
         ])
     except Exception as e:
         st.warning(f"Google Sheets error: {e}")
+
+
+# Fetch all change logs from Google Sheets
+
+def fetch_logs_from_google_sheet():
+    try:
+        sheet = gspread_client.open("change_logs").sheet1
+        records = sheet.get_all_records()
+        return records
+    except Exception as e:
+        st.warning(f"Google Sheets read error: {e}")
+        return []
 
 def fetch_logs_from_google_sheet():
     try:
