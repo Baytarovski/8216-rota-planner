@@ -104,4 +104,4 @@ CHANGELOG_HISTORY = """
 #### 🎉 v1.0.0 — Initial Release
 - Weekly rota planner with basic fair assignment logic
 - Unique worker validation, HEAD selection, and CSV output
-
+"""
