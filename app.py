@@ -109,7 +109,7 @@ render_admin_panel(rotas, save_rotas, delete_rota)
 # 🛠️ Build Info and Creator
 # ─────────────────────────────────────────────────────────────
     
-    st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
+st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("<span style='font-size: 0.95rem;'>Version 1.2.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
