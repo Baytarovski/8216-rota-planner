@@ -10,6 +10,7 @@ import streamlit as st
 from datetime import datetime, timedelta
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
+from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT, WHATS_NEW, CHANGELOG_HISTORY
 import os
 import json
 import pandas as pd
@@ -66,24 +67,14 @@ st.sidebar.markdown(
 
 st.sidebar.markdown("---")
 
+from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT
+
 with st.sidebar.expander("📘 How to Use", expanded=False):
-    st.markdown("""
-1. Select the **Monday** of the week you want to plan.  
-2. For each weekday, choose exactly **6 unique inspectors**, one of whom is the **HEAD**.  
-3. Press **Generate Rota** to assign roles fairly and save the rota automatically.  
-4. You can view the current week's rota summary directly on the homepage.  
-""")
+    st.markdown(HOW_TO_USE)
 
 with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
-    st.markdown("""
-- **Different Role Daily**: No one gets the same position twice in a week (unless unavoidable).
-- **FCI/OFFLINE Priority**: These roles are assigned fairly using:
-   1. Total recent workload (past 4 weeks + current week)
-   2. Weekly workload (this week)
-   3. Fewer past FCI/OFFLINE roles (if tied)
-- **FCI & OFFLINE Combination Allowed**: One person may be given both roles in the same week if needed.
-- **Flexible Rule**: Workers with heavier weekly shifts are more likely to get FCI or OFFLINE, but it's not mandatory.
-""")
+    st.markdown(FAIR_ASSIGNMENT)
+
 
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
