@@ -405,33 +405,16 @@ if not rota_already_exists:
             rota_df = rota_df[POSITIONS]
         else:
             st.warning("⚠️ Missing positions in generated rota")
-    
+
         st.dataframe(rota_df)
         st.markdown("</div>", unsafe_allow_html=True)
-    
+
         # 💾 SAVE ROTAS
         rotas[week_key] = rota_result
         save_rotas(week_key, rota_result)
-    
+
         # 🔄 CLEAR CACHE + RELOAD
         st.cache_data.clear()
         st.rerun()
-        
 
-        # Display rota
-        
-        rota_df = pd.DataFrame.from_dict(rota_result, orient="index")
-        rota_df = rota_df.reindex(days)
-        missing_columns = [col for col in POSITIONS if col not in rota_df.columns]
-        if missing_columns:
-            st.warning(f"⚠️ Missing positions in generated rota: {', '.join(missing_columns)}")
-        else:
-            rota_df = rota_df[POSITIONS]
-
-        st.dataframe(rota_df)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        rota_result = {day: roles for day, roles in rota_result.items() if isinstance(roles, dict)}
-
-        
     
