@@ -181,7 +181,8 @@ if week_key in rotas:
     else:
         # 💡 Rota bugünkü hafta ve zaten yukarıda gösterildi
         st.info("ℹ️ A rota already exists for the selected week and is displayed at the top.")
-
+        
+    is_admin = st.session_state.get("is_admin", False)
     if not is_admin:
         st.stop()
     else:
