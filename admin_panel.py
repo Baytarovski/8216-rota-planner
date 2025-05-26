@@ -1,4 +1,9 @@
-# admin_panel.py
+# © 2025 Doğukan Dağ. All rights reserved.
+# This file is protected by copyright law.
+# Unauthorized use, copying, modification, or distribution is strictly prohibited.
+# Contact: ticked.does-7c@icloud.com
+
+
 import json
 from datetime import datetime
 import os
