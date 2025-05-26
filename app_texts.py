@@ -14,76 +14,64 @@ HOW_TO_USE = """
 """
 
 FAIR_ASSIGNMENT = """
-- **Different Role Daily**: No one gets the same position twice in a week (unless unavoidable).
-- **FCI/OFFLINE Priority**: These roles are assigned fairly using:
-   1. Total recent workload (past 4 weeks + current week)
-   2. Weekly workload (this week)
-   3. Fewer past FCI/OFFLINE roles (if tied)
-- **FCI & OFFLINE Combination Allowed**: One person may be given both roles in the same week if needed.
-- **Flexible Rule**: Workers with heavier weekly shifts are more likely to get FCI or OFFLINE, but it's not mandatory.
-"""
+### ⚖️ How Fair Assignment Works
 
-WHATS_NEW = """
-**🔄 Cloud Integration**
-- All rota records are now stored and retrieved from **Cloud** instead of local files.
-- Automatic caching added to minimize Google API quota usage.
+Our rota planner now includes a **semi-AI (rule-guided smart assignment)** engine to fairly distribute lighter reward roles like FCI and OFFLINE.
 
-**🧠 Algorithm Improvements**
-- One person can now be assigned both **FCI** and **OFFLINE** in the same week if needed.
-- Removed mandatory rule for 4+ day workers to receive FCI/OFFLINE.
-- Increased rota generation attempts from 100 → 500.
+It analyses:
+- Who worked more recently,
+- Who has the heavier workload this week,
+- And who deserves a break — all with built-in constraints.
 
-**📋 Weekly Rota Summary**
-- Automatically shows the latest rota on homepage.
-- Hides when user selects a different week.
-
-**📈 Monthly Overview**
-- Monthly view of FCI and OFFLINE counts per inspector.
-- Collapsible interface under the admin panel.
-
-**🗂️ Saved Weekly Rotas**
-- Each week is now collapsible.
-- Editable directly from the panel.
-
-**🎨 Design Enhancements**
-- Stylish header and cleaner overall layout.
-- Weekday planner dates displayed more clearly.
-- Dividers improved for better visual structure.
-
-**📘 Instruction Updates**
-- Sidebar "How to Use" and "Fair Assignment" updated.
-- Reflects new logic and week selection starting from Monday.
-"""
-
-CHANGELOG_HISTORY = """
-### 📝 Version 1.2.0 Stable
-- Google Sheets integration for live rota saving
-- Algorithm updated (more flexible FCI/OFFLINE rules)
-- Automatic rota summary on homepage
-- Monthly FCI/OFFLINE overview panel
-- Redesigned UI with improved layout and spacing
-- Updated instructions and weekly planning logic
-
-### 📝 Version 1.1.0 Stable
-**Features:**
-- Admin panel with rota editing, backup, and warning system
-- Editable rota tables with inline data editor
-
-**Fixes & Improvements:**
-- Improved error messages when inspector selection is incomplete
-- Prevented duplicate rota generation for existing weeks
-
-**UX Enhancements:**
-- Sidebar changelog and version info display
-- Conditional hiding of input sections when rota exists
+This smart logic helps promote fairness without needing full AI.
 
 ---
 
-### 📝 Version 1.0.0 Beta
-**Features:**
-- First working rota generation algorithm
-- Inspector selection and HEAD assignment UI
-- Position assignment logic, validation, and saving system
-- Initial stable interface with calendar-based selection
+#### 🔄 Weekly Rules:
+- Each inspector can only be assigned to a specific position **once per week**
+- Each day must have **exactly 6 different inspectors**, including 1 HEAD
+- The **HEAD** position is manually assigned and excluded from auto-calculation
+
+---
+
+#### 🟢 FCI & OFFLINE — Reward Positions:
+These are lighter, more desirable roles. They are assigned based on:
+
+- **Weekly Load (This Week):** Inspectors who are scheduled to work more days or harder roles this week get priority
+- **Historical Load (Last 4 Weeks):** Those who consistently worked more in recent weeks are prioritized
+- **Recent Rewards Penalty:** If someone had FCI/OFFLINE too often, their chances decrease
+
+---
+
+#### 🚫 Anti-Repetition Logic:
+To promote fairness:
+- The system prevents assigning the **same person to the same position on the same weekday** as in the previous week  
+  _(e.g., if CU was in CAR1 on Monday last week, they won’t be given CAR1 on Monday this week)_
+
+---
+
+This ensures a rotating, fair, and effort-based schedule — not just random!
 """
 
+WHATS_NEW = """
+### 🆕 What's New in Version 1.3.0
+
+- ✅ Smart Assignment System: Now prioritizes FCI/OFFLINE roles based on:
+  - Weekly workload (current week effort)
+  - Historical workload (past 4 weeks)
+  - Reduced chance for those who had recent FCI/OFFLINE
+- ⛔ Prevents Same-Day Same-Role Repeats:
+  - If someone worked in CAR1 on Monday last week, they won't be given CAR1 again on Monday this week
+- ⚖️ Fully respects fair distribution + avoids duplication within the week
+- 🔁 Retry limit increased to 1000 attempts to improve success rate on complex weeks
+"""
+
+CHANGELOG_HISTORY = """
+### 🔄 Version History
+
+- **v1.3.0** — Fairness-Weighted AI Planner (May 2025)
+- **v1.2.1** — Google Sheets Integration & Manual Edits
+- **v1.2.0** — Saved Weekly Rotas & Admin Tools
+- **v1.1.0** — Monthly Tracking System Added
+- **v1.0.0** — Initial Release
+"""
