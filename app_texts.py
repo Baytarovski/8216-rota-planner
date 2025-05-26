@@ -69,9 +69,39 @@ WHATS_NEW = """
 CHANGELOG_HISTORY = """
 ### 🔄 Version History
 
-- **v1.3.0** — Fairness-Weighted AI Planner (May 2025)
-- **v1.2.1** — Google Sheets Integration & Manual Edits
-- **v1.2.0** — Saved Weekly Rotas & Admin Tools
-- **v1.1.0** — Monthly Tracking System Added
-- **v1.0.0** — Initial Release
-"""
+---
+
+#### 🧠 v1.3.0 — Fairness-Weighted AI Planner (May 2025)
+- Introduced **semi-AI algorithm** for FCI & OFFLINE role assignment
+- Prioritizes inspectors with higher current and historical workload
+- Penalizes inspectors who recently received reward roles (FCI/OFFLINE)
+- Prevents assigning the **same position to the same person on the same weekday** as in the previous week
+- Ensures fair weekly balance — each position used only once per person per week
+- Increased rota generation attempts from **500 → 1000** to improve success rate
+
+---
+
+#### ☁️ v1.2.1 — Google Sheets Integration & Manual Edits
+- Full integration with Google Sheets for rota storage
+- Editable saved rotas and changelogs in the admin panel
+- Manual correction log system enabled
+
+---
+
+#### 🛠️ v1.2.0 — Saved Weekly Rotas & Admin Tools
+- Local rota history saved by week
+- Admin panel with rota editing, backup, and reset tools
+- Redesigned homepage with live rota preview
+
+---
+
+#### 📊 v1.1.0 — Monthly Tracking System Added
+- Monthly view for FCI/OFFLINE counts
+- Clear overview of reward role fairness over time
+
+---
+
+#### 🎉 v1.0.0 — Initial Release
+- Weekly rota planner with basic fair assignment logic
+- Unique worker validation, HEAD selection, and CSV output
+
