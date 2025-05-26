@@ -66,17 +66,6 @@ def fetch_logs_from_google_sheet():
         st.warning(f"Google Sheets read error: {e}")
         return []
 
-def fetch_logs_from_google_sheet():
-    try:
-        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
-        client = gspread.authorize(creds)
-        sheet = client.open(SHEET_NAME).sheet1
-        records = sheet.get_all_records()
-        return records
-    except Exception as e:
-        st.warning(f"Google Sheets read error: {e}")
-        return []
-
 def render_admin_panel(rotas, save_rotas, delete_rota):
     if not st.session_state.get("is_admin", False):
         return
