@@ -25,7 +25,7 @@ FAIR_ASSIGNMENT = """
 
 WHATS_NEW = """
 **🔄 Cloud Integration**
-- All rota records are now stored and retrieved from **Google Sheets** instead of local files.
+- All rota records are now stored and retrieved from **Cloud** instead of local files.
 - Automatic caching added to minimize Google API quota usage.
 
 **🧠 Algorithm Improvements**
