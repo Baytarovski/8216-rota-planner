@@ -292,7 +292,7 @@ st.markdown("</div>", unsafe_allow_html=True)
 # Check for existing rota
 week_key = week_start.strftime("%Y-%m-%d")
 rota_already_exists = False
-if week_key in rotas:
+if week_key in rotas and week_key != latest_week:
     st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
     existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
     
