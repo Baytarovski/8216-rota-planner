@@ -1,9 +1,4 @@
-# © 2025 Doğukan Dağ. All rights reserved.
-# This file is protected by copyright law.
-# Unauthorized use, copying, modification, or distribution is strictly prohibited.
-# Contact: ticked.does-7c@icloud.com
-
-
+# admin_panel.py
 import json
 from datetime import datetime
 import os
@@ -121,7 +116,55 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
     st.subheader("📋 Change History (Manual Edits)")
-    logs = []  # Disabled local logs
+    def fetch_logs_from_google_sheet():
+    try:
+        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
+        client = gspread.authorize(creds)
+        sheet = client.open(SHEET_NAME).sheet1
+        records = sheet.get_all_records()
+        return records
+    except Exception as e:
+        st.warning(f"Google Sheets read error: {e}")
+        return []
+
+logs = fetch_logs_from_google_sheet()
+    if not logs:
+        st.info("No manual edits recorded.")
+        return
+
+    df = pd.DataFrame(logs)
+    week_options = sorted(df["week_start"].unique(), reverse=True)
+    selected_week = st.selectbox("Select Week", week_options)
+    filtered = df[df["week_start"] == selected_week]
+    st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
+
+
+
+def fetch_logs_from_google_sheet():
+    try:
+        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
+        client = gspread.authorize(creds)
+        sheet = client.open(SHEET_NAME).sheet1
+        records = sheet.get_all_records()
+        return records
+    except Exception as e:
+        st.warning(f"Google Sheets read error: {e}")
+        return []
+
+# Inside render_admin_panel, replace the local logs section
+    st.subheader("📋 Change History (Manual Edits)")
+    def fetch_logs_from_google_sheet():
+    try:
+        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
+        client = gspread.authorize(creds)
+        sheet = client.open(SHEET_NAME).sheet1
+        records = sheet.get_all_records()
+        return records
+    except Exception as e:
+        st.warning(f"Google Sheets read error: {e}")
+        return []
+
+logs = fetch_logs_from_google_sheet()
     if not logs:
         st.info("No manual edits recorded.")
         return
