@@ -309,9 +309,13 @@ if week_key in rotas:
     else:
         rota_already_exists = True
 
+if rota_already_exists and week_key == latest_week:
+    st.info("ℹ️ A rota already exists for the selected week and is displayed at the top.")
+
 # ─────────────────────────────────────────────────────────────
 # 🔹 Step 2: Select Inspectors for Each Day
 # ─────────────────────────────────────────────────────────────
+
 if not rota_already_exists:
     st.markdown("""
 <div style='border:1px solid #ccc; border-radius:10px; padding:1em; background:#f9f9f9; margin-bottom:1.5em;'>
