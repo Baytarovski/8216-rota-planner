@@ -138,7 +138,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
 
     st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
-    st.subheader("📋 Change History (Manual Edits)")
+    st.subheader("📋 Rota Change Logs")
     logs = fetch_logs_from_google_sheet()
     if not logs:
         st.info("No manual edits recorded.")
