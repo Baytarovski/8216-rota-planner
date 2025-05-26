@@ -3,7 +3,6 @@
 # Unauthorized use, copying, modification, or distribution is strictly prohibited.
 # Contact: ticked.does-7c@icloud.com
 
-# admin_panel.py
 import json
 from datetime import datetime
 import os
@@ -18,8 +17,8 @@ DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
 # Google Sheets setup
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-CREDS_FILE = "service_account.json"  # Servis hesabı JSON dosyasının adı
-SHEET_NAME = "change_logs"  # Google Sheet adı
+CREDS_FILE = "service_account.json"
+SHEET_NAME = "change_logs"
 
 def append_to_google_sheet(log_entry):
     try:
@@ -38,14 +37,25 @@ def append_to_google_sheet(log_entry):
     except Exception as e:
         st.warning(f"Google Sheets error: {e}")
 
+def fetch_logs_from_google_sheet():
+    try:
+        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
+        client = gspread.authorize(creds)
+        sheet = client.open(SHEET_NAME).sheet1
+        records = sheet.get_all_records()
+        return records
+    except Exception as e:
+        st.warning(f"Google Sheets read error: {e}")
+        return []
+
 def render_admin_panel(rotas, save_rotas, delete_rota):
     st.markdown("<h3 style='margin-bottom:0;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
     st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
-    st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+    st.markdown("<h4 style='margin-top:0;'>🗕️ Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     week_list = sorted(rotas.keys())
     for wk in week_list:
-        with st.expander(f"📆 {wk}"):
+        with st.expander(f"🗖️ {wk}"):
             rota_data = rotas[wk]
             rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
             display_days = [d for d in DAYS_FULL if d in rota_df.index or d in DAYS_FULL]
@@ -54,7 +64,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
             col1, col2 = st.columns([1, 1])
             with col1:
-                if st.button("💾 Save Changes", key=f"save_{wk}"):
+                if st.button("📂 Save Changes", key=f"save_{wk}"):
                     original = pd.DataFrame.from_dict(rota_data, orient="index").reindex(display_days).fillna("")
                     new = edited_df.fillna("")
 
@@ -94,7 +104,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
         st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
         available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
-        selected_month = st.selectbox("📅 Select Month for Summary", available_months)
+        selected_month = st.selectbox("🗕️ Select Month for Summary", available_months)
 
         summary = {}
         for week_key, week_data in rotas.items():
@@ -121,55 +131,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
     st.subheader("📋 Change History (Manual Edits)")
-    def fetch_logs_from_google_sheet():
-    try:
-        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
-        client = gspread.authorize(creds)
-        sheet = client.open(SHEET_NAME).sheet1
-        records = sheet.get_all_records()
-        return records
-    except Exception as e:
-        st.warning(f"Google Sheets read error: {e}")
-        return []
-
-logs = fetch_logs_from_google_sheet()
-    if not logs:
-        st.info("No manual edits recorded.")
-        return
-
-    df = pd.DataFrame(logs)
-    week_options = sorted(df["week_start"].unique(), reverse=True)
-    selected_week = st.selectbox("Select Week", week_options)
-    filtered = df[df["week_start"] == selected_week]
-    st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
-
-
-
-def fetch_logs_from_google_sheet():
-    try:
-        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
-        client = gspread.authorize(creds)
-        sheet = client.open(SHEET_NAME).sheet1
-        records = sheet.get_all_records()
-        return records
-    except Exception as e:
-        st.warning(f"Google Sheets read error: {e}")
-        return []
-
-# Inside render_admin_panel, replace the local logs section
-    st.subheader("📋 Change History (Manual Edits)")
-    def fetch_logs_from_google_sheet():
-    try:
-        creds = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILE, SCOPE)
-        client = gspread.authorize(creds)
-        sheet = client.open(SHEET_NAME).sheet1
-        records = sheet.get_all_records()
-        return records
-    except Exception as e:
-        st.warning(f"Google Sheets read error: {e}")
-        return []
-
-logs = fetch_logs_from_google_sheet()
+    logs = fetch_logs_from_google_sheet()
     if not logs:
         st.info("No manual edits recorded.")
         return
