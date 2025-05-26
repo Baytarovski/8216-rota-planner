@@ -292,23 +292,22 @@ st.markdown("</div>", unsafe_allow_html=True)
 # Check for existing rota
 week_key = week_start.strftime("%Y-%m-%d")
 rota_already_exists = False
-if week_key in rotas and week_key != latest_week:
-    st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
-    existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
-    
-    display_days = [d for d in DAYS_FULL if d in rotas[week_key].keys() or d in DAYS_FULL[:5]]
-    existing_df = existing_df.reindex(display_days)
-    missing_cols = [c for c in POSITIONS if c not in existing_df.columns]
-    if not missing_cols:
-        existing_df = existing_df[POSITIONS]
-    st.dataframe(existing_df)
+if week_key in rotas:
+    if week_key != latest_week:
+        st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
+        existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
+        
+        display_days = [d for d in DAYS_FULL if d in rotas[week_key].keys() or d in DAYS_FULL[:5]]
+        existing_df = existing_df.reindex(display_days)
+        missing_cols = [c for c in POSITIONS if c not in existing_df.columns]
+        if not missing_cols:
+            existing_df = existing_df[POSITIONS]
+        st.dataframe(existing_df)
 
     if not is_admin:
         st.stop()
     else:
         rota_already_exists = True
-
-
 
 # ─────────────────────────────────────────────────────────────
 # 🔹 Step 2: Select Inspectors for Each Day
