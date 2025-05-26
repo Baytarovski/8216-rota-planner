@@ -16,13 +16,13 @@ SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/au
 
 try:
     creds_dict = dict(st.secrets["gcp_service_account"])
-    creds_dict["private_key"] = creds_dict["private_key"].replace("\n", "
-")
+    creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
     creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)
     gspread_client = gspread.authorize(creds)
 except Exception as e:
     st.error(f"❌ Google Sheets authorization failed: {e}")
     gspread_client = None
+
 
 def append_to_google_sheet(log_entry):
     if gspread_client is None:
