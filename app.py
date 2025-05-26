@@ -11,6 +11,7 @@ from datetime import datetime, timedelta
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
 from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT, WHATS_NEW, CHANGELOG_HISTORY
+from admin_panel import render_admin_panel
 import os
 import json
 import pandas as pd
@@ -97,71 +98,16 @@ with st.sidebar.expander("🔐 Admin Access", expanded=False):
     else:
         is_admin = False
 
-      
+    
+# ─────────────────────────────────────────────────────────────
+# 🛠️ Admin Panel
+# ─────────────────────────────────────────────────────────────
+
+render_admin_panel(rotas, save_rotas, delete_rota)
 
 # ─────────────────────────────────────────────────────────────
 # 🛠️ Build Info and Creator
 # ─────────────────────────────────────────────────────────────
-
-if is_admin:
-    st.markdown("<h3 style='margin-bottom:0;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
-    st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
-    
-    st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-    week_list = sorted(rotas.keys())
-    for wk in week_list:
-        with st.expander(f"📆 {wk}"):
-            rota_data = rotas[wk]
-            rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
-            display_days = [d for d in DAYS_FULL if d in rota_df.index or d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]]
-            rota_df = rota_df.reindex(display_days)
-            rota_df = rota_df[POSITIONS].fillna("")
-            edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
-            col1, col2 = st.columns([1, 1])
-            with col1:
-                if st.button("💾 Save Changes", key=f"save_{wk}"):
-                    rotas[wk] = edited_df.to_dict(orient="index")
-                    save_rotas(wk, rotas[wk])
-                    st.session_state["feedback"] = f"✅ Rota for {wk} updated."
-                    st.cache_data.clear()
-                    st.rerun()
-            with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
-                    rotas.pop(wk)
-                    delete_rota(wk)
-                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
-                    st.cache_data.clear()
-                    st.rerun()
-
-    st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-
-    with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
-        st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-
-        available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
-        selected_month = st.selectbox("📅 Select Month for Summary", available_months)
-
-        summary = {}
-        for week_key, week_data in rotas.items():
-            week_dt = datetime.strptime(week_key, "%Y-%m-%d")
-            if week_dt.strftime("%B %Y") != selected_month:
-                continue
-            for day, roles in week_data.items():
-                for role, person in roles.items():
-                    if person == "Not Working":
-                        continue
-                    if person not in summary:
-                        summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                    summary[person]["Total Days"] += 1
-                    if role == "FCI":
-                        summary[person]["FCI"] += 1
-                    elif role == "OFFLINE":
-                        summary[person]["OFFLINE"] += 1
-    
-        if summary:
-            df_summary = pd.DataFrame.from_dict(summary, orient="index")
-            df_summary = df_summary.sort_values(by="Total Days", ascending=False)
-            st.dataframe(df_summary, use_container_width=True)
     
     st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
