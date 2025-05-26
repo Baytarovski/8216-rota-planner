@@ -56,14 +56,28 @@ This ensures a rotating, fair, and effort-based schedule — not just random!
 WHATS_NEW = """
 ### 🆕 What's New in Version 1.3.0
 
-- ✅ Smart Assignment System: Now prioritizes FCI/OFFLINE roles based on:
-  - Weekly workload (current week effort)
-  - Historical workload (past 4 weeks)
-  - Reduced chance for those who had recent FCI/OFFLINE
-- ⛔ Prevents Same-Day Same-Role Repeats:
-  - If someone worked in CAR1 on Monday last week, they won't be given CAR1 again on Monday this week
-- ⚖️ Fully respects fair distribution + avoids duplication within the week
-- 🔁 Retry limit increased to 1000 attempts to improve success rate on complex weeks
+🚀 **Major Algorithm Upgrade: Now Semi-AI Powered**
+
+- Our rota generator now uses **smart scoring** to assign FCI and OFFLINE roles more fairly.
+- Inspectors with **heavier current workload** or **stronger recent contribution** are rewarded.
+- Those who **already received rewards recently** have a lower chance this week.
+- HEAD roles are still assigned manually and excluded from fairness scoring.
+
+🧠 **Fairness Logic Improvements**
+
+- The same inspector will no longer be placed in the **same position on the same weekday** two weeks in a row (e.g., no "CAR1 on Monday" two weeks back-to-back).
+- The system ensures **no position is repeated within the same week** for any inspector.
+
+🔁 **More Robust Assignment Engine**
+
+- Increased rota generation attempts from **500 → 1000** for higher success rate in complex weeks.
+- Improved internal balance between daily and historical workload.
+
+📊 **Clearer Role Distribution**
+
+- The algorithm favors a **rotation-based reward system**, reducing the chances of over-assigning light duties to the same people.
+
+💡 Try generating a rota now — and see the difference in how smart it feels!
 """
 
 CHANGELOG_HISTORY = """
