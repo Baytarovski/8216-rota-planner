@@ -80,7 +80,6 @@ def render_sidebar():
 # 🔐 Admin Login
 # ─────────────────────────────────────────────
 def admin_login():
-    unique_key = f"admin_password_input_{str(uuid.uuid4())[:8]}"
     with st.sidebar.expander("🔐 Admin Access", expanded=False):
         admin_input = st.text_input("Enter admin password:", type="password", key=unique_key)
         if admin_input == "1234":
