@@ -107,7 +107,8 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                     st.rerun()
 
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-
+    
+    st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
         st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
@@ -136,7 +137,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             df_summary = df_summary.sort_values(by="Total Days", ascending=False)
             st.dataframe(df_summary, use_container_width=True)
 
-    st.markdown("<hr style='margin-top:0.5em; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
+    st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
 
     st.subheader("📋 Rota Change Logs")
     logs = fetch_logs_from_google_sheet()
