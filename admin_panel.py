@@ -2,44 +2,40 @@
 # This file is protected by copyright law.
 # Unauthorized use, copying, modification, or distribution is strictly prohibited.
 # Contact: ticked.does-7c@icloud.com
-# © 2025 Doğukan Dağ. All rights reserved.
-# This file is protected by copyright law.
-# Unauthorized use, copying, modification, or distribution is strictly prohibited.
-# Contact: ticked.does-7c@icloud.com
 
-import json
-from datetime import datetime
 import streamlit as st
-import pandas as pd
 import gspread
+import pandas as pd
+from datetime import datetime
 from google.oauth2.service_account import Credentials
 
 POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 
-# Google Sheets secrets-based setup (Streamlit Cloud compatible)
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-creds_dict = {
-    "type": st.secrets["type"],
-    "project_id": st.secrets["project_id"],
-    "private_key_id": st.secrets["private_key_id"],
-    "private_key": st.secrets["private_key"].replace("\\n", "\n"),
-    "client_email": st.secrets["client_email"],
-    "client_id": st.secrets["client_id"],
-    "auth_uri": st.secrets["auth_uri"],
-    "token_uri": st.secrets["token_uri"],
-    "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-    "client_x509_cert_url": st.secrets["client_x509_cert_url"]
-}
-
-creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)
-gspread_client = gspread.authorize(creds)
-
-
-# Append single log row to Google Sheets
+try:
+    creds_dict = {
+        "type": st.secrets["type"],
+        "project_id": st.secrets["project_id"],
+        "private_key_id": st.secrets["private_key_id"],
+        "private_key": st.secrets["private_key"].replace("\\n", "\n"),
+        "client_email": st.secrets["client_email"],
+        "client_id": st.secrets["client_id"],
+        "auth_uri": st.secrets["auth_uri"],
+        "token_uri": st.secrets["token_uri"],
+        "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
+        "client_x509_cert_url": st.secrets["client_x509_cert_url"]
+    }
+    creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)
+    gspread_client = gspread.authorize(creds)
+except Exception as e:
+    st.error(f"❌ Google Sheets authorization failed: {e}")
+    gspread_client = None
 
 def append_to_google_sheet(log_entry):
+    if gspread_client is None:
+        return
     try:
         sheet = gspread_client.open("change_logs").sheet1
         sheet.append_row([
@@ -54,10 +50,9 @@ def append_to_google_sheet(log_entry):
     except Exception as e:
         st.warning(f"Google Sheets error: {e}")
 
-
-# Fetch all change logs from Google Sheets
-
 def fetch_logs_from_google_sheet():
+    if gspread_client is None:
+        return []
     try:
         sheet = gspread_client.open("change_logs").sheet1
         records = sheet.get_all_records()
@@ -65,6 +60,7 @@ def fetch_logs_from_google_sheet():
     except Exception as e:
         st.warning(f"Google Sheets read error: {e}")
         return []
+
 
 def render_admin_panel(rotas, save_rotas, delete_rota):
     if not st.session_state.get("is_admin", False):
