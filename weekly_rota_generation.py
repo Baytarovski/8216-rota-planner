@@ -120,3 +120,30 @@ def generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, ins
 
         st.cache_data.clear()
         st.rerun()
+
+def check_existing_rota(week_key, rotas, selected_monday, is_admin, all_days, positions):
+    rota_exists = False
+    latest_week = max(rotas.keys()) if rotas else None
+    latest_week_date = datetime.strptime(latest_week, "%Y-%m-%d").date() if latest_week else None
+
+    if week_key in rotas:
+        if selected_monday == latest_week_date:
+            st.info("ℹ️ A rota already exists for the selected week and is displayed at the top.")
+        else:
+            st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
+            existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
+            display_days = [d for d in all_days if d in rotas[week_key].keys() or d in all_days[:5]]
+            existing_df = existing_df.reindex(display_days)
+
+            for col in positions:
+                if col not in existing_df.columns:
+                    existing_df[col] = ""
+
+            existing_df = existing_df[positions]
+            st.dataframe(existing_df)
+
+        if not is_admin:
+            st.stop()
+        else:
+            rota_exists = True
+    return rota_exists
