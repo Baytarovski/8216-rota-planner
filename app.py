@@ -118,6 +118,50 @@ display_latest_rota(rotas)
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
 
+# 🚀 App Entry (devamı)
+render_sidebar()
+admin_login()
+
+if st.session_state.get("is_admin", False):
+    render_admin_panel(rotas, save_rotas, delete_rota)
+
+display_latest_rota(rotas)
+
+if "feedback" in st.session_state:
+    st.success(st.session_state.pop("feedback"))
+
+# 🔁 Weekly Rota Planning
+from weekly_rota_generation import (
+    select_week,
+    select_daily_inspectors,
+    validate_selection,
+    generate_and_display_rota,
+    check_existing_rota
+)
+
+selected_monday, days = select_week()
+week_key = selected_monday.strftime("%Y-%m-%d")
+
+rota_already_exists = check_existing_rota(
+    week_key=week_key,
+    rotas=rotas,
+    selected_monday=selected_monday,
+    is_admin=st.session_state.get("is_admin", False),
+    all_days=days,
+    positions=POSITIONS
+)
+
+if not rota_already_exists:
+    daily_workers, daily_heads, raw_selected, raw_head = select_daily_inspectors(selected_monday, days, inspectors)
+    valid_days, invalid_days = validate_selection(days, raw_selected, raw_head)
+
+    if invalid_days:
+        st.warning(f"⚠️ Incomplete or invalid selections for: {', '.join(invalid_days)}")
+
+    if valid_days and not invalid_days:
+        generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, inspectors, week_key, days)
+
+
 # 🔁 Weekly Rota Planning
 selected_monday, days = select_week()
 week_key = selected_monday.strftime("%Y-%m-%d")
