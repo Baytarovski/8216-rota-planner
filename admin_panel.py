@@ -50,7 +50,7 @@ def fetch_logs_from_google_sheet():
 
 def render_admin_panel(rotas, save_rotas, delete_rota):
     password = st.text_input("Enter admin password", type="password")
-    if password != st.secrets["admin_password"]:
+    if password != "1234":
         st.warning("Incorrect password. Admin access denied.")
         return
     st.markdown("<h3 style='margin-bottom:0;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
