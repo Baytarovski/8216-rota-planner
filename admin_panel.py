@@ -9,11 +9,16 @@ import pandas as pd
 from datetime import datetime
 from google.oauth2.service_account import Credentials
 
+# ─────────────────────────────────────────────
+# 🔧 Constants
+# ─────────────────────────────────────────────
 POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
+# ─────────────────────────────────────────────
+# 🔐 Google Sheets Authorization
+# ─────────────────────────────────────────────
 try:
     creds_dict = dict(st.secrets["gcp_service_account"])
     creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
@@ -23,7 +28,9 @@ except Exception as e:
     st.error(f"❌ Google Sheets authorization failed: {e}")
     gspread_client = None
 
-
+# ─────────────────────────────────────────────
+# 📤 Append Change to Google Sheet
+# ─────────────────────────────────────────────
 def append_to_google_sheet(log_entry):
     if gspread_client is None:
         return
@@ -41,6 +48,9 @@ def append_to_google_sheet(log_entry):
     except Exception as e:
         st.warning(f"Google Sheets error: {e}")
 
+# ─────────────────────────────────────────────
+# 📥 Fetch Logs from Google Sheet
+# ─────────────────────────────────────────────
 def fetch_logs_from_google_sheet():
     if gspread_client is None:
         return []
@@ -52,14 +62,18 @@ def fetch_logs_from_google_sheet():
         st.warning(f"Google Sheets read error: {e}")
         return []
 
-
+# ─────────────────────────────────────────────
+# 🛠️ Admin Panel Renderer
+# ─────────────────────────────────────────────
 def render_admin_panel(rotas, save_rotas, delete_rota):
     if not st.session_state.get("is_admin", False):
         return
 
+    # ── Header
     st.markdown("<h3 style='margin-bottom:0;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
     st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
+    # ── Section: Saved Weekly Rotas
     st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     week_list = sorted(rotas.keys())
     for wk in week_list:
@@ -67,10 +81,11 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             rota_data = rotas[wk]
             rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
             display_days = [d for d in DAYS_FULL if d in rota_df.index or d in DAYS_FULL]
-            rota_df = rota_df.reindex(display_days)
-            rota_df = rota_df[POSITIONS].fillna("")
+            rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
+
             edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
             col1, col2 = st.columns([1, 1])
+
             with col1:
                 if st.button("📂 Save Changes", key=f"save_{wk}"):
                     original = pd.DataFrame.from_dict(rota_data, orient="index").reindex(display_days).fillna("")
@@ -92,12 +107,12 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                                     "old_value": old_val,
                                     "new_value": new_val
                                 })
-
                     rotas[wk] = edited_df.to_dict(orient="index")
                     save_rotas(wk, rotas[wk])
                     st.session_state["feedback"] = f"✅ Rota for {wk} updated."
                     st.cache_data.clear()
                     st.rerun()
+
             with col2:
                 if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
                     rotas.pop(wk)
@@ -107,11 +122,10 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                     st.rerun()
 
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-    
+
+    # ── Section: Monthly Assignment Summary
     st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
-        st.markdown("<hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-
         available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
         selected_month = st.selectbox("🗕️ Select Month for Summary", available_months)
 
@@ -139,6 +153,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
 
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
 
+    # ── Section: Logs
     st.markdown("<h4 style='margin-top:0;'>🗃️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     logs = fetch_logs_from_google_sheet()
     if not logs:
