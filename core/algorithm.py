@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import random
 
 POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
-DEFAULT_ATTEMPTS = 500
+DEFAULT_ATTEMPTS = 1000
 
 def calculate_fairness_scores(rotas, current_week_key, current_week_assignments):
     position_weights = {
