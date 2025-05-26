@@ -10,6 +10,8 @@ import base64
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
+import uuid
+
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
 from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT, WHATS_NEW, CHANGELOG_HISTORY
@@ -18,7 +20,8 @@ from weekly_rota_generation import (
     select_week,
     select_daily_inspectors,
     validate_selection,
-    generate_and_display_rota
+    generate_and_display_rota,
+    check_existing_rota
 )
 
 # ─────────────────────────────────────────────
@@ -49,6 +52,7 @@ def cached_load_rotas():
 
 inspectors = get_inspectors()
 rotas = cached_load_rotas()
+POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 
 # ─────────────────────────────────────────────
 # 📚 Sidebar
@@ -72,10 +76,9 @@ def render_sidebar():
     with st.sidebar.expander("📚 Changelog History", expanded=False):
         st.markdown(CHANGELOG_HISTORY)
 
-# 📌 Admin Login Block
-
-import uuid
-
+# ─────────────────────────────────────────────
+# 🔐 Admin Login
+# ─────────────────────────────────────────────
 def admin_login():
     unique_key = f"admin_password_input_{str(uuid.uuid4())[:8]}"
     with st.sidebar.expander("🔐 Admin Access", expanded=False):
@@ -92,7 +95,6 @@ def admin_login():
 # ─────────────────────────────────────────────
 def display_latest_rota(rotas):
     DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     latest_week = max(rotas.keys()) if rotas else None
     today = datetime.today().date()
 
@@ -123,27 +125,7 @@ display_latest_rota(rotas)
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
 
-# 🚀 App Entry (devamı)
-render_sidebar()
-admin_login()
-
-if st.session_state.get("is_admin", False):
-    render_admin_panel(rotas, save_rotas, delete_rota)
-
-display_latest_rota(rotas)
-
-if "feedback" in st.session_state:
-    st.success(st.session_state.pop("feedback"))
-
 # 🔁 Weekly Rota Planning
-from weekly_rota_generation import (
-    select_week,
-    select_daily_inspectors,
-    validate_selection,
-    generate_and_display_rota,
-    check_existing_rota
-)
-
 selected_monday, days = select_week()
 week_key = selected_monday.strftime("%Y-%m-%d")
 
@@ -165,27 +147,3 @@ if not rota_already_exists:
 
     if valid_days and not invalid_days:
         generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, inspectors, week_key, days)
-
-
-# 🔁 Weekly Rota Planning
-selected_monday, days = select_week()
-week_key = selected_monday.strftime("%Y-%m-%d")
-
-if week_key in rotas and week_key != max(rotas.keys()):
-    st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
-    existing_df = pd.DataFrame.from_dict(rotas[week_key], orient="index")
-    existing_df = existing_df.reindex(days)
-    if all(col in existing_df.columns for col in POSITIONS):
-        existing_df = existing_df[POSITIONS]
-    st.dataframe(existing_df)
-    if not st.session_state.get("is_admin", False):
-        st.stop()
-
-daily_workers, daily_heads, raw_selected, raw_head = select_daily_inspectors(selected_monday, days, inspectors)
-valid_days, invalid_days = validate_selection(days, raw_selected, raw_head)
-
-if invalid_days:
-    st.warning(f"⚠️ Incomplete or invalid selections for: {', '.join(invalid_days)}")
-
-if valid_days and not invalid_days:
-    generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, inspectors, week_key, days)
