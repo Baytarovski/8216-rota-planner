@@ -74,16 +74,18 @@ def render_sidebar():
 
 # 📌 Admin Login Block
 
+import uuid
+
 def admin_login():
+    unique_key = f"admin_password_input_{str(uuid.uuid4())[:8]}"
     with st.sidebar.expander("🔐 Admin Access", expanded=False):
-        admin_input = st.text_input("Enter admin password:", type="password", key="admin_password_input_sidebar")
+        admin_input = st.text_input("Enter admin password:", type="password", key=unique_key)
         if admin_input == "1234":
             st.success("Access granted. Admin panel is now visible.")
             st.session_state["is_admin"] = True
         elif admin_input:
             st.error("Incorrect password.")
             st.session_state["is_admin"] = False
-
 
 # ─────────────────────────────────────────────
 # 🔄 Display Latest Rota
