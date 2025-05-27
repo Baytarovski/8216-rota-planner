@@ -92,18 +92,25 @@ def admin_login():
 # ─────────────────────────────────────────────
 # 🔄 Display Latest Rota
 # ─────────────────────────────────────────────
+
 def display_latest_rota(rotas):
+    from datetime import datetime, timedelta
+    import pandas as pd
+    import streamlit as st
+
     DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     today = datetime.today().date()
 
-    # 🔍 Daha esnek filtre: haftanın son günü ≥ bugün olanları göster
+    # 🔄 Hafta sonu ≥ bugünün tarihi olanları kapsayan filtre
     future_rotas = {
         date_str: rota for date_str, rota in rotas.items()
         if datetime.strptime(date_str, "%Y-%m-%d").date() + timedelta(days=4) >= today
     }
 
-    st.write("📦 Gelecek geçerli rotalar:", list(future_rotas.keys()))
+    # 🔍 Sadece admin'e gösterilen debug satırı
+    if st.session_state.get("is_admin", False):
+        st.write("📦 Gelecek geçerli rotalar:", list(future_rotas.keys()))
 
     latest_week = max(future_rotas.keys()) if future_rotas else None
 
@@ -122,6 +129,7 @@ def display_latest_rota(rotas):
         st.markdown("</div>", unsafe_allow_html=True)
     else:
         st.info("📭 No rota available for this week or upcoming weeks.")
+
 
 # ─────────────────────────────────────────────
 # 🚀 App Entry
