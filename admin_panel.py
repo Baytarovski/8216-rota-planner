@@ -74,52 +74,56 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
     # ── Section: Saved Weekly Rotas
-    st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-    week_list = sorted(rotas.keys())
-    for wk in week_list:
-        with st.expander(f"🗖️ {wk}"):
-            rota_data = rotas[wk]
-            rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
-            display_days = [d for d in DAYS_FULL if d in rota_df.index or d in DAYS_FULL]
-            rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
+st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+week_list = sorted(rotas.keys())
+for wk in week_list:
+    with st.expander(f"🗖️ {wk}"):
+        rota_data = rotas[wk]
+        rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
+        display_days = [d for d in DAYS_FULL if d in rota_df.index or d in DAYS_FULL]
+        rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
 
-            edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
-            col1, col2 = st.columns([1, 1])
+        # Düzenleme yapılabilir tablo (geçici)
+        edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
 
-            with col1:
-                if st.button("📂 Save Changes", key=f"save_{wk}"):
-                    original = pd.DataFrame.from_dict(rota_data, orient="index").reindex(display_days).fillna("")
-                    new = edited_df.fillna("")
+        col1, col2 = st.columns([1, 1])
 
-                    for day in DAYS_FULL:
-                        if day not in new.index or day not in original.index:
-                            continue
-                        for pos in POSITIONS:
-                            old_val = original.at[day, pos] if pos in original.columns else ""
-                            new_val = new.at[day, pos] if pos in new.columns else ""
-                            if old_val != new_val:
-                                append_to_google_sheet({
-                                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                                    "admin_id": "admin",
-                                    "week_start": wk,
-                                    "day": day,
-                                    "position": pos,
-                                    "old_value": old_val,
-                                    "new_value": new_val
-                                })
-                    rotas[wk] = edited_df.to_dict(orient="index")
-                    save_rotas(wk, rotas[wk])
-                    st.session_state["feedback"] = f"✅ Rota for {wk} updated."
-                    st.cache_data.clear()
-                    st.rerun()
+        with col1:
+            if st.button("📂 Save Changes", key=f"save_{wk}"):
+                original = rota_df.fillna("")
+                new = edited_df.fillna("")
 
-            with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
-                    rotas.pop(wk)
-                    delete_rota(wk)
-                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
-                    st.cache_data.clear()
-                    st.rerun()
+                for day in DAYS_FULL:
+                    if day not in new.index or day not in original.index:
+                        continue
+                    for pos in POSITIONS:
+                        old_val = original.at[day, pos] if pos in original.columns else ""
+                        new_val = new.at[day, pos] if pos in new.columns else ""
+                        if old_val != new_val:
+                            append_to_google_sheet({
+                                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                                "admin_id": "admin",
+                                "week_start": wk,
+                                "day": day,
+                                "position": pos,
+                                "old_value": old_val,
+                                "new_value": new_val
+                            })
+
+                # 🔐 Değişikliği yalnızca burada kaydet
+                rotas[wk] = new.to_dict(orient="index")
+                save_rotas(wk, rotas[wk])
+                st.session_state["feedback"] = f"✅ Rota for {wk} updated."
+                st.cache_data.clear()
+                st.rerun()
+
+        with col2:
+            if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
+                rotas.pop(wk)
+                delete_rota(wk)
+                st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
+                st.cache_data.clear()
+                st.rerun()
 
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
 
