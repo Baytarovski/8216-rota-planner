@@ -97,11 +97,13 @@ def display_latest_rota(rotas):
     POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     today = datetime.today().date()
 
-    # Sadece bugünden itibaren olan haftaları filtrele
+    # 🔍 Daha esnek filtre: haftanın son günü ≥ bugün olanları göster
     future_rotas = {
         date_str: rota for date_str, rota in rotas.items()
-        if datetime.strptime(date_str, "%Y-%m-%d").date() >= today
+        if datetime.strptime(date_str, "%Y-%m-%d").date() + timedelta(days=4) >= today
     }
+
+    st.write("📦 Gelecek geçerli rotalar:", list(future_rotas.keys()))
 
     latest_week = max(future_rotas.keys()) if future_rotas else None
 
@@ -119,7 +121,7 @@ def display_latest_rota(rotas):
         st.dataframe(summary_df, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
     else:
-        st.info("📭 No rota available for today or future weeks.")
+        st.info("📭 No rota available for this week or upcoming weeks.")
 
 # ─────────────────────────────────────────────
 # 🚀 App Entry
