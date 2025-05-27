@@ -97,6 +97,8 @@ def display_latest_rota(rotas):
     from datetime import datetime, timedelta
     import pandas as pd
     import streamlit as st
+    
+    rotas = cached_load_rotas()
 
     DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
     POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
