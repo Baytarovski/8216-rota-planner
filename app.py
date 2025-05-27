@@ -93,11 +93,24 @@ def admin_login():
 # 🔄 Display Latest Rota
 # ─────────────────────────────────────────────
 def display_latest_rota(rotas):
+    from datetime import datetime, timedelta
+    import pandas as pd
+    import streamlit as st
+
     DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    latest_week = max(rotas.keys()) if rotas else None
+    POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+
     today = datetime.today().date()
 
-    if latest_week and datetime.strptime(latest_week, "%Y-%m-%d").date() >= today and "selected_monday" not in st.session_state:
+    # Filtrele: sadece bugün veya gelecek haftalar
+    future_rotas = {
+        date_str: rota for date_str, rota in rotas.items()
+        if datetime.strptime(date_str, "%Y-%m-%d").date() >= today
+    }
+
+    latest_week = max(future_rotas.keys()) if future_rotas else None
+
+    if latest_week:
         latest_week_start = datetime.strptime(latest_week, "%Y-%m-%d")
         week_label = f"{latest_week_start.strftime('%d %b')} – {(latest_week_start + timedelta(days=4)).strftime('%d %b %Y')}"
 
@@ -105,7 +118,8 @@ def display_latest_rota(rotas):
         <div style='border:1px solid #d1e7dd; background:#f1fdf7; padding:1em; border-radius:10px; margin-bottom:1.5em;'>
             <p style='margin:0 0 0.5em; font-weight:500;'>📋 <strong>{week_label} Weekly Rota</strong></p>
         """, unsafe_allow_html=True)
-        summary_df = pd.DataFrame.from_dict(rotas[latest_week], orient="index")
+
+        summary_df = pd.DataFrame.from_dict(future_rotas[latest_week], orient="index")
         summary_df = summary_df.reindex(DAYS_FULL)[POSITIONS].fillna("")
         st.dataframe(summary_df, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
