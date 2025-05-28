@@ -112,47 +112,47 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                 mime="image/png",
                 key=f"download_{wk}"
             )
-
+            
         # 📄 Düzenlenebilir tablo
         edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
         col1, col2 = st.columns([1, 1])
-    
-            with col1:
-                if st.button("📂 Save Changes", key=f"save_{wk}"):
-                    original = rota_df.fillna("")
-                    new = edited_df.fillna("")
-    
-                    for day in DAYS_FULL:
-                        if day not in new.index or day not in original.index:
-                            continue
-                        for pos in POSITIONS:
-                            old_val = original.at[day, pos] if pos in original.columns else ""
-                            new_val = new.at[day, pos] if pos in new.columns else ""
-                            if old_val != new_val:
-                                append_to_google_sheet({
-                                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                                    "admin_id": "admin",
-                                    "week_start": wk,
-                                    "day": day,
-                                    "position": pos,
-                                    "old_value": old_val,
-                                    "new_value": new_val
-                                })
-    
-                    # 🔐 Değişikliği yalnızca burada kaydet
-                    rotas[wk] = new.to_dict(orient="index")
-                    save_rotas(wk, rotas[wk])
-                    st.session_state["feedback"] = f"✅ Rota for {wk} updated."
-                    st.cache_data.clear()
-                    st.rerun()
-    
-            with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
-                    rotas.pop(wk)
-                    delete_rota(wk)
-                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
-                    st.cache_data.clear()
-                    st.rerun()
+
+        with col1:
+            if st.button("📂 Save Changes", key=f"save_{wk}"):
+                original = rota_df.fillna("")
+                new = edited_df.fillna("")
+
+                for day in DAYS_FULL:
+                    if day not in new.index or day not in original.index:
+                        continue
+                    for pos in POSITIONS:
+                        old_val = original.at[day, pos] if pos in original.columns else ""
+                        new_val = new.at[day, pos] if pos in new.columns else ""
+                        if old_val != new_val:
+                            append_to_google_sheet({
+                                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                                "admin_id": "admin",
+                                "week_start": wk,
+                                "day": day,
+                                "position": pos,
+                                "old_value": old_val,
+                                "new_value": new_val
+                            })
+                    
+                # 🔐 Değişikliği yalnızca burada kaydet
+                rotas[wk] = new.to_dict(orient="index")
+                save_rotas(wk, rotas[wk])
+                st.session_state["feedback"] = f"✅ Rota for {wk} updated."
+                st.cache_data.clear()
+                st.rerun()
+
+        with col2:
+            if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
+                rotas.pop(wk)
+                delete_rota(wk)
+                st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
+                st.cache_data.clear()
+                st.rerun()
 
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
 
