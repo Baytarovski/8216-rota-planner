@@ -150,7 +150,7 @@ def display_latest_rota(rotas):
         summary_df = summary_df.reindex(DAYS_FULL)[POSITIONS].fillna("")
         
               # 📸 PNG Image + Download Button
-        image_buf = generate_table_image(summary_df)
+        image_buf = generate_table_image(summary_df, title=f"{week_label} Weekly Rota")
         st.image(image_buf, caption=f"📸 {week_label} Weekly Rota Table", use_container_width=True)
         st.download_button(
             label="📥 Download Rota",
