@@ -6,7 +6,7 @@ def generate_table_image(df, title=None):
     from io import BytesIO
     import matplotlib.pyplot as plt
 
-    fig_height = len(df) * 0.6 + 0.6  # even tighter vertical space
+    fig_height = len(df) * 0.40 + 0.6  # even tighter vertical space
     fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
 
