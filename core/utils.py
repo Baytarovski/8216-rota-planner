@@ -3,15 +3,12 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 
 def generate_table_image(df, title=None):
-    from io import BytesIO
-    import matplotlib.pyplot as plt
-
-    fig_height = len(df) * 0.6 + (1.2 if title else 1)
+    fig_height = len(df) * 0.45 + 0.8
     fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
 
     if title:
-        fig.suptitle(title, fontsize=14, fontweight='bold', y=0.96)
+        fig.suptitle(title, fontsize=14, fontweight='bold', y=0.92)  # çok yaklaştır
 
     tbl = ax.table(
         cellText=df.values,
@@ -24,10 +21,11 @@ def generate_table_image(df, title=None):
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
 
-    plt.subplots_adjust(top=0.87)
+    plt.subplots_adjust(top=0.84, bottom=0.05)  # üst ve alt boşluğu iyice kırp
 
     buf = BytesIO()
-    plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
+    plt.savefig(buf, format='png', bbox_inches='tight', dpi=300, pad_inches=0.05)  # padding neredeyse sıfır
     buf.seek(0)
     return buf
+
 
