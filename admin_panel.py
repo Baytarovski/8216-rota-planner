@@ -27,16 +27,12 @@ def generate_table_image(df):
     buf.seek(0)
     return buf
 
-# ─────────────────────────────────────────────
-# 🔧 Constants
-# ─────────────────────────────────────────────
+# ─── Constants ───
 POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# ─────────────────────────────────────────────
-# 🔐 Google Sheets Authorization
-# ─────────────────────────────────────────────
+# ─── Google Sheets Authorization ───
 try:
     creds_dict = dict(st.secrets["gcp_service_account"])
     creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
@@ -46,9 +42,7 @@ except Exception as e:
     st.error(f"❌ Google Sheets authorization failed: {e}")
     gspread_client = None
 
-# ─────────────────────────────────────────────
-# 📤 Append Change to Google Sheet
-# ─────────────────────────────────────────────
+# ─── Google Sheet Log Functions ───
 def append_to_google_sheet(log_entry):
     if gspread_client is None:
         return
@@ -66,9 +60,6 @@ def append_to_google_sheet(log_entry):
     except Exception as e:
         st.warning(f"Google Sheets error: {e}")
 
-# ─────────────────────────────────────────────
-# 📥 Fetch Logs from Google Sheet
-# ─────────────────────────────────────────────
 def fetch_logs_from_google_sheet():
     if gspread_client is None:
         return []
@@ -80,83 +71,76 @@ def fetch_logs_from_google_sheet():
         st.warning(f"Google Sheets read error: {e}")
         return []
 
-# ─────────────────────────────────────────────
-# 🛠️ Admin Panel Renderer
-# ─────────────────────────────────────────────
+# ─── Admin Panel ───
 def render_admin_panel(rotas, save_rotas, delete_rota):
     if not st.session_state.get("is_admin", False):
         return
 
-    # ── Header
     st.markdown("<h3 style='margin-bottom:0;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
     st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
-    # ── Section: Saved Weekly Rotas
-    st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+    # Weekly Rotas
+    st.markdown("<h4 style='margin-top:0;'>🗕️ Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     week_list = sorted(rotas.keys())
     
     for wk in week_list:
-        with st.expander(f"🔖️ {wk}"):
+        with st.expander(f"🔗️ {wk}"):
             rota_data = rotas[wk]
             rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
             display_days = [d for d in DAYS_FULL if d in rota_df.index or d in DAYS_FULL]
             rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
-    
-            # 📸 PNG görsel ve indirme butonu
+
             image_buf = generate_table_image(rota_df)
             st.image(image_buf, caption=f"📸 {wk} haftası için Rota Tablosu (PNG)", use_container_width=True)
             st.download_button(
-                label="📅 PNG Olarak İndir",
+                label="🗕 PNG Olarak İndir",
                 data=image_buf,
                 file_name=f"rota_{wk}.png",
                 mime="image/png",
                 key=f"download_{wk}"
             )
-            
-        # 📄 Düzenlenebilir tablo
-        edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
-        col1, col2 = st.columns([1, 1])
 
-        with col1:
-            if st.button("📂 Save Changes", key=f"save_{wk}"):
-                original = rota_df.fillna("")
-                new = edited_df.fillna("")
+            edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
+            col1, col2 = st.columns([1, 1])
 
-                for day in DAYS_FULL:
-                    if day not in new.index or day not in original.index:
-                        continue
-                    for pos in POSITIONS:
-                        old_val = original.at[day, pos] if pos in original.columns else ""
-                        new_val = new.at[day, pos] if pos in new.columns else ""
-                        if old_val != new_val:
-                            append_to_google_sheet({
-                                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                                "admin_id": "admin",
-                                "week_start": wk,
-                                "day": day,
-                                "position": pos,
-                                "old_value": old_val,
-                                "new_value": new_val
-                            })
-                    
-                # 🔐 Değişikliği yalnızca burada kaydet
-                rotas[wk] = new.to_dict(orient="index")
-                save_rotas(wk, rotas[wk])
-                st.session_state["feedback"] = f"✅ Rota for {wk} updated."
-                st.cache_data.clear()
-                st.rerun()
+            with col1:
+                if st.button("📂 Save Changes", key=f"save_{wk}"):
+                    original = rota_df.fillna("")
+                    new = edited_df.fillna("")
 
-        with col2:
-            if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
-                rotas.pop(wk)
-                delete_rota(wk)
-                st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
-                st.cache_data.clear()
-                st.rerun()
+                    for day in DAYS_FULL:
+                        if day not in new.index or day not in original.index:
+                            continue
+                        for pos in POSITIONS:
+                            old_val = original.at[day, pos] if pos in original.columns else ""
+                            new_val = new.at[day, pos] if pos in new.columns else ""
+                            if old_val != new_val:
+                                append_to_google_sheet({
+                                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
+                                    "admin_id": "admin",
+                                    "week_start": wk,
+                                    "day": day,
+                                    "position": pos,
+                                    "old_value": old_val,
+                                    "new_value": new_val
+                                })
 
+                    rotas[wk] = new.to_dict(orient="index")
+                    save_rotas(wk, rotas[wk])
+                    st.session_state["feedback"] = f"✅ Rota for {wk} updated."
+                    st.cache_data.clear()
+                    st.rerun()
+
+            with col2:
+                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
+                    rotas.pop(wk)
+                    delete_rota(wk)
+                    st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
+                    st.cache_data.clear()
+                    st.rerun()
+
+    # Monthly Summary
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-
-    # ── Section: Monthly Assignment Summary
     st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
         available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
@@ -184,9 +168,8 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             df_summary = df_summary.sort_values(by="Total Days", ascending=False)
             st.dataframe(df_summary, use_container_width=True)
 
+    # Logs
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-
-    # ── Section: Logs
     st.markdown("<h4 style='margin-top:0;'>🗃️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     logs = fetch_logs_from_google_sheet()
     if not logs:
