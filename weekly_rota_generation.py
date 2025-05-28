@@ -16,17 +16,16 @@ from io import BytesIO
 def generate_table_image(df):
 
     df = df.copy()
-    df.index.name = "8216"
+    df.index.name = ""
     df.reset_index(inplace=True)
-
-    # Satır ve sütun etiketlerini birleştirerek tabloya manuel olarak sol üst köşe ekle
-    cell_data = [df.columns.tolist()] + df.values.tolist()
+    df.columns = ["8216"] + df.columns.tolist()[1:]
 
     fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
     ax.axis('off')
 
     tbl = ax.table(
-        cellText=cell_data,
+        cellText=df.values,
+        colLabels=df.columns,
         loc='center',
         cellLoc='center'
     )
@@ -39,6 +38,7 @@ def generate_table_image(df):
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
     return buf
+
 
 
     
