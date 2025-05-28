@@ -20,9 +20,9 @@ def generate_table_image(df, title=None):
     fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
 
-    # Add title if provided
+    # ✅ Add title if provided
     if title:
-        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        fig.suptitle(title, fontsize=14, fontweight='bold', y=1.02)
 
     tbl = ax.table(
         cellText=df.values,
@@ -39,6 +39,7 @@ def generate_table_image(df, title=None):
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
     return buf
+
 
 
 from core.algorithm import generate_rota
