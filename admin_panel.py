@@ -8,6 +8,24 @@ import gspread
 import pandas as pd
 from datetime import datetime
 from google.oauth2.service_account import Credentials
+from io import BytesIO
+import matplotlib.pyplot as plt
+
+def generate_table_image(df):
+    fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
+    ax.axis('off')
+    tbl = ax.table(cellText=df.values,
+                   colLabels=df.columns,
+                   rowLabels=df.index,
+                   loc='center',
+                   cellLoc='center')
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(10)
+    tbl.scale(1.2, 1.2)
+    buf = BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
+    buf.seek(0)
+    return buf
 
 # ─────────────────────────────────────────────
 # 🔧 Constants
@@ -76,17 +94,28 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     # ── Section: Saved Weekly Rotas
     st.markdown("<h4 style='margin-top:0;'>📅 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     week_list = sorted(rotas.keys())
+    
     for wk in week_list:
-        with st.expander(f"🗖️ {wk}"):
+        with st.expander(f"🔖️ {wk}"):
             rota_data = rotas[wk]
             rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
             display_days = [d for d in DAYS_FULL if d in rota_df.index or d in DAYS_FULL]
             rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
     
-            # Düzenleme yapılabilir tablo (geçici)
-            edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
-    
-            col1, col2 = st.columns([1, 1])
+            # 📸 PNG görsel ve indirme butonu
+            image_buf = generate_table_image(rota_df)
+            st.image(image_buf, caption=f"📸 {wk} haftası için Rota Tablosu (PNG)", use_container_width=True)
+            st.download_button(
+                label="📅 PNG Olarak İndir",
+                data=image_buf,
+                file_name=f"rota_{wk}.png",
+                mime="image/png",
+                key=f"download_{wk}"
+            )
+
+        # 📄 Düzenlenebilir tablo
+        edited_df = st.data_editor(rota_df, key=f"edit_{wk}")
+        col1, col2 = st.columns([1, 1])
     
             with col1:
                 if st.button("📂 Save Changes", key=f"save_{wk}"):
