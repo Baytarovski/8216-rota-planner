@@ -54,25 +54,11 @@ def select_daily_inspectors(week_start, days, inspectors):
         cols = st.columns(2)
 
         with cols[0]:
-
-            current_selection = st.session_state.get(day, [])
-            label = f"Select up to 6 inspectors for {day}"
-            if len(current_selection) == 6:
-                label += "  ✅ 6 inspectors selected. Remove one to change."
-
             selected = st.multiselect(
-                label,
+                f"Select up to 6 inspectors for {day}",
                 options=inspectors,
-                default=current_selection,
                 key=day
             )
-
-            
-            if len(selected) > 6:
-                st.warning("⚠️ Please select only 6 inspectors.")
-                selected = selected[:6]
-
-            
 
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
