@@ -84,15 +84,6 @@ def select_daily_inspectors(week_start, days, inspectors):
     st.markdown("</div>", unsafe_allow_html=True)
     return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
 
-        if len(set(selected)) == 6 and head in selected:
-            daily_workers[day] = [w for w in selected if w != head]
-            daily_heads[day] = head
-
-        st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
-    return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
-
 def validate_selection(days, raw_selected, raw_head):
     valid_days, invalid_days = [], []
     for day in days:
