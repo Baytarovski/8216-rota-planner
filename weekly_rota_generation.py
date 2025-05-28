@@ -61,7 +61,6 @@ def select_daily_inspectors(week_start, days, inspectors):
             selected = st.multiselect(
                 f"Select 6 inspectors for {day}",
                 options=options_available,
-                default=current_selected,
                 key=multiselect_key
             )
 
@@ -75,6 +74,16 @@ def select_daily_inspectors(week_start, days, inspectors):
 
         daily_raw_selected[day] = selected
         daily_raw_head[day] = head
+
+        # Güvenli kontrol: selected boş olabilir, None olabilir
+        if selected and head and len(set(selected)) == 6 and head in selected:
+            daily_workers[day] = [w for w in selected if w != head]
+            daily_heads[day] = head
+
+        st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+    return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
 
         if len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
