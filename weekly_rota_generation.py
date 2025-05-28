@@ -61,7 +61,7 @@ def select_daily_inspectors(week_start, days, inspectors):
             )
 
             if len(selected) == 6:
-            st.caption("✅ 6 inspectors selected. Remove one to change.")
+                st.caption("✅ 6 inspectors selected. Remove one to change.")
             elif len(selected) > 6:
                 st.warning("⚠️ Please select only 6 inspectors.")
 
