@@ -56,7 +56,7 @@ def select_daily_inspectors(week_start, days, inspectors):
         with cols[0]:
             selected = st.multiselect(
                 f"Select up to 6 inspectors for {day}",
-                options=inspectors,
+                options=[i for i in inspectors if i in selected or len(selected) < 6],
                 key=day
             )
 
