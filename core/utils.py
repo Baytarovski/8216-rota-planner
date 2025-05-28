@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 
 def generate_table_image(df, title=None):
 
-    fig_height = len(df) * 0.6 + (1.2 if title else 1)
+    fig_height = len(df) * 0.6 + (1.4 if title else 1)
     fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
 
     if title:
-        fig.suptitle(title, fontsize=14, fontweight='bold', y=0.96)  # closer to table
+        fig.suptitle(title, fontsize=14, fontweight='bold', y=0.94)  # even closer
 
     tbl = ax.table(
         cellText=df.values,
@@ -22,7 +22,7 @@ def generate_table_image(df, title=None):
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
 
-    plt.subplots_adjust(top=0.85)  # tighter layout
+    plt.subplots_adjust(top=0.83)  # tighter spacing
 
     buf = BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
