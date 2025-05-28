@@ -145,7 +145,6 @@ def display_latest_rota(rotas):
 
         summary_df = pd.DataFrame.from_dict(future_rotas[latest_week], orient="index")
         summary_df = summary_df.reindex(DAYS_FULL)[POSITIONS].fillna("")
-        st.dataframe(summary_df, use_container_width=True)
         
                 # 📸 PNG Olarak Görsel + İndirme Butonu
         image_buf = generate_table_image(summary_df)
