@@ -24,7 +24,7 @@ def generate_table_image(df, title=None):
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
 
-    plt.subplots_adjust(top=0.85, bottom=0.01)  # tighter layout
+    plt.subplots_adjust(top=0.5, bottom=0.01)  # tighter layout
 
     buf = BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300, pad_inches=0.01)  # minimal padding
