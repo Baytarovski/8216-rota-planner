@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 
 def generate_table_image(df, title=None):
-
+    
     fig_height = len(df) * 0.6 + 2 if title else len(df) * 0.6 + 1
     fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
@@ -39,6 +39,7 @@ def generate_table_image(df, title=None):
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
     return buf
+
 
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
