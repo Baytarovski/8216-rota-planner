@@ -14,42 +14,21 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 
 def generate_table_image(df):
-
-    df = df.copy()
-    df.index.name = "8216"
-    df.reset_index(inplace=True)
-
     fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
     ax.axis('off')
-
-    # 'rowLabels' olarak ilk sütunu kullan, geri kalanları colLabels
-    row_labels = df.iloc[:, 0].tolist()
-    data = df.iloc[:, 1:].values
-    col_labels = df.columns[1:]
-
-    # Tabloyu çiz
-    tbl = ax.table(
-        cellText=data,
-        rowLabels=row_labels,
-        colLabels=col_labels,
-        loc='center',
-        cellLoc='center'
-    )
-
-    # Sol üst köşeye manuel "8216" başlığı
-    tbl.add_cell(-1, -1, width=0.1, height=0.1, text="8216", loc='center')
-
+    tbl = ax.table(cellText=df.values,
+                   colLabels=df.columns,
+                   rowLabels=df.index,
+                   loc='center',
+                   cellLoc='center')
     tbl.auto_set_font_size(False)
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
-
-    plt.tight_layout()
     buf = BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
     return buf
 
-    
 DAYS_ALL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 
