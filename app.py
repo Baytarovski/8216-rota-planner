@@ -149,8 +149,7 @@ def display_latest_rota(rotas):
         
                 # 📸 PNG Olarak Görsel + İndirme Butonu
         image_buf = generate_table_image(summary_df)
-        st.image(image_buf, caption=f"📸 {week_label} Rota Tablosu (PNG)", use_column_width=True)
-        st.download_button(
+        st.image(image_buf, caption="Sample Table", use_container_width=True)        st.download_button(
             label="📥 Rota Tablosunu PNG Olarak İndir",
             data=image_buf,
             file_name=f"rota_{latest_week}.png",
