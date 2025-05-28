@@ -10,6 +10,24 @@ import pandas as pd
 from datetime import datetime, timedelta
 from core.algorithm import generate_rota
 from core.data_utils import save_rotas
+import matplotlib.pyplot as plt
+from io import BytesIO
+
+def generate_table_image(df):
+    fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
+    ax.axis('off')
+    tbl = ax.table(cellText=df.values,
+                   colLabels=df.columns,
+                   rowLabels=df.index,
+                   loc='center',
+                   cellLoc='center')
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(10)
+    tbl.scale(1.2, 1.2)
+    buf = BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
+    buf.seek(0)
+    return buf
 
 DAYS_ALL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
