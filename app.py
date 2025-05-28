@@ -122,15 +122,13 @@ def display_latest_rota(rotas):
     POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     today = datetime.today().date()
 
-    # 🔄 Hafta sonu ≥ bugünün tarihi olanları kapsayan filtre
     future_rotas = {
         date_str: rota for date_str, rota in rotas.items()
         if datetime.strptime(date_str, "%Y-%m-%d").date() + timedelta(days=4) >= today
     }
 
-    # 🔍 Sadece admin'e gösterilen debug satırı
     if st.session_state.get("is_admin", False):
-        st.write("📦 Gelecek geçerli rotalar:", list(future_rotas.keys()))
+        st.write("📦 Upcoming valid rotas:", list(future_rotas.keys()))
 
     latest_week = max(future_rotas.keys()) if future_rotas else None
 
