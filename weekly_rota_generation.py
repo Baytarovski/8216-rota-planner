@@ -42,7 +42,7 @@ def select_daily_inspectors(week_start, days, inspectors):
     """, unsafe_allow_html=True)
 
     week_range = f"{week_start.strftime('%d %b')} – {(week_start + timedelta(days=4)).strftime('%d %b %Y')}"
-    st.markdown(f"<div style='text-align:right; color:#444; font-size:1.05em; margin-top:0.5em; margin-bottom:1em;'>🗓️ Planning Week: <strong>{week_range}</strong></div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='text-align:right; color:#444; font-size:1.05em; margin-top:0.5em; margin-bottom:1em;'>Ὄ5️ Planning Week: <strong>{week_range}</strong></div>", unsafe_allow_html=True)
 
     daily_workers, daily_heads = {}, {}
     daily_raw_selected, daily_raw_head = {}, {}
@@ -50,9 +50,29 @@ def select_daily_inspectors(week_start, days, inspectors):
     for i, day in enumerate(days):
         date_str = (week_start + timedelta(days=i)).strftime('%d %b %Y')
         st.markdown(f"<span style='font-size:1.05em;'>🔹 <strong>{day}</strong> <span style='color:#666; font-size:0.9em;'>({date_str})</span></span>", unsafe_allow_html=True)
+
         cols = st.columns(2)
+
+        multiselect_key = f"{day}_select"
+        if multiselect_key not in st.session_state:
+            st.session_state[multiselect_key] = []
+
+        current_selected = st.session_state[multiselect_key]
+        options_available = [i for i in inspectors if i in current_selected or len(current_selected) < 6]
+
         with cols[0]:
-            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
+            selected = st.multiselect(
+                f"Select 6 inspectors for {day}",
+                options=options_available,
+                default=current_selected,
+                key=multiselect_key
+            )
+
+            if len(selected) == 6:
+                st.success("✅ 6 inspectors selected.")
+            elif len(selected) > 6:
+                st.warning("⚠️ Please select only 6 inspectors.")
+
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
