@@ -54,19 +54,32 @@ def select_daily_inspectors(week_start, days, inspectors):
         cols = st.columns(2)
 
         with cols[0]:
-            selected = st.multiselect(
-                f"Select up to 6 inspectors for {day}",
-                options=inspectors,
-                key=day
-            )
+            if f"{day}_block" not in st.session_state:
+                st.session_state[f"{day}_block"] = False
+
+            if st.session_state[f"{day}_block"]:
+                selected = st.multiselect(
+                    f"✅ 6 inspectors selected. Remove one to change.",
+                    options=inspectors,
+                    default=st.session_state.get(day, []),
+                    key=day
+                )
+            else:
+                selected = st.multiselect(
+                    f"Select up to 6 inspectors for {day}",
+                    options=inspectors,
+                    key=day
+                )
 
             if len(selected) == 6:
                 st.caption("✅ 6 inspectors selected. Remove one to change.")
             elif len(selected) > 6:
                 st.warning("⚠️ Please select only 6 inspectors.")
 
-            # override selection to maximum 6 without breaking interaction
-            selected = selected[:6]
+            if len(selected) >= 6:
+                st.session_state[f"{day}_block"] = True
+            else:
+                st.session_state[f"{day}_block"] = False
 
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
@@ -82,6 +95,7 @@ def select_daily_inspectors(week_start, days, inspectors):
 
     st.markdown("</div>", unsafe_allow_html=True)
     return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
+
 
 def validate_selection(days, raw_selected, raw_head):
     valid_days, invalid_days = [], []
