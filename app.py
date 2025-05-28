@@ -11,6 +11,24 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
 import uuid
+import matplotlib.pyplot as plt
+from io import BytesIO
+
+def generate_table_image(df):
+    fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
+    ax.axis('off')
+    tbl = ax.table(cellText=df.values,
+                   colLabels=df.columns,
+                   rowLabels=df.index,
+                   loc='center',
+                   cellLoc='center')
+    tbl.auto_set_font_size(False)
+    tbl.set_fontsize(10)
+    tbl.scale(1.2, 1.2)
+    buf = BytesIO()
+    plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
+    buf.seek(0)
+    return buf
 
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
@@ -128,6 +146,17 @@ def display_latest_rota(rotas):
         summary_df = pd.DataFrame.from_dict(future_rotas[latest_week], orient="index")
         summary_df = summary_df.reindex(DAYS_FULL)[POSITIONS].fillna("")
         st.dataframe(summary_df, use_container_width=True)
+        
+                # 📸 PNG Olarak Görsel + İndirme Butonu
+        image_buf = generate_table_image(summary_df)
+        st.image(image_buf, caption=f"📸 {week_label} Rota Tablosu (PNG)", use_column_width=True)
+        st.download_button(
+            label="📥 Rota Tablosunu PNG Olarak İndir",
+            data=image_buf,
+            file_name=f"rota_{latest_week}.png",
+            mime="image/png"
+        )
+        
         st.markdown("</div>", unsafe_allow_html=True)
     else:
         st.info("📭 No rota available for this week or upcoming weeks.")
