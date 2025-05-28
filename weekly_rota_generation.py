@@ -52,15 +52,16 @@ def select_daily_inspectors(week_start, days, inspectors):
         st.markdown(f"<span style='font-size:1.05em;'>🔹 <strong>{day}</strong> <span style='color:#666; font-size:0.9em;'>({date_str})</span></span>", unsafe_allow_html=True)
 
         cols = st.columns(2)
+
         multiselect_key = f"{day}_select"
         current_selected = st.session_state.get(multiselect_key, [])
-
         options_available = [i for i in inspectors if i in current_selected or len(current_selected) < 6]
 
         with cols[0]:
             selected = st.multiselect(
                 f"Select 6 inspectors for {day}",
                 options=options_available,
+                default=current_selected,
                 key=multiselect_key
             )
 
@@ -74,6 +75,15 @@ def select_daily_inspectors(week_start, days, inspectors):
 
         daily_raw_selected[day] = selected
         daily_raw_head[day] = head
+
+        if len(set(selected)) == 6 and head in selected:
+            daily_workers[day] = [w for w in selected if w != head]
+            daily_heads[day] = head
+
+        st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
+    return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
 
         if len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
