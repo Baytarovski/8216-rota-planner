@@ -71,7 +71,7 @@ def select_daily_inspectors(week_start, days, inspectors):
 
             if new_selection != current_selected:
                 st.session_state[multiselect_key] = new_selection
-                st.experimental_rerun()
+                st.rerun()
 
             if len(new_selection) == 6:
                 st.success("✅ 6 inspectors selected.")
