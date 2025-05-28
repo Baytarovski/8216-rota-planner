@@ -54,27 +54,31 @@ def select_daily_inspectors(week_start, days, inspectors):
         cols = st.columns(2)
 
         with cols[0]:
-            prev_selected = st.session_state.get(day, [])
-            options_available = [i for i in inspectors if i in prev_selected or len(prev_selected) < 6]
+            selected = st.session_state.get(day, [])
+            available_options = [i for i in inspectors if i in selected or len(selected) < 6]
 
-            selected = st.multiselect(
+            updated_selected = st.multiselect(
                 f"Select up to 6 inspectors for {day}",
-                options=options_available,
-                key=day
+                options=available_options,
+                default=selected,
+                key=f"{day}_select"
             )
 
-            if len(selected) == 6:
+            if updated_selected != selected:
+                st.session_state[day] = updated_selected
+
+            if len(updated_selected) == 6:
                 st.info("✅ You have selected 6 inspectors. To change, remove one first.")
-            elif len(selected) > 6:
+            elif len(updated_selected) > 6:
                 st.warning("⚠️ Please select only 6 inspectors.")
 
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
-        daily_raw_selected[day] = selected
+        daily_raw_selected[day] = updated_selected
         daily_raw_head[day] = head
 
-        if selected and head and len(set(selected)) == 6 and head in selected:
+        if updated_selected and head and len(set(updated_selected)) == 6 and head in updated_selected:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
 
