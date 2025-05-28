@@ -135,7 +135,7 @@ def generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, ins
 
         # 🔽 PNG olarak indirme bölümü
         image_buf = generate_table_image(rota_df)
-        st.image(image_buf, caption="📸 Oluşturulan Rota Tablosu (PNG)", use_column_width=True)
+        st.image(image_buf, caption="📸 Oluşturulan Rota Tablosu (PNG)", use_container_width=True)
         st.download_button(
             label="📥 Rota Tablosunu PNG Olarak İndir",
             data=image_buf,
