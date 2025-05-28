@@ -54,32 +54,36 @@ def select_daily_inspectors(week_start, days, inspectors):
         cols = st.columns(2)
 
         with cols[0]:
-            selected = st.session_state.get(day, [])
-            available_options = inspectors if len(selected) < 6 else selected
+            multiselect_key = f"{day}_select"
+            if multiselect_key not in st.session_state:
+                st.session_state[multiselect_key] = []
 
-            updated_selected = st.multiselect(
+            selected = st.session_state[multiselect_key]
+            options_available = [i for i in inspectors if i in selected or len(selected) < 6]
+
+            updated_selection = st.multiselect(
                 f"Select up to 6 inspectors for {day}",
-                options=available_options,
+                options=options_available,
                 default=selected,
-                key=f"{day}_select"
+                key=f"{day}_multiselect"
             )
 
-            if updated_selected != selected:
-                st.session_state[day] = updated_selected
+            if updated_selection != selected:
+                st.session_state[multiselect_key] = updated_selection
 
-            if len(updated_selected) == 6:
+            if len(updated_selection) == 6:
                 st.info("✅ You have selected 6 inspectors. To change, remove one first.")
-            elif len(updated_selected) > 6:
+            elif len(updated_selection) > 6:
                 st.warning("⚠️ Please select only 6 inspectors.")
 
         with cols[1]:
-            head = st.selectbox(f"Select HEAD for {day}", options=updated_selected if len(updated_selected) == 6 else [], key=day+"_head")
+            head = st.selectbox(f"Select HEAD for {day}", options=updated_selection if len(updated_selection) == 6 else [], key=day+"_head")
 
-        daily_raw_selected[day] = updated_selected
+        daily_raw_selected[day] = updated_selection
         daily_raw_head[day] = head
 
-        if updated_selected and head and len(set(updated_selected)) == 6 and head in updated_selected:
-            daily_workers[day] = [w for w in updated_selected if w != head]
+        if updated_selection and head and len(set(updated_selection)) == 6 and head in updated_selection:
+            daily_workers[day] = [w for w in updated_selection if w != head]
             daily_heads[day] = head
 
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
