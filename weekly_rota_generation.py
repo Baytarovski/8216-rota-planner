@@ -17,6 +17,7 @@ def generate_table_image(df):
     df = df.copy()
     df.index.name = "8216"  # Sol üst köşeye başlık eklenmesi
     df.reset_index(inplace=True)
+    df.columns.values[0] = "8216"  # Sol üst hücre başlığını açıkça ayarla
 
     fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
     ax.axis('off')
