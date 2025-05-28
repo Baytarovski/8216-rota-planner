@@ -151,7 +151,6 @@ def display_latest_rota(rotas):
         
               # 📸 PNG Image + Download Button
         image_buf = generate_table_image(summary_df, title=f"{week_label} Weekly Rota")
-        st.image(image_buf, caption=f"📸 {week_label} Weekly Rota Table", use_container_width=True)
         st.download_button(
             label="📥 Download Rota",
             data=image_buf,
