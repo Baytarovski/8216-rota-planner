@@ -55,7 +55,7 @@ def select_daily_inspectors(week_start, days, inspectors):
 
         with cols[0]:
             selected = st.session_state.get(day, [])
-            available_options = [i for i in inspectors if i in selected or len(selected) < 6]
+            available_options = inspectors if len(selected) < 6 else selected
 
             updated_selected = st.multiselect(
                 f"Select up to 6 inspectors for {day}",
