@@ -72,7 +72,7 @@ def render_sidebar():
     with st.sidebar.expander("⚖️ How Fair Assignment Works", expanded=False):
         st.markdown(FAIR_ASSIGNMENT)
     st.sidebar.markdown("---")
-    st.sidebar.markdown("<span style='font-size:0.95rem;'>Version 1.3.0 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
+    st.sidebar.markdown("<span style='font-size:0.95rem;'>Version 1.3.2 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
     with st.sidebar.expander("📝 What's New in 1.3.0", expanded=False):
         st.markdown(WHATS_NEW)
     with st.sidebar.expander("📚 Changelog History", expanded=False):
