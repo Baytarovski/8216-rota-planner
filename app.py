@@ -146,11 +146,11 @@ def display_latest_rota(rotas):
         summary_df = pd.DataFrame.from_dict(future_rotas[latest_week], orient="index")
         summary_df = summary_df.reindex(DAYS_FULL)[POSITIONS].fillna("")
         
-                # 📸 PNG Olarak Görsel + İndirme Butonu
+              # 📸 PNG Image + Download Button
         image_buf = generate_table_image(summary_df)
-        st.image(image_buf, caption=f"📸 {week_label} Rota Tablosu (PNG)", use_container_width=True)
+        st.image(image_buf, caption=f"📸 {week_label} Weekly Rota Table (PNG)", use_container_width=True)
         st.download_button(
-            label="📥 Rota Tablosunu PNG Olarak İndir",
+            label="📥 Download Rota as PNG",
             data=image_buf,
             file_name=f"rota_{latest_week}.png",
             mime="image/png"
