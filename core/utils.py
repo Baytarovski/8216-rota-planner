@@ -8,9 +8,6 @@ def generate_table_image(df, title=None):
     fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
 
-    if title:
-        fig.text(0.5, 0.96, title, fontsize=14, fontweight='bold', ha='center', va='top')
-
     tbl = ax.table(
         cellText=df.values,
         colLabels=df.columns,
@@ -22,13 +19,18 @@ def generate_table_image(df, title=None):
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
 
-    # Tighten layout to remove extra spacing
-    plt.subplots_adjust(top=0.92, bottom=0.05)
+    if title:
+        # Overlay the title closer to the top edge of the table
+        fig.subplots_adjust(top=0.87)  # this ensures the table is moved down
+        fig.text(0.5, 0.98, title, fontsize=14, fontweight='bold', ha='center', va='top')
+    else:
+        fig.subplots_adjust(top=0.95)
 
     buf = BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300, pad_inches=0)
     buf.seek(0)
     return buf
+
 
 
 
