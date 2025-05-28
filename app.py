@@ -40,8 +40,6 @@ def generate_table_image(df, title=None):
     buf.seek(0)
     return buf
 
-
-
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
 from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT, WHATS_NEW, CHANGELOG_HISTORY
