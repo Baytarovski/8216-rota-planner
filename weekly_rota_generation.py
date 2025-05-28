@@ -54,11 +54,14 @@ def select_daily_inspectors(week_start, days, inspectors):
         cols = st.columns(2)
 
         with cols[0]:
-            selected = st.multiselect(
-                f"Select up to 6 inspectors for {day}",
+            label = f"Select up to 6 inspectors for {day}"
+            selected = st.multiselect(label,
                 options=inspectors,
-                key=day
-            )
+                key=day)
+
+            if len(selected) == 6:
+                st.markdown("<div style='color:#d9534f; font-size:0.9em; margin-top:-0.5em;'>✅ 6 inspectors selected. Remove one to change.</div>", unsafe_allow_html=True)
+
 
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
@@ -74,6 +77,7 @@ def select_daily_inspectors(week_start, days, inspectors):
 
     st.markdown("</div>", unsafe_allow_html=True)
     return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
+
 
 def validate_selection(days, raw_selected, raw_head):
     valid_days, invalid_days = [], []
