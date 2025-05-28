@@ -55,19 +55,22 @@ def select_daily_inspectors(week_start, days, inspectors):
 
         with cols[0]:
 
-            
+            current_selection = st.session_state.get(day, [])
             label = f"Select up to 6 inspectors for {day}"
-            if len(st.session_state.get(day, [])) == 6:
+            if len(current_selection) == 6:
                 label += "  ✅ 6 inspectors selected. Remove one to change."
+
             selected = st.multiselect(
                 label,
                 options=inspectors,
+                default=current_selection,
                 key=day
             )
 
             
-            elif len(selected) > 6:
+            if len(selected) > 6:
                 st.warning("⚠️ Please select only 6 inspectors.")
+                selected = selected[:6]
 
             
 
