@@ -14,25 +14,29 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 
 def generate_table_image(df):
-    df = df.copy()
-    df.index.name = ""
-    df.reset_index(inplace=True)
 
-    col_labels = ["8216"] + list(df.columns[1:])  
+    df = df.copy()
+    df.insert(0, "8216", df.index)  # Index'i ilk sütun olarak ekle
 
     fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
     ax.axis('off')
-    tbl = ax.table(cellText=df.values,
-                   colLabels=col_labels,
-                   loc='center',
-                   cellLoc='center')
+
+    tbl = ax.table(
+        cellText=df.values,
+        colLabels=df.columns,
+        loc='center',
+        cellLoc='center'
+    )
     tbl.auto_set_font_size(False)
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
+
+    plt.tight_layout()
     buf = BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
     return buf
+
 
     
 DAYS_ALL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
