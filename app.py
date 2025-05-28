@@ -136,6 +136,11 @@ def display_latest_rota(rotas):
         latest_week_start = datetime.strptime(latest_week, "%Y-%m-%d")
         week_label = f"{latest_week_start.strftime('%d %b')} – {(latest_week_start + timedelta(days=4)).strftime('%d %b %Y')}"
 
+        st.markdown(f"""
+        <div style='border:1px solid #d1e7dd; background:#f1fdf7; padding:1em; border-radius:10px; margin-bottom:1.5em;'>
+            <p style='margin:0 0 0.5em; font-weight:500;'>📋 <strong>{week_label} Weekly Rota</strong></p>
+        """, unsafe_allow_html=True)
+
         summary_df = pd.DataFrame.from_dict(future_rotas[latest_week], orient="index")
         summary_df = summary_df.reindex(DAYS_FULL)[POSITIONS].fillna("")
         
