@@ -133,6 +133,17 @@ def generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, ins
         st.dataframe(rota_df)
         st.markdown("</div>", unsafe_allow_html=True)
 
+        # 🔽 PNG olarak indirme bölümü
+        image_buf = generate_table_image(rota_df)
+        st.image(image_buf, caption="📸 Oluşturulan Rota Tablosu (PNG)", use_column_width=True)
+        st.download_button(
+            label="📥 Rota Tablosunu PNG Olarak İndir",
+            data=image_buf,
+            file_name=f"rota_{week_key}.png",
+            mime="image/png"
+        )
+
+        # Verileri kaydet
         rotas[week_key] = rota_result
         save_rotas(week_key, rota_result)
 
