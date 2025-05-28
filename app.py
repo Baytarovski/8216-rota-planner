@@ -14,17 +14,27 @@ import uuid
 import matplotlib.pyplot as plt
 from io import BytesIO
 
-def generate_table_image(df):
-    fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
+def generate_table_image(df, title=None):
+
+    fig_height = len(df) * 0.6 + 2 if title else len(df) * 0.6 + 1
+    fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
-    tbl = ax.table(cellText=df.values,
-                   colLabels=df.columns,
-                   rowLabels=df.index,
-                   loc='center',
-                   cellLoc='center')
+
+    # Add title if provided
+    if title:
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+
+    tbl = ax.table(
+        cellText=df.values,
+        colLabels=df.columns,
+        rowLabels=df.index,
+        loc='center',
+        cellLoc='center'
+    )
     tbl.auto_set_font_size(False)
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
+
     buf = BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
