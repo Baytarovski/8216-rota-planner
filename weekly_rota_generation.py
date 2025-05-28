@@ -50,29 +50,16 @@ def select_daily_inspectors(week_start, days, inspectors):
     for i, day in enumerate(days):
         date_str = (week_start + timedelta(days=i)).strftime('%d %b %Y')
         st.markdown(f"<span style='font-size:1.05em;'>🔹 <strong>{day}</strong> <span style='color:#666; font-size:0.9em;'>({date_str})</span></span>", unsafe_allow_html=True)
-
         cols = st.columns(2)
-
         with cols[0]:
-            label = f"Select up to 6 inspectors for {day}"
-            helper_text = ""
-            if len(st.session_state.get(day, [])) == 6:
-                helper_text = "✅ 6 inspectors selected. Remove one to change."
-
-            selected = st.multiselect(
-                label,
-                options=inspectors,
-                key=day,
-                help=helper_text
-            )
-
+            selected = st.multiselect(f"Select 6 inspectors for {day}", inspectors, key=day)
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
 
         daily_raw_selected[day] = selected
         daily_raw_head[day] = head
 
-        if selected and head and len(set(selected)) == 6 and head in selected:
+        if len(set(selected)) == 6 and head in selected:
             daily_workers[day] = [w for w in selected if w != head]
             daily_heads[day] = head
 
@@ -80,7 +67,6 @@ def select_daily_inspectors(week_start, days, inspectors):
 
     st.markdown("</div>", unsafe_allow_html=True)
     return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
-
 
 def validate_selection(days, raw_selected, raw_head):
     valid_days, invalid_days = [], []
