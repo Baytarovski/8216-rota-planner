@@ -54,29 +54,38 @@ def select_daily_inspectors(week_start, days, inspectors):
         cols = st.columns(2)
 
         multiselect_key = f"{day}_select"
-        current_selected = st.session_state.get(multiselect_key, [])
+        if multiselect_key not in st.session_state:
+            st.session_state[multiselect_key] = []
+
+        current_selected = st.session_state[multiselect_key]
+
         options_available = [i for i in inspectors if i in current_selected or len(current_selected) < 6]
 
         with cols[0]:
-            selected = st.multiselect(
+            new_selection = st.multiselect(
                 f"Select 6 inspectors for {day}",
                 options=options_available,
-                key=multiselect_key
+                default=current_selected,
+                key=multiselect_key + "_input"
             )
 
-            if len(selected) == 6:
+            if new_selection != current_selected:
+                st.session_state[multiselect_key] = new_selection
+                st.experimental_rerun()
+
+            if len(new_selection) == 6:
                 st.success("✅ 6 inspectors selected.")
-            elif len(selected) > 6:
+            elif len(new_selection) > 6:
                 st.warning("⚠️ Please select only 6 inspectors.")
 
         with cols[1]:
-            head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
+            head = st.selectbox(f"Select HEAD for {day}", options=new_selection if len(new_selection) == 6 else [], key=day+"_head")
 
-        daily_raw_selected[day] = selected
+        daily_raw_selected[day] = new_selection
         daily_raw_head[day] = head
 
-        if selected and head and len(set(selected)) == 6 and head in selected:
-            daily_workers[day] = [w for w in selected if w != head]
+        if new_selection and head and len(set(new_selection)) == 6 and head in new_selection:
+            daily_workers[day] = [w for w in new_selection if w != head]
             daily_heads[day] = head
 
         st.markdown("<div style='margin-bottom: 1em;'></div>", unsafe_allow_html=True)
