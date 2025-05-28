@@ -55,13 +55,16 @@ def select_daily_inspectors(week_start, days, inspectors):
 
         with cols[0]:
             label = f"Select up to 6 inspectors for {day}"
-            selected = st.multiselect(label,
+            helper_text = ""
+            if len(st.session_state.get(day, [])) == 6:
+                helper_text = "✅ 6 inspectors selected. Remove one to change."
+
+            selected = st.multiselect(
+                label,
                 options=inspectors,
-                key=day)
-
-            if len(selected) == 6:
-                st.markdown("<div style='color:#d9534f; font-size:0.9em; margin-top:-0.5em;'>✅ 6 inspectors selected. Remove one to change.</div>", unsafe_allow_html=True)
-
+                key=day,
+                help=helper_text
+            )
 
         with cols[1]:
             head = st.selectbox(f"Select HEAD for {day}", options=selected if len(selected) == 6 else [], key=day+"_head")
