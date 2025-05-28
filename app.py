@@ -15,14 +15,13 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 
 def generate_table_image(df, title=None):
-    
-    fig_height = len(df) * 0.6 + 2 if title else len(df) * 0.6 + 1
+
+    fig_height = len(df) * 0.6 + (1.5 if title else 1)
     fig, ax = plt.subplots(figsize=(12, fig_height))
     ax.axis('off')
 
-    # ✅ Add title if provided
     if title:
-        fig.suptitle(title, fontsize=14, fontweight='bold', y=1.02)
+        fig.suptitle(title, fontsize=14, fontweight='bold', y=1.01)  # moved closer
 
     tbl = ax.table(
         cellText=df.values,
@@ -35,10 +34,13 @@ def generate_table_image(df, title=None):
     tbl.set_fontsize(10)
     tbl.scale(1.2, 1.2)
 
+    plt.subplots_adjust(top=0.88)  # reduce space between title and table
+
     buf = BytesIO()
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
     return buf
+
 
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
