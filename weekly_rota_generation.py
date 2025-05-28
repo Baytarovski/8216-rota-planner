@@ -62,7 +62,8 @@ def select_daily_inspectors(week_start, days, inspectors):
                     f"✅ 6 inspectors selected. Remove one to change.",
                     options=inspectors,
                     default=st.session_state.get(day, []),
-                    key=day
+                    key=day,
+                    disabled=True
                 )
             else:
                 selected = st.multiselect(
@@ -95,7 +96,6 @@ def select_daily_inspectors(week_start, days, inspectors):
 
     st.markdown("</div>", unsafe_allow_html=True)
     return daily_workers, daily_heads, daily_raw_selected, daily_raw_head
-
 
 def validate_selection(days, raw_selected, raw_head):
     valid_days, invalid_days = [], []
