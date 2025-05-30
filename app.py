@@ -111,9 +111,6 @@ def display_latest_rota(rotas):
         if datetime.strptime(date_str, "%Y-%m-%d").date() + timedelta(days=4) >= today
     }
 
-    if st.session_state.get("is_admin", False):
-        st.write("📦 Upcoming valid rotas:", list(future_rotas.keys()))
-
     latest_week = max(future_rotas.keys()) if future_rotas else None
 
     if latest_week:
