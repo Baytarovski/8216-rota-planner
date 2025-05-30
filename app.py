@@ -121,7 +121,14 @@ def display_latest_rota(rotas):
         week_label = f"{latest_week_start.strftime('%d %b')} – {(latest_week_start + timedelta(days=4)).strftime('%d %b %Y')}"
 
         summary_df = pd.DataFrame.from_dict(future_rotas[latest_week], orient="index")
-        summary_df = summary_df.reindex(DAYS_FULL)[POSITIONS].fillna("")
+        saturday_exists = "Saturday" in summary_df.index and summary_df.loc["Saturday"].replace("", pd.NA).dropna().any()
+        
+        display_days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        if saturday_exists:
+            display_days.append("Saturday")
+        
+        summary_df = summary_df.reindex(display_days)[POSITIONS].fillna("")
+
         
               # 📸 PNG Image + Download Button
         image_buf = generate_table_image(summary_df, title=f"{week_label} Weekly Rota")
