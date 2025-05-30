@@ -100,7 +100,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             image_buf = generate_table_image(rota_df)
             st.image(image_buf, caption=f"📸 Rota Table for the week of {wk}", use_container_width=True)
             st.download_button(
-                label="🗕️ Download as PNG",
+                label="📥 Download Rota",
                 data=image_buf,
                 file_name=f"rota_{wk}.png",
                 mime="image/png",
