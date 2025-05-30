@@ -10,6 +10,7 @@ import random
 POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DEFAULT_ATTEMPTS = 1000
 
+# Calculates fairness scores using past 4 weeks + current week's partial assignments
 def calculate_fairness_scores(rotas, current_week_key, current_week_assignments):
     position_weights = {
         "CAR1": 1.0, "CAR2": 1.0, "OFFAL": 1.5, "HEAD": 0.0, "FCI": 0.0, "OFFLINE": 0.0
@@ -19,6 +20,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
     past_offline_count = defaultdict(int)
     current_shift_weight = defaultdict(float)
 
+    # Look at previous 4 weeks
     current_date = datetime.strptime(current_week_key, "%Y-%m-%d")
     past_weeks = [(current_date - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(1, 5)]
 
@@ -33,6 +35,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
                         past_offline_count[inspector] += 1
                     past_shift_weight[inspector] += position_weights.get(position, 0.0)
 
+    # Current week's partial assignment weights (just non-FCI/OFFLINE)
     for day, assignments in current_week_assignments.items():
         for position, inspector in assignments.items():
             if inspector:
@@ -53,6 +56,8 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
 
     return fairness_scores
 
+# Prevents same-day repeat of role from last week
+
 def get_last_week_same_day_restrictions(rotas, current_week_key):
     restrictions = defaultdict(dict)
     current_date = datetime.strptime(current_week_key, "%Y-%m-%d")
@@ -66,6 +71,7 @@ def get_last_week_same_day_restrictions(rotas, current_week_key):
 
     return restrictions
 
+# Main rota generator
 def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
     all_days = list(daily_workers.keys())
     worker_days = defaultdict(int)
