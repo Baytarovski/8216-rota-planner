@@ -18,15 +18,19 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
     past_shift_weight = defaultdict(float)
     past_fci_count = defaultdict(int)
     past_offline_count = defaultdict(int)
+    past_day_count = defaultdict(int)
     current_shift_weight = defaultdict(float)
 
-    # Look at previous 4 weeks
     current_date = datetime.strptime(current_week_key, "%Y-%m-%d")
     past_weeks = [(current_date - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(1, 5)]
 
     for week_key in past_weeks:
         week_data = rotas.get(week_key, {})
         for day_data in week_data.values():
+            unique_people = set(day_data.values())
+            for person in unique_people:
+                if person:
+                    past_day_count[person] += 1
             for position, inspector in day_data.items():
                 if inspector:
                     if position == "FCI":
@@ -41,7 +45,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
             if inspector:
                 current_shift_weight[inspector] += position_weights.get(position, 0.0)
 
-    all_inspectors = set(past_shift_weight) | set(current_shift_weight) | set(past_fci_count) | set(past_offline_count)
+    all_inspectors = set(past_shift_weight) | set(current_shift_weight) | set(past_fci_count) | set(past_offline_count) | set(past_day_count)
     fairness_scores = {}
 
     for inspector in all_inspectors:
@@ -49,9 +53,10 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
         score_past = past_shift_weight[inspector] * 0.8
         penalty_fci = past_fci_count[inspector] * 1.5
         penalty_offline = past_offline_count[inspector] * 1.5
+        bonus_for_attendance = past_day_count[inspector] * 0.6
         fairness_scores[inspector] = {
-            "FCI_score": score_base + score_past - penalty_fci,
-            "OFFLINE_score": score_base + score_past - penalty_offline
+            "FCI_score": score_base + score_past + bonus_for_attendance - penalty_fci,
+            "OFFLINE_score": score_base + score_past + bonus_for_attendance - penalty_offline
         }
 
     return fairness_scores
