@@ -139,7 +139,16 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                     st.rerun()
 
             with col2:
-                if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
+    if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
+        append_to_google_sheet({
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "admin_id": "admin",
+            "week_start": wk,
+            "day": "-",
+            "position": "-",
+            "old_value": "Full rota deleted",
+            "new_value": "-"
+        })
                     rotas.pop(wk)
                     delete_rota(wk)
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
