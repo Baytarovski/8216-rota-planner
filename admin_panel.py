@@ -11,6 +11,22 @@ from google.oauth2.service_account import Credentials
 from io import BytesIO
 import matplotlib.pyplot as plt
 
+# ─── Constants ───
+POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
+DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+# ─── Google Sheets Authorization ───
+try:
+    creds_dict = dict(st.secrets["gcp_service_account"])
+    creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
+    creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)
+    gspread_client = gspread.authorize(creds)
+except Exception as e:
+    st.error(f"❌ Google Sheets authorization failed: {e}")
+    gspread_client = None
+
+# ─── Table Image Generator ───
 def generate_table_image(df):
     fig, ax = plt.subplots(figsize=(12, len(df) * 0.6 + 1))
     ax.axis('off')
@@ -26,21 +42,6 @@ def generate_table_image(df):
     plt.savefig(buf, format='png', bbox_inches='tight', dpi=300)
     buf.seek(0)
     return buf
-
-# ─── Constants ───
-POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
-DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-
-# ─── Google Sheets Authorization ───
-try:
-    creds_dict = dict(st.secrets["gcp_service_account"])
-    creds_dict["private_key"] = creds_dict["private_key"].replace("\\n", "\n")
-    creds = Credentials.from_service_account_info(creds_dict, scopes=SCOPE)
-    gspread_client = gspread.authorize(creds)
-except Exception as e:
-    st.error(f"❌ Google Sheets authorization failed: {e}")
-    gspread_client = None
 
 # ─── Google Sheet Log Functions ───
 def append_to_google_sheet(log_entry):
@@ -91,9 +92,9 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
 
             image_buf = generate_table_image(rota_df)
-            st.image(image_buf, caption=f"📸 {wk} haftası için Rota Tablosu (PNG)", use_container_width=True)
+            st.image(image_buf, caption=f"📸 Rota Table for the week of {wk} (PNG)", use_container_width=True)
             st.download_button(
-                label="🗕 PNG Olarak İndir",
+                label="🗕 Download as PNG",
                 data=image_buf,
                 file_name=f"rota_{wk}.png",
                 mime="image/png",
