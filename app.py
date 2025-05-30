@@ -102,7 +102,7 @@ def display_latest_rota(rotas):
     
     rotas = cached_load_rotas()
 
-    DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
     today = datetime.today().date()
 
