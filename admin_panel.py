@@ -83,8 +83,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
       # Optional Cache Reset Button
     if st.button("🔄 Clear Cached Data"):
         st.cache_data.clear()
-        st.success("✅ Cache cleared. Reloading...")
-        st.experimental_rerun()
+        st.success("✅ Cache cleared. Please refresh the page manually.")
 
     # Weekly Rotas
     st.markdown("<h4 style='margin-top:0;'>📁 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
