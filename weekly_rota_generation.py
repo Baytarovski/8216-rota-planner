@@ -25,14 +25,14 @@ def select_week():
     """, unsafe_allow_html=True)
 
     selected_monday = st.date_input("Select the Monday of the week you want to plan", value=datetime.today())
-    include_weekend = st.checkbox("Include Saturday and Sunday in this week's rota", value=False)
+    include_saturday = st.checkbox("Include Saturday in this week's rota", value=False)
     st.markdown("</div>", unsafe_allow_html=True)
 
     if selected_monday.weekday() != 0:
         st.warning("Please select a Monday.")
         st.stop()
 
-    week_days = DAYS_ALL[:5] + DAYS_ALL[5:] if include_weekend else DAYS_ALL[:5]
+    week_days = DAYS_ALL[:5] + ["Saturday"] if include_saturday else DAYS_ALL[:5]
     return selected_monday, week_days
 
 def select_daily_inspectors(week_start, days, inspectors):
