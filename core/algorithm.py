@@ -12,9 +12,7 @@ DEFAULT_ATTEMPTS = 1000
 
 # Calculates fairness scores using past 4 weeks + current week's partial assignments
 def calculate_fairness_scores(rotas, current_week_key, current_week_assignments):
-    position_weights = {
-        "CAR1": 0.0, "CAR2": 0.0, "OFFAL": 0.0, "HEAD": 0.0, "FCI": 0.0, "OFFLINE": 0.0
-    }
+    position_weights = {p: 0.0 for p in POSITIONS + ["HEAD"]}
     past_shift_weight = defaultdict(float)
     past_fci_count = defaultdict(int)
     past_offline_count = defaultdict(int)
@@ -90,10 +88,17 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
     fairness_scores = calculate_fairness_scores(rotas, week_key, current_week_assignments)
     same_day_block = get_last_week_same_day_restrictions(rotas, week_key)
 
+    # En iyi 3 FCI/Offline skoruna sahip kişileri belirle
+    all_scores = defaultdict(float)
+    for person in fairness_scores:
+        all_scores[person] = fairness_scores[person].get("FCI_score", 0) + fairness_scores[person].get("OFFLINE_score", 0)
+    top3 = [p for p in top3 if worker_days[p] > 0]
+
     for attempt in range(DEFAULT_ATTEMPTS):
         used = defaultdict(list)
         rota_table = {}
         fci_offline_count = defaultdict(int)
+        assigned_top3 = set()
         success = True
 
         for day in all_days:
@@ -128,6 +133,8 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
                         if pos in ["FCI", "OFFLINE"]:
                             fci_offline_count[candidate] += 1
                         available.remove(candidate)
+                        if candidate in top3:
+                            assigned_top3.add(candidate)
                         break
                 else:
                     success = False
@@ -139,7 +146,7 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
             rota_table[day] = assignments
             current_week_assignments[day] = assignments
 
-        if success:
+        if success and assigned_top3.issuperset(top3):
             return rota_table
 
     return {"error": f"Could not generate rota without conflicts after {DEFAULT_ATTEMPTS} attempts."}
