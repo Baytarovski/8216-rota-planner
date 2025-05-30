@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from google.oauth2.service_account import Credentials
 from io import BytesIO
-from algorithm import calculate_fairness_scores
+from core.algorithm import calculate_fairness_scores
 import matplotlib.pyplot as plt
 
 # ─── Constants ───
