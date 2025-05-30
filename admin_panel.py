@@ -225,8 +225,8 @@ with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
             st.info("No manual edits recorded.")
             return
 
-    df = pd.DataFrame(logs)
-    week_options = sorted(df["week_start"].unique(), reverse=True)
-    selected_week = st.selectbox("Select Week", week_options)
-    filtered = df[df["week_start"] == selected_week]
-    st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
+        df = pd.DataFrame(logs)
+        week_options = sorted(df["week_start"].unique(), reverse=True)
+        selected_week = st.selectbox("Select Week", week_options)
+        filtered = df[df["week_start"] == selected_week]
+        st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
