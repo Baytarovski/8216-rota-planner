@@ -220,10 +220,10 @@ with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
 st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
 st.markdown("<h4 style='margin-top:0;'>🗓️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
    
-logs = fetch_logs_from_google_sheet()
-if not logs:
-    st.info("No manual edits recorded.")
-    return
+    logs = fetch_logs_from_google_sheet()
+    if not logs:
+        st.info("No manual edits recorded.")
+        return
 
     df = pd.DataFrame(logs)
     week_options = sorted(df["week_start"].unique(), reverse=True)
