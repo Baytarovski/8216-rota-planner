@@ -9,6 +9,7 @@ import random
 
 POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DEFAULT_ATTEMPTS = 1000
+MIN_REQUIRED_DAYS_FOR_FCI_OFFLINE = 2
 
 # Calculates fairness scores using past 4 weeks + current week's partial assignments
 def calculate_fairness_scores(rotas, current_week_key, current_week_assignments):
@@ -92,6 +93,7 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
     all_scores = defaultdict(float)
     for person in fairness_scores:
         all_scores[person] = fairness_scores[person].get("FCI_score", 0) + fairness_scores[person].get("OFFLINE_score", 0)
+    top3 = sorted(all_scores, key=all_scores.get, reverse=True)[:3]
     top3 = [p for p in top3 if worker_days[p] > 0]
 
     for attempt in range(DEFAULT_ATTEMPTS):
@@ -115,6 +117,7 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
             for pos in POSITIONS:
                 eligible = [w for w in day_workers if pos not in used[w]]
                 if pos in ["FCI", "OFFLINE"]:
+                    eligible = [w for w in eligible if worker_days[w] >= MIN_REQUIRED_DAYS_FOR_FCI_OFFLINE]
                     eligible = sorted(
                         eligible,
                         key=lambda w: -fairness_scores.get(w, {}).get(f"{pos}_score", 0) + random.random() * 0.01
