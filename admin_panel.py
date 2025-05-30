@@ -98,7 +98,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
 
             image_buf = generate_table_image(rota_df)
-            st.image(image_buf, caption=f"📸 Rota Table for the week of {wk} (PNG)", use_container_width=True)
+            st.image(image_buf, caption=f"📸 Rota Table for the week of {wk}", use_container_width=True)
             st.download_button(
                 label="🗕️ Download as PNG",
                 data=image_buf,
