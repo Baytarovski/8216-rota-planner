@@ -13,7 +13,7 @@ DEFAULT_ATTEMPTS = 1000
 # Calculates fairness scores using past 4 weeks + current week's partial assignments
 def calculate_fairness_scores(rotas, current_week_key, current_week_assignments):
     position_weights = {
-        "CAR1": 1.0, "CAR2": 1.0, "OFFAL": 1.5, "HEAD": 0.0, "FCI": 0.0, "OFFLINE": 0.0
+        "CAR1": 0.0, "CAR2": 0.0, "OFFAL": 0.0, "HEAD": 0.0, "FCI": 0.0, "OFFLINE": 0.0
     }
     past_shift_weight = defaultdict(float)
     past_fci_count = defaultdict(int)
