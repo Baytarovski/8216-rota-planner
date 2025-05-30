@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 # ─── Constants ───
 POSITIONS = ["CAR1", "HEAD", "CAR2", "OFFAL", "FCI", "OFFLINE"]
-DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
 # ─── Google Sheets Authorization ───
@@ -83,18 +83,24 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     # Weekly Rotas
     st.markdown("<h4 style='margin-top:0;'>🗕️ Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     week_list = sorted(rotas.keys())
-    
+
     for wk in week_list:
         with st.expander(f"🔗️ {wk}"):
             rota_data = rotas[wk]
             rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
-            display_days = [d for d in DAYS_FULL if d in rota_df.index or d in DAYS_FULL]
+
+            # Determine days to show
+            saturday_exists = "Saturday" in rota_df.index and rota_df.loc["Saturday"].replace("", pd.NA).dropna().any()
+            display_days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+            if saturday_exists:
+                display_days.append("Saturday")
+
             rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
 
             image_buf = generate_table_image(rota_df)
             st.image(image_buf, caption=f"📸 Rota Table for the week of {wk} (PNG)", use_container_width=True)
             st.download_button(
-                label="🗕 Download as PNG",
+                label="🗕️ Download as PNG",
                 data=image_buf,
                 file_name=f"rota_{wk}.png",
                 mime="image/png",
@@ -109,7 +115,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                     original = rota_df.fillna("")
                     new = edited_df.fillna("")
 
-                    for day in DAYS_FULL:
+                    for day in display_days:
                         if day not in new.index or day not in original.index:
                             continue
                         for pos in POSITIONS:
@@ -171,7 +177,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
 
     # Logs
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin-top:0;'>🗃️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+    st.markdown("<h4 style='margin-top:0;'>🗓️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     logs = fetch_logs_from_google_sheet()
     if not logs:
         st.info("No manual edits recorded.")
