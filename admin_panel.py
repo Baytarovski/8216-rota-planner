@@ -80,6 +80,11 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     st.markdown("<h3 style='margin-bottom:0;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)
     st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
 
+      # Optional Cache Reset Button
+    if st.button("🔄 Clear Cached Data (Statistics, Logs etc.)"):
+        st.cache_data.clear()
+        st.success("✅ Cache cleared. Reloading...")
+        st.experimental_rerun()
 
     # Weekly Rotas
     st.markdown("<h4 style='margin-top:0;'>🗕️ Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
