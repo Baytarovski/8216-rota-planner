@@ -9,6 +9,7 @@ import pandas as pd
 from datetime import datetime
 from google.oauth2.service_account import Credentials
 from io import BytesIO
+from algorithm import calculate_fairness_scores
 import matplotlib.pyplot as plt
 
 # ─── Constants ───
@@ -160,34 +161,60 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                     st.cache_data.clear()
                     st.rerun()
 
-    # Monthly Summary
-    st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-    with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
-        available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
-        selected_month = st.selectbox("🗕️ Select Month for Summary", available_months)
+# Monthly Summary Section
+st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
+st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
-        summary = {}
-        for week_key, week_data in rotas.items():
-            week_dt = datetime.strptime(week_key, "%Y-%m-%d")
-            if week_dt.strftime("%B %Y") != selected_month:
-                continue
-            for day, roles in week_data.items():
-                for role, person in roles.items():
-                    if person == "Not Working":
-                        continue
-                    if person not in summary:
-                        summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                    summary[person]["Total Days"] += 1
-                    if role == "FCI":
-                        summary[person]["FCI"] += 1
-                    elif role == "OFFLINE":
-                        summary[person]["OFFLINE"] += 1
+with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
+    available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
+    selected_month = st.selectbox("🗕️ Select a Month", available_months)
 
-        if summary:
-            df_summary = pd.DataFrame.from_dict(summary, orient="index")
-            df_summary = df_summary.sort_values(by="Total Days", ascending=False)
-            st.dataframe(df_summary, use_container_width=True)
+    summary = {}
+    month_week_keys = [
+        wk for wk in rotas.keys()
+        if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month
+    ]
+
+    # Include 3 more weeks before the month to calculate fairness scores
+    if month_week_keys:
+        first_month_date = min(datetime.strptime(wk, "%Y-%m-%d") for wk in month_week_keys)
+        additional_weeks = [
+            (first_month_date - timedelta(weeks=i)).strftime("%Y-%m-%d")
+            for i in range(1, 4)
+        ]
+        combined_weeks = additional_weeks + month_week_keys
+    else:
+        combined_weeks = []
+
+    combined_assignments = defaultdict(dict)
+    for wk in combined_weeks:
+        week_data = rotas.get(wk, {})
+        for day, roles in week_data.items():
+            for role, person in roles.items():
+                if person == "Not Working":
+                    continue
+                if person not in summary:
+                    summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
+                summary[person]["Total Days"] += 1
+                if role == "FCI":
+                    summary[person]["FCI"] += 1
+                elif role == "OFFLINE":
+                    summary[person]["OFFLINE"] += 1
+                combined_assignments[day][role] = person
+
+    if summary and month_week_keys:
+        latest_week = max(month_week_keys)
+        fairness_scores = calculate_fairness_scores(rotas, latest_week, combined_assignments)
+
+        df_summary = pd.DataFrame.from_dict(summary, orient="index")
+        df_summary["FCI Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("FCI_score", 0), 2))
+        df_summary["OFFLINE Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("OFFLINE_score", 0), 2))
+        df_summary["Total Weighted Score"] = df_summary["FCI Score"] + df_summary["OFFLINE Score"]
+        df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
+
+        st.dataframe(df_summary, use_container_width=True)
+
+
 
     # Logs
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
