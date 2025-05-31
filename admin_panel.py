@@ -155,90 +155,90 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                     st.cache_data.clear()
                     st.rerun()
 
-    # Monthly Summary Section
-st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-
-with st.expander("📈 Recent 4-Week FCI/OFFLINE Load", expanded=True):
-    use_month_filter = st.checkbox("📅 View by specific month", value=False)
-
-    summary = {}
-    seen_days = defaultdict(set)
-    combined_assignments = defaultdict(dict)
-
-    if use_month_filter:
-        available_months = sorted(
-            {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()},
-            reverse=True
-        )
-        selected_month = st.selectbox("🗕️ Select a Month", available_months)
-
-        month_week_keys = [
-            wk for wk in rotas.keys()
-            if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month
-        ]
-
-        if month_week_keys:
-            first_month_date = min(datetime.strptime(wk, "%Y-%m-%d") for wk in month_week_keys)
-            additional_weeks = [
-                (first_month_date - timedelta(weeks=i)).strftime("%Y-%m-%d")
-                for i in range(1, 4)
-            ]
-            combined_weeks = additional_weeks + month_week_keys
-        else:
-            combined_weeks = []
-    else:
-        reference_date = datetime.today()
-        combined_weeks = [
-            (reference_date - timedelta(weeks=i)).strftime("%Y-%m-%d")
-            for i in range(4)
-        ]
-
-
-    for wk in combined_weeks:
-        week_data = rotas.get(wk, {})
-        for day, roles in week_data.items():
-            unique_day = f"{wk}_{day}"
-            for role, person in roles.items():
-                if person and person != "Not Working":
-                    if person not in summary:
-                        summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                    if unique_day not in seen_days[person]:
-                        summary[person]["Total Days"] += 1
-                        seen_days[person].add(unique_day)
-                    if role == "FCI":
-                        summary[person]["FCI"] += 1
-                    elif role == "OFFLINE":
-                        summary[person]["OFFLINE"] += 1
-
-                    combined_assignments[unique_day][role] = person
-
-    if summary and combined_weeks:
-        latest_week = max(combined_weeks)
-        fairness_scores = calculate_fairness_scores(rotas, latest_week, combined_assignments)
-
-        df_summary = pd.DataFrame.from_dict(summary, orient="index")
-        df_summary["FCI Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("FCI_score", 0), 2))
-        df_summary["OFFLINE Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("OFFLINE_score", 0), 2))
-        df_summary["Total Weighted Score"] = df_summary["FCI Score"] + df_summary["OFFLINE Score"]
-        df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
-
-        st.dataframe(df_summary, use_container_width=True)
-
-    # Logs Section
+        # Monthly Summary Section
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin-top:0;'>🗓️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-
-    logs = fetch_logs_from_google_sheet()
-    if not logs:
-        st.info("No manual edits recorded.")
-    else:
-        df = pd.DataFrame(logs)
-        week_options = sorted(df["week_start"].unique(), reverse=True)
-        selected_week = st.selectbox("Select Week", week_options)
-        filtered = df[df["week_start"] == selected_week]
-        st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
+    st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
     
-    st.markdown("<hr style='margin-top:1; margin-bottom:1; border: 2px solid black;'>", unsafe_allow_html=True)
-
-
+    with st.expander("📈 Recent 4-Week FCI/OFFLINE Load", expanded=True):
+        use_month_filter = st.checkbox("📅 View by specific month", value=False)
+    
+        summary = {}
+        seen_days = defaultdict(set)
+        combined_assignments = defaultdict(dict)
+    
+        if use_month_filter:
+            available_months = sorted(
+                {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()},
+                reverse=True
+            )
+            selected_month = st.selectbox("🗕️ Select a Month", available_months)
+    
+            month_week_keys = [
+                wk for wk in rotas.keys()
+                if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month
+            ]
+    
+            if month_week_keys:
+                first_month_date = min(datetime.strptime(wk, "%Y-%m-%d") for wk in month_week_keys)
+                additional_weeks = [
+                    (first_month_date - timedelta(weeks=i)).strftime("%Y-%m-%d")
+                    for i in range(1, 4)
+                ]
+                combined_weeks = additional_weeks + month_week_keys
+            else:
+                combined_weeks = []
+        else:
+            reference_date = datetime.today()
+            combined_weeks = [
+                (reference_date - timedelta(weeks=i)).strftime("%Y-%m-%d")
+                for i in range(4)
+            ]
+    
+    
+        for wk in combined_weeks:
+            week_data = rotas.get(wk, {})
+            for day, roles in week_data.items():
+                unique_day = f"{wk}_{day}"
+                for role, person in roles.items():
+                    if person and person != "Not Working":
+                        if person not in summary:
+                            summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
+                        if unique_day not in seen_days[person]:
+                            summary[person]["Total Days"] += 1
+                            seen_days[person].add(unique_day)
+                        if role == "FCI":
+                            summary[person]["FCI"] += 1
+                        elif role == "OFFLINE":
+                            summary[person]["OFFLINE"] += 1
+    
+                        combined_assignments[unique_day][role] = person
+    
+        if summary and combined_weeks:
+            latest_week = max(combined_weeks)
+            fairness_scores = calculate_fairness_scores(rotas, latest_week, combined_assignments)
+    
+            df_summary = pd.DataFrame.from_dict(summary, orient="index")
+            df_summary["FCI Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("FCI_score", 0), 2))
+            df_summary["OFFLINE Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("OFFLINE_score", 0), 2))
+            df_summary["Total Weighted Score"] = df_summary["FCI Score"] + df_summary["OFFLINE Score"]
+            df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
+    
+            st.dataframe(df_summary, use_container_width=True)
+    
+        # Logs Section
+        st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
+        st.markdown("<h4 style='margin-top:0;'>🗓️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+    
+        logs = fetch_logs_from_google_sheet()
+        if not logs:
+            st.info("No manual edits recorded.")
+        else:
+            df = pd.DataFrame(logs)
+            week_options = sorted(df["week_start"].unique(), reverse=True)
+            selected_week = st.selectbox("Select Week", week_options)
+            filtered = df[df["week_start"] == selected_week]
+            st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
+        
+        st.markdown("<hr style='margin-top:1; margin-bottom:1; border: 2px solid black;'>", unsafe_allow_html=True)
+    
+    
