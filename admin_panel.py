@@ -186,6 +186,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                 for role, person in roles.items():
                     if person == "Not Working":
                         continue
+                if person and person != "Not Working":
                     if person not in summary:
                         summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
                     summary[person]["Total Days"] += 1
