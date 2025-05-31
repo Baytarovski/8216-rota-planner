@@ -26,6 +26,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
 
     current_date = datetime.strptime(current_week_key, "%Y-%m-%d")
     past_weeks = [(current_date - timedelta(weeks=i)).strftime("%Y-%m-%d") for i in range(1, 5)]
+    st.write("🟦 Weeks included in scoring:", past_weeks)
 
     for week_key in past_weeks:
         week_data = rotas.get(week_key, {})
