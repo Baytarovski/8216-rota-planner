@@ -222,3 +222,6 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     selected_week = st.selectbox("Select Week", week_options)
     filtered = df[df["week_start"] == selected_week]
     st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
+
+    st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
+
