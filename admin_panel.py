@@ -156,17 +156,23 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                     st.rerun()
 
     # Monthly Summary Section
-    st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
-    st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
+st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
 
-    with st.expander("📈 Monthly FCI/OFFLINE Overview", expanded=False):
-        available_months = sorted({datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()}, reverse=True)
+with st.expander("📈 Recent 4-Week FCI/OFFLINE Load", expanded=True):
+    use_month_filter = st.checkbox("📅 View by specific month", value=False)
+
+    summary = {}
+    seen_days = defaultdict(set)
+    combined_assignments = defaultdict(dict)
+
+    if use_month_filter:
+        available_months = sorted(
+            {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()},
+            reverse=True
+        )
         selected_month = st.selectbox("🗕️ Select a Month", available_months)
 
-        summary = {}
-        seen_days = defaultdict(set)  
-        combined_assignments = defaultdict(dict)
-        
         month_week_keys = [
             wk for wk in rotas.keys()
             if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month
@@ -181,36 +187,42 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             combined_weeks = additional_weeks + month_week_keys
         else:
             combined_weeks = []
+    else:
+        reference_date = datetime.today()
+        combined_weeks = [
+            (reference_date - timedelta(weeks=i)).strftime("%Y-%m-%d")
+            for i in range(4)
+        ]
 
-        for wk in combined_weeks:
-            week_data = rotas.get(wk, {})
-            for day, roles in week_data.items():
-                unique_day = f"{wk}_{day}"
-                for role, person in roles.items():
-                   if person and person != "Not Working":
-                        if person not in summary:
-                            summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                        if unique_day not in seen_days[person]:
-                            summary[person]["Total Days"] += 1
-                            seen_days[person].add(unique_day)
-                        if role == "FCI":
-                            summary[person]["FCI"] += 1
-                        elif role == "OFFLINE":
-                            summary[person]["OFFLINE"] += 1
+    for wk in combined_weeks:
+        week_data = rotas.get(wk, {})
+        for day, roles in week_data.items():
+            unique_day = f"{wk}_{day}"
+            for role, person in roles.items():
+                if person and person != "Not Working":
+                    if person not in summary:
+                        summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
+                    if unique_day not in seen_days[person]:
+                        summary[person]["Total Days"] += 1
+                        seen_days[person].add(unique_day)
+                    if role == "FCI":
+                        summary[person]["FCI"] += 1
+                    elif role == "OFFLINE":
+                        summary[person]["OFFLINE"] += 1
 
-                        combined_assignments[unique_day][role] = person
+                    combined_assignments[unique_day][role] = person
 
-        if summary and month_week_keys:
-            latest_week = max(month_week_keys)
-            fairness_scores = calculate_fairness_scores(rotas, latest_week, combined_assignments)
+    if summary and combined_weeks:
+        latest_week = max(combined_weeks)
+        fairness_scores = calculate_fairness_scores(rotas, latest_week, combined_assignments)
 
-            df_summary = pd.DataFrame.from_dict(summary, orient="index")
-            df_summary["FCI Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("FCI_score", 0), 2))
-            df_summary["OFFLINE Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("OFFLINE_score", 0), 2))
-            df_summary["Total Weighted Score"] = df_summary["FCI Score"] + df_summary["OFFLINE Score"]
-            df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
+        df_summary = pd.DataFrame.from_dict(summary, orient="index")
+        df_summary["FCI Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("FCI_score", 0), 2))
+        df_summary["OFFLINE Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("OFFLINE_score", 0), 2))
+        df_summary["Total Weighted Score"] = df_summary["FCI Score"] + df_summary["OFFLINE Score"]
+        df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
 
-            st.dataframe(df_summary, use_container_width=True)
+        st.dataframe(df_summary, use_container_width=True)
 
     # Logs Section
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
