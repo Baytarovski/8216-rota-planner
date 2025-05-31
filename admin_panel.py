@@ -87,7 +87,20 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
         st.success("✅ Cache cleared. Please refresh the page manually.")
 
     st.markdown("<h4 style='margin-top:0;'>📁 Saved Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-    week_list = sorted(rotas.keys())
+    use_month_filter_saved = st.checkbox("📅 View by specific month", value=False, key="month_filter_saved_rotas")
+
+    if use_month_filter_saved:
+        available_months_saved = sorted(
+            {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()},
+            reverse=True
+        )
+        selected_month_saved = st.selectbox("🗕️ Select a Month", available_months_saved, key="select_month_saved_rotas")
+        week_list = sorted([
+            wk for wk in rotas.keys()
+            if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month_saved
+        ])
+    else:
+        week_list = sorted(rotas.keys(), reverse=True)[:4]
 
     for wk in week_list:
         with st.expander(f"🔗️ {wk}"):
