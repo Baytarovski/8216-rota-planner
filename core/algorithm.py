@@ -35,8 +35,10 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
             for position, inspector in day_data.items():
                 if inspector:
                     if position == "FCI":
+                        st.write(f"🟥 FCI Count — {inspector}")
                         past_fci_count[inspector] += 1
                     elif position == "OFFLINE":
+                        st.write(f"🟦 OFFLINE Count — {inspector}")
                         past_offline_count[inspector] += 1
 
         all_inspectors = set(past_fci_count) | set(past_offline_count) | set(past_day_count)
