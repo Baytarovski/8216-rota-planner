@@ -184,17 +184,15 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             week_data = rotas.get(wk, {})
             for day, roles in week_data.items():
                 for role, person in roles.items():
-                    if person == "Not Working":
-                        continue
-                if person and person != "Not Working":
-                    if person not in summary:
-                        summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                    summary[person]["Total Days"] += 1
-                    if role == "FCI":
-                        summary[person]["FCI"] += 1
-                    elif role == "OFFLINE":
-                        summary[person]["OFFLINE"] += 1
-                    combined_assignments[day][role] = person
+                   if person and person != "Not Working":
+                        if person not in summary:
+                            summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
+                        summary[person]["Total Days"] += 1
+                        if role == "FCI":
+                            summary[person]["FCI"] += 1
+                        elif role == "OFFLINE":
+                            summary[person]["OFFLINE"] += 1
+                        combined_assignments[day][role] = person
 
         if summary and month_week_keys:
             latest_week = max(month_week_keys)
