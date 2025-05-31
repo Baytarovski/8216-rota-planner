@@ -219,7 +219,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     logs = fetch_logs_from_google_sheet()
     if not logs:
         st.info("No manual edits recorded.")
-    else
+    else:
     df = pd.DataFrame(logs)
     week_options = sorted(df["week_start"].unique(), reverse=True)
     selected_week = st.selectbox("Select Week", week_options)
