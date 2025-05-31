@@ -192,7 +192,9 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                             summary[person]["FCI"] += 1
                         elif role == "OFFLINE":
                             summary[person]["OFFLINE"] += 1
-                        combined_assignments[day][role] = person
+
+                        unique_day = f"{wk}_{day}"
+                        combined_assignments[unique_day][role] = person
 
         if summary and month_week_keys:
             latest_week = max(month_week_keys)
