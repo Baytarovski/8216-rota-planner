@@ -8,6 +8,8 @@ from datetime import datetime, timedelta
 import random
 import streamlit as st
 
+st.cache_data.clear()
+
 POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DEFAULT_ATTEMPTS = 1000
 MIN_REQUIRED_DAYS_FOR_FCI_OFFLINE = 2
