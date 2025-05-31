@@ -30,6 +30,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
             unique_people = set(day_data.values())
             for person in unique_people:
                 if person:
+                    st.write(f"🟨 Day Count — Person: {person}")
                     past_day_count[person] += 1
             for position, inspector in day_data.items():
                 if inspector:
