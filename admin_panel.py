@@ -164,6 +164,9 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
         selected_month = st.selectbox("🗕️ Select a Month", available_months)
 
         summary = {}
+        seen_days = defaultdict(set)  
+        combined_assignments = defaultdict(dict)
+        
         month_week_keys = [
             wk for wk in rotas.keys()
             if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month
@@ -179,21 +182,22 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
         else:
             combined_weeks = []
 
-        combined_assignments = defaultdict(dict)
         for wk in combined_weeks:
             week_data = rotas.get(wk, {})
             for day, roles in week_data.items():
+                unique_day = f"{wk}_{day}"
                 for role, person in roles.items():
                    if person and person != "Not Working":
                         if person not in summary:
                             summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                        summary[person]["Total Days"] += 1
+                        if unique_day not in seen_days[person]:
+                            summary[person]["Total Days"] += 1
+                            seen_days[person].add(unique_day)
                         if role == "FCI":
                             summary[person]["FCI"] += 1
                         elif role == "OFFLINE":
                             summary[person]["OFFLINE"] += 1
 
-                        unique_day = f"{wk}_{day}"
                         combined_assignments[unique_day][role] = person
 
         if summary and month_week_keys:
