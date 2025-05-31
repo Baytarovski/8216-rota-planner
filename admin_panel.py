@@ -221,11 +221,12 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
         st.info("No manual edits recorded.")
         return
         
-    st.markdown("<hr style='margin-top:0; margin-bottom:1em; border: 2px solid black;'>", unsafe_allow_html=True)
-
     df = pd.DataFrame(logs)
     week_options = sorted(df["week_start"].unique(), reverse=True)
     selected_week = st.selectbox("Select Week", week_options)
     filtered = df[df["week_start"] == selected_week]
     st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
+
+    st.markdown("<hr style='margin-top:1; margin-bottom:1; border: 2px solid black;'>", unsafe_allow_html=True)
+
 
