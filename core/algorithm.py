@@ -32,24 +32,32 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
     st.write("📦 Rota keys available:", list(rotas.keys()))
 
 
+    
     for week_key in past_weeks:
         week_data = rotas.get(week_key, {})
         for day_data in week_data.values():
-            unique_people = set(day_data.values())
-            for person in unique_people:
+            for role, person in day_data.items():
                 if person and person != "Not Working":
                     st.write(f"🟨 Day Count — Person: {person}")
                     past_day_count[person] += 1
-            for position, inspector in day_data.items():
-                if inspector and inspector != "Not Working":
-                    if position == "FCI":
-                        st.write(f"🟥 FCI Count — {inspector}")
-                        past_fci_count[inspector] += 1
-                    elif position == "OFFLINE":
-                        st.write(f"🟦 OFFLINE Count — {inspector}")
-                        past_offline_count[inspector] += 1
+                    if role == "FCI":
+                        st.write(f"🟥 FCI Count — {person}")
+                        past_fci_count[person] += 1
+                    elif role == "OFFLINE":
+                        st.write(f"🟦 OFFLINE Count — {person}")
+                        past_offline_count[person] += 1
 
-        all_inspectors = set(past_fci_count) | set(past_offline_count) | set(past_day_count)
+    # 🔁 INCLUDE CURRENT WEEK
+    for day, assignments in current_week_assignments.items():
+        for role, person in assignments.items():
+            if person and person != "Not Working":
+                past_day_count[person] += 1
+                if role == "FCI":
+                    past_fci_count[person] += 1
+                elif role == "OFFLINE":
+                    past_offline_count[person] += 1
+
+    all_inspectors = set(past_day_count) | set(past_fci_count) | set(past_offline_count)
     fairness_scores = {}
 
     for inspector in all_inspectors:
