@@ -6,6 +6,7 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 import random
+import streamlit as st
 
 POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DEFAULT_ATTEMPTS = 1000
