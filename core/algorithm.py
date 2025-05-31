@@ -28,9 +28,6 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
     current_date = datetime.strptime(current_week_key, "%Y-%m-%d")
     parsed_weeks = [w for w in all_weeks if datetime.strptime(w, "%Y-%m-%d") <= current_date]
     past_weeks = parsed_weeks[:4]
-    st.write("🟦 Weeks included in scoring:", past_weeks)
-    st.write("📦 Rota keys available:", list(rotas.keys()))
-
 
     
     for week_key in past_weeks:
@@ -38,13 +35,10 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
         for day_data in week_data.values():
             for role, person in day_data.items():
                 if person and person != "Not Working":
-                    st.write(f"🟨 Day Count — Person: {person}")
                     past_day_count[person] += 1
                     if role == "FCI":
-                        st.write(f"🟥 FCI Count — {person}")
                         past_fci_count[person] += 1
                     elif role == "OFFLINE":
-                        st.write(f"🟦 OFFLINE Count — {person}")
                         past_offline_count[person] += 1
 
     # 🔁 INCLUDE CURRENT WEEK
