@@ -188,12 +188,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             else:
                 combined_weeks = []
         else:
-            reference_date = datetime.today()
-            combined_weeks = [
-                (reference_date - timedelta(weeks=i)).strftime("%Y-%m-%d")
-                for i in range(4)
-            ]
-    
+            combined_weeks = sorted(rotas.keys(), reverse=True)[:4]    
     
         for wk in combined_weeks:
             week_data = rotas.get(wk, {})
