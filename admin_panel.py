@@ -94,7 +94,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()},
             reverse=True
         )
-        selected_month_saved = st.selectbox("🗕️ Select a Month", available_months_saved, key="select_month_saved_rotas")
+        selected_month_saved = st.selectbox("🗓️ Select a Month", available_months_saved, key="select_month_saved_rotas")
         week_list = sorted([
             wk for wk in rotas.keys()
             if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month_saved
@@ -184,7 +184,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                 {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()},
                 reverse=True
             )
-            selected_month = st.selectbox("🗕️ Select a Month", available_months)
+            selected_month = st.selectbox("🗓️ Select a Month", available_months)
     
             month_week_keys = [
                 wk for wk in rotas.keys()
