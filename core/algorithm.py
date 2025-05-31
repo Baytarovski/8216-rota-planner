@@ -11,6 +11,10 @@ POSITIONS = ["CAR1", "CAR2", "OFFAL", "FCI", "OFFLINE"]
 DEFAULT_ATTEMPTS = 1000
 MIN_REQUIRED_DAYS_FOR_FCI_OFFLINE = 2
 
+FCI_PENALTY = 1.5
+OFFLINE_PENALTY = 1.5
+ATTENDANCE_BONUS = 0.6
+
 # Calculates fairness scores using past 4 weeks + current week's partial assignments
 def calculate_fairness_scores(rotas, current_week_key, current_week_assignments):
     past_fci_count = defaultdict(int)
@@ -38,9 +42,10 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
     fairness_scores = {}
 
     for inspector in all_inspectors:
-        bonus = past_day_count[inspector] * 0.6
-        penalty_fci = past_fci_count[inspector] * 1.5
-        penalty_offline = past_offline_count[inspector] * 1.5
+        bonus = past_day_count[inspector] * ATTENDANCE_BONUS
+        penalty_fci = past_fci_count[inspector] * FCI_PENALTY
+        penalty_offline = past_offline_count[inspector] * OFFLINE_PENALTY
+
 
         fairness_scores[inspector] = {
             "FCI_score": bonus - penalty_fci,
