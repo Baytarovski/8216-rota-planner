@@ -194,6 +194,10 @@ with st.expander("📈 Recent 4-Week FCI/OFFLINE Load", expanded=True):
             for i in range(4)
         ]
 
+    
+    if combined_weeks:
+    st.caption(f"📦 Weeks included in scoring: {', '.join(combined_weeks)}")
+
     for wk in combined_weeks:
         week_data = rotas.get(wk, {})
         for day, roles in week_data.items():
