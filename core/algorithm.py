@@ -160,3 +160,65 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
             return rota_table
 
     return {"error": f"Could not generate rota without conflicts after {DEFAULT_ATTEMPTS} attempts."}
+
+def calculate_fairness_summary(rotas, current_week_key, current_week_assignments):
+    from collections import defaultdict
+    from datetime import datetime
+
+    FCI_PENALTY = 1.5
+    OFFLINE_PENALTY = 1.5
+    ATTENDANCE_BONUS = 0.6
+
+    past_fci_count = defaultdict(int)
+    past_offline_count = defaultdict(int)
+    past_day_count = defaultdict(int)
+
+    all_weeks = sorted(rotas.keys(), reverse=True)
+    current_date = datetime.strptime(current_week_key, "%Y-%m-%d")
+    parsed_weeks = [w for w in all_weeks if datetime.strptime(w, "%Y-%m-%d") <= current_date]
+    past_weeks = parsed_weeks[:4]
+
+    for week_key in past_weeks:
+        week_data = rotas.get(week_key, {})
+        for day_data in week_data.values():
+            for role, person in day_data.items():
+                if person and person != "Not Working":
+                    past_day_count[person] += 1
+                    if role == "FCI":
+                        past_fci_count[person] += 1
+                    elif role == "OFFLINE":
+                        past_offline_count[person] += 1
+
+    for day, assignments in current_week_assignments.items():
+        for role, person in assignments.items():
+            if person and person != "Not Working":
+                past_day_count[person] += 1
+                if role == "FCI":
+                    past_fci_count[person] += 1
+                elif role == "OFFLINE":
+                    past_offline_count[person] += 1
+
+    all_inspectors = set(past_day_count) | set(past_fci_count) | set(past_offline_count)
+    summary = {}
+
+    for inspector in all_inspectors:
+        days = past_day_count[inspector]
+        fci = past_fci_count[inspector]
+        off = past_offline_count[inspector]
+
+        bonus = days * ATTENDANCE_BONUS
+        fci_score = bonus - fci * FCI_PENALTY
+        off_score = bonus - off * OFFLINE_PENALTY
+        total_score = fci_score + off_score
+
+        summary[inspector] = {
+            "Total Days": days,
+            "FCI": fci,
+            "OFFLINE": off,
+            "FCI Score": round(fci_score, 2),
+            "OFFLINE Score": round(off_score, 2),
+            "Total Weighted Score": round(total_score, 2),
+        }
+
+    return summary
+
