@@ -84,7 +84,7 @@ def render_sidebar():
 def admin_login():
     with st.sidebar.expander("🔐 Admin Access", expanded=False):
         admin_input = st.text_input("Enter admin password:", type="password", key="admin_password")
-        if admin_input == "1234":
+        if admin_input == "17500#":
             st.session_state["is_admin"] = True
             st.success("Access granted. Admin panel is now visible.")
         elif admin_input:
