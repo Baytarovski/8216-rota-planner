@@ -221,17 +221,15 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     
                         combined_assignments[unique_day][role] = person
     
-        if summary and combined_weeks:
+        if combined_weeks:
             latest_week = max(combined_weeks)
-            fairness_scores = calculate_fairness_scores(rotas, latest_week, combined_assignments)
-    
-            df_summary = pd.DataFrame.from_dict(summary, orient="index")
-            df_summary["FCI Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("FCI_score", 0), 2))
-            df_summary["OFFLINE Score"] = df_summary.index.map(lambda name: round(fairness_scores.get(name, {}).get("OFFLINE_score", 0), 2))
-            df_summary["Total Weighted Score"] = df_summary["FCI Score"] + df_summary["OFFLINE Score"]
+            from core.algorithm import calculate_fairness_summary
+        
+            fairness_summary = calculate_fairness_summary(rotas, latest_week, combined_assignments)
+            df_summary = pd.DataFrame.from_dict(fairness_summary, orient="index")
             df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
-    
             st.dataframe(df_summary, use_container_width=True)
+
     
     # Logs Section
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
