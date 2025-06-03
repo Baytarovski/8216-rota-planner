@@ -10,7 +10,6 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from google.oauth2.service_account import Credentials
 from io import BytesIO
-from core.algorithm import calculate_fairness_scores
 import matplotlib.pyplot as plt
 
 # ─── Constants ───
@@ -175,8 +174,6 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     with st.expander("📈 Recent 4-Week FCI/OFFLINE Load", expanded=True):
         use_month_filter = st.checkbox("📅 View by specific month", value=False)
     
-        summary = {}
-        seen_days = defaultdict(set)
         combined_assignments = defaultdict(dict)
     
         if use_month_filter:
@@ -202,24 +199,6 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                 combined_weeks = []
         else:
             combined_weeks = sorted(rotas.keys(), reverse=True)[:4]    
-    
-        for wk in combined_weeks:
-            week_data = rotas.get(wk, {})
-            for day, roles in week_data.items():
-                unique_day = f"{wk}_{day}"
-                for role, person in roles.items():
-                    if person and person != "Not Working":
-                        if person not in summary:
-                            summary[person] = {"Total Days": 0, "FCI": 0, "OFFLINE": 0}
-                        if unique_day not in seen_days[person]:
-                            summary[person]["Total Days"] += 1
-                            seen_days[person].add(unique_day)
-                        if role == "FCI":
-                            summary[person]["FCI"] += 1
-                        elif role == "OFFLINE":
-                            summary[person]["OFFLINE"] += 1
-    
-                        combined_assignments[unique_day][role] = person
     
         if combined_weeks:
             latest_week = max(combined_weeks)
