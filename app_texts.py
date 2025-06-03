@@ -16,41 +16,44 @@ HOW_TO_USE = """
 FAIR_ASSIGNMENT = """
 ### ⚖️ How Fair Assignment Works
 
-Our rota planner now includes a **semi-AI (rule-guided smart assignment)** engine to fairly distribute lighter reward roles like FCI and OFFLINE.
+Our rota planner uses a **smart rule-based engine** to fairly assign lighter roles like **FCI** and **OFFLINE**.
 
-It analyses:
-- Who worked more recently,
-- Who has the heavier workload this week,
-- And who deserves a break — all with built-in constraints.
-
-This smart logic helps promote fairness without needing full AI.
+It considers:
+- 📆 Who is scheduled to work more days this week
+- 📊 Who worked more in the past 4 weeks
+- 🔁 Who had recent access to FCI or OFFLINE
 
 ---
 
-#### 🔄 Weekly Rules:
-- Each inspector can only be assigned to a specific position **once per week**
-- Each day must have **exactly 6 different inspectors**, including 1 HEAD
-- The **HEAD** position is manually assigned and excluded from auto-calculation
+### 📋 Weekly Assignment Rules
+- Each inspector can only hold **one position per day**
+- Each day must include **6 different inspectors**, including 1 **HEAD**
+- **HEAD** is manually assigned and excluded from fairness scoring
 
 ---
 
-#### 🟢 FCI & OFFLINE — Reward Positions:
-These are lighter, more desirable roles. They are assigned based on:
+### 🟢 FCI & OFFLINE – Fair Rotation Roles
+These are limited, desirable positions. They are assigned to ensure everyone gets a fair share, based on:
 
-- **Weekly Load (This Week):** Inspectors who are scheduled to work more days or harder roles this week get priority
-- **Historical Load (Last 4 Weeks):** Those who consistently worked more in recent weeks are prioritized
-- **Recent Rewards Penalty:** If someone had FCI/OFFLINE too often, their chances decrease
+1. **This Week's Schedule**  
+   → Inspectors already working more days are less likely to receive FCI or OFFLINE again.
 
----
+2. **Recent 4-Week History**  
+   → Those with a heavier recent workload are prioritised to receive these roles.
 
-#### 🚫 Anti-Repetition Logic:
-To promote fairness:
-- The system prevents assigning the **same person to the same position on the same weekday** as in the previous week  
-  _(e.g., if CU was in CAR1 on Monday last week, they won’t be given CAR1 on Monday this week)_
+3. **Recent Usage Penalty**  
+   → If someone had FCI or OFFLINE frequently in the past few weeks, their chance is lowered temporarily.
 
 ---
 
-This ensures a rotating, fair, and effort-based schedule — not just random!
+### 🚫 No Repeating Roles
+To keep things balanced:
+> Inspectors **won’t be assigned the same role on the same weekday** as in the previous week.  
+> _(e.g., if AK had CAR2 on Tuesday last week, they won’t get CAR2 on Tuesday this week.)_
+
+---
+
+✅ The system ensures that FCI and OFFLINE roles are **rotated fairly** — not randomly — across the team.
 """
 
 WHATS_NEW = """
