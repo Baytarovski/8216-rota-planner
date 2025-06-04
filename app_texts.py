@@ -16,33 +16,34 @@ HOW_TO_USE = """
 FAIR_ASSIGNMENT = """
 ### ⚖️ How Fair Assignment Works
 
-Our rota planner uses a **smart rule-based engine** to fairly assign lighter roles like **FCI** and **OFFLINE**.
+Our rota planner uses a **smart rule-based engine** to fairly assign roles like **FCI** and **OFFLINE**.
 
 It considers:
 - 📆 Who is scheduled to work more days this week
 - 📊 Who worked more in the past 4 weeks
-- 🔁 Who had recent access to FCI or OFFLINE
+- 🔁 Who recently had access to FCI or OFFLINE
 
 ---
 
 ### 📋 Weekly Assignment Rules
 - Each inspector can only hold **one position per day**
 - Each day must include **6 different inspectors**, including 1 **HEAD**
-- **HEAD** is manually assigned and excluded from fairness scoring
+- **HEAD** is manually assigned and not included in fairness calculations
 
 ---
 
-### 🟢 FCI & OFFLINE – Fair Rotation Roles
-These are limited, desirable positions. They are assigned to ensure everyone gets a fair share, based on:
+### 🟢 FCI & OFFLINE – Rotated Reward Roles
 
-1. **This Week's Schedule**  
-   → Inspectors already working more days are less likely to receive FCI or OFFLINE again.
+These roles are assigned based on effort, to ensure everyone receives a fair share over time:
 
-2. **Recent 4-Week History**  
-   → Those with a heavier recent workload are prioritised to receive these roles.
+1. **This Week’s Schedule**  
+   → Inspectors working **more days this week** are more likely to receive FCI or OFFLINE as recognition of higher effort.
 
-3. **Recent Usage Penalty**  
-   → If someone had FCI or OFFLINE frequently in the past few weeks, their chance is lowered temporarily.
+2. **Recent 4-Week Load**  
+   → Those who worked **more overall in the past month** are given priority for these roles.
+
+3. **Recent Assignment Penalty**  
+   → If someone recently had FCI or OFFLINE multiple times, their chance temporarily decreases to ensure fair rotation.
 
 ---
 
@@ -53,7 +54,7 @@ To keep things balanced:
 
 ---
 
-✅ The system ensures that FCI and OFFLINE roles are **rotated fairly** — not randomly — across the team.
+✅ The system ensures that FCI and OFFLINE roles are distributed based on **contribution, not chance**.
 """
 
 WHATS_NEW = """
