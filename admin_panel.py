@@ -208,6 +208,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     
             if fairness_summary:
                 df_summary = pd.DataFrame.from_dict(fairness_summary, orient="index")
+                df_summary["Total Weighted Score"] = df_summary["FCI_score"] + df_summary["OFFLINE_score"]
                 df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
                 st.dataframe(df_summary, use_container_width=True)
             else:
