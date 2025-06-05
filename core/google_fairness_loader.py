@@ -39,13 +39,14 @@ def calculate_fairness_summary_from_google_sheet():
         records = sheet.get_all_records()
         df = pd.DataFrame(records)
 
-        latest_week = df["week_start"].max()
-        recent_weeks = sorted(df["week_start"].unique())[-4:]
-        filtered_df = df[df["week_start"].isin(recent_weeks)]
+        df["week_start"] = pd.to_datetime(df["week_start"])
+        latest_week = df["week_start"].max().strftime("%Y-%m-%d")
+        recent_weeks = sorted(df["week_start"].dt.strftime("%Y-%m-%d").unique())[-4:]
+        filtered_df = df[df["week_start"].dt.strftime("%Y-%m-%d").isin(recent_weeks)]
 
         combined_assignments = defaultdict(dict)
         for _, row in filtered_df.iterrows():
-            day_id = f"{row['week_start']}_{row['day']}"
+            day_id = f"{row['week_start'].strftime('%Y-%m-%d')}_{row['day']}"
             for role in POSITIONS:
                 person = row.get(role, "")
                 if person and person.strip() and person != "Not Working":
