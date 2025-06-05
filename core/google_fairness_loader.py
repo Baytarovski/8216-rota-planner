@@ -45,19 +45,19 @@ def calculate_fairness_summary_from_google_sheet():
 
         filtered_df = df[df["week_start"].dt.strftime("%Y-%m-%d").isin(recent_weeks)]
 
-        combined_assignments = defaultdict(dict)
+        combined_assignments = defaultdict(lambda: defaultdict(dict))
         current_week_assignments = defaultdict(dict)
 
         for _, row in filtered_df.iterrows():
             week_str = row["week_start"].strftime("%Y-%m-%d")
-            day_id = f"{week_str}_{row['day']}"
+            day = row["day"]
 
             for role in POSITIONS:
                 person = row.get(role, "")
                 if person and person.strip() and person != "Not Working":
-                    combined_assignments[week_str][role] = person.strip()
+                    combined_assignments[week_str][day][role] = person.strip()
                     if week_str == latest_week:
-                        current_week_assignments[row['day']][role] = person.strip()
+                        current_week_assignments[day][role] = person.strip()
 
         summary = calculate_fairness_scores(
             rotas=combined_assignments,
