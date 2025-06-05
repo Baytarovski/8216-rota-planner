@@ -55,11 +55,15 @@ def calculate_fairness_summary_from_google_sheet():
             for role in POSITIONS:
                 person = row.get(role, "")
                 if person and person.strip() and person != "Not Working":
-                    combined_assignments[day_id][role] = person.strip()
+                    combined_assignments[week_str][role] = person.strip()
                     if week_str == latest_week:
-                        current_week_assignments[day_id][role] = person.strip()
+                        current_week_assignments[row['day']][role] = person.strip()
 
-        summary = calculate_fairness_scores(current_week_assignments=current_week_assignments, combined_assignments=combined_assignments)
+        summary = calculate_fairness_scores(
+            rotas=combined_assignments,
+            current_week_key=latest_week,
+            current_week_assignments=current_week_assignments
+        )
         return summary
 
     except Exception as e:
