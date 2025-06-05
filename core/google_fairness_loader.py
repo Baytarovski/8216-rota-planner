@@ -28,16 +28,35 @@ except Exception as e:
     st.error(f"❌ Google Sheets authorization failed: {e}")
     gspread_client = None
 
-# ─── Load Fairness Data from Google Sheet ───
-def load_fairness_from_google_sheet(sheet):
-    records = sheet.get_all_records()
-    df = pd.DataFrame(records)
-    if "Inspector" in df.columns:
-        df.set_index("Inspector", inplace=True)
-    else:
-        df.set_index(df.columns[0], inplace=True)  # fallback
-    df.index = df.index.str.strip()  # Remove any trailing spaces in names
-    return df
+# ─── Load and Compute Fairness from Google Sheet ───
+def calculate_fairness_summary_from_google_sheet():
+    if gspread_client is None:
+        st.warning("Google Sheets client not initialized.")
+        return {}
+
+    try:
+        sheet = gspread_client.open("rota_data").sheet1
+        records = sheet.get_all_records()
+        df = pd.DataFrame(records)
+
+        latest_week = df["week_start"].max()
+        recent_weeks = sorted(df["week_start"].unique())[-4:]
+        filtered_df = df[df["week_start"].isin(recent_weeks)]
+
+        combined_assignments = defaultdict(dict)
+        for _, row in filtered_df.iterrows():
+            day_id = f"{row['week_start']}_{row['day']}"
+            for role in POSITIONS:
+                person = row.get(role, "")
+                if person and person.strip() and person != "Not Working":
+                    combined_assignments[day_id][role] = person.strip()
+
+        summary = calculate_fairness_scores(latest_week, combined_assignments)
+        return summary
+
+    except Exception as e:
+        st.error(f"❌ Failed to fetch fairness data from Google Sheets: {e}")
+        return {}
 
 # ─── Table Image Generator ───
 def generate_table_image(df):
