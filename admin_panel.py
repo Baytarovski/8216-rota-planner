@@ -9,7 +9,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from collections import defaultdict
 from google.oauth2.service_account import Credentials
-from core.google_fairness_loader import load_fairness_from_google_sheet
+from core.google_fairness_loader import calculate_fairness_summary_from_google_sheet
 from io import BytesIO
 import matplotlib.pyplot as plt
 
@@ -204,7 +204,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     if combined_weeks:
         try:
             sheet = gspread_client.open("rota_data").sheet1
-            fairness_summary = load_fairness_from_google_sheet(sheet)
+            fairness_summary = calculate_fairness_summary_from_google_sheet()
     
             if fairness_summary:
                 df_summary = pd.DataFrame.from_dict(fairness_summary, orient="index")
