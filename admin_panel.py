@@ -203,7 +203,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
     
     if combined_weeks:
     try:
-        sheet = gspread_client.open("rota_data").sheet1  # ✅ Sayfa adını doğru girdiysen sorun yok
+        sheet = gspread_client.open("rota_data").sheet1
         fairness_summary = load_fairness_from_google_sheet(sheet)
 
         if fairness_summary:
@@ -211,10 +211,10 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
             st.dataframe(df_summary, use_container_width=True)
         else:
-            st.info("No fairness data could be generated from the Google Sheet.")
+            st.info("ℹ️ No fairness data found in the rota_data sheet.")
 
     except Exception as e:
-        st.error(f"❌ Failed to load fairness data from Google Sheets: {e}")
+        st.error(f"❌ Failed to fetch fairness data from Google Sheets: {e}")
 
     
     # Logs Section
