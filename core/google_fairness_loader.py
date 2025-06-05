@@ -59,7 +59,7 @@ def calculate_fairness_summary_from_google_sheet():
                     if week_str == latest_week:
                         current_week_assignments[day_id][role] = person.strip()
 
-        summary = calculate_fairness_scores(current_week_assignments, combined_assignments)
+        summary = calculate_fairness_scores(current_week_assignments=current_week_assignments, combined_assignments=combined_assignments)
         return summary
 
     except Exception as e:
