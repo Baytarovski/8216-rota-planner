@@ -7,6 +7,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import random
 import streamlit as st
+from math import log
 
 st.cache_data.clear()
 
