@@ -59,9 +59,12 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
         fci_ratio = fci / days if days else 0
         offline_ratio = offline / days if days else 0
 
-        fci_score = max(0, round((TARGET_RATIO_FCI - fci_ratio) * 10, 1))
-        offline_score = max(0, round((TARGET_RATIO_OFFLINE - offline_ratio) * 10, 1))
-        total_score = round(fci_score + offline_score, 1)
+        base_fci_score = max(0, (TARGET_RATIO_FCI - fci_ratio) * 10)
+        base_offline_score = max(0, (TARGET_RATIO_OFFLINE - offline_ratio) * 10)
+
+        fci_score = round(base_fci_score * log(days + 1), 2) if days > 0 else 0
+        offline_score = round(base_offline_score * log(days + 1), 2) if days > 0 else 0
+        total_score = round(fci_score + offline_score, 2)
 
         fairness_scores[inspector] = {
             "Days": days,
@@ -213,9 +216,12 @@ def calculate_fairness_summary(rotas, current_week_key, current_week_assignments
         fci_ratio = fci / days if days else 0
         offline_ratio = offline / days if days else 0
 
-        fci_score = max(0, round((TARGET_RATIO_FCI - fci_ratio) * 10, 1))
-        offline_score = max(0, round((TARGET_RATIO_OFFLINE - offline_ratio) * 10, 1))
-        total_score = round(fci_score + offline_score, 1)
+        base_fci_score = max(0, (TARGET_RATIO_FCI - fci_ratio) * 10)
+        base_offline_score = max(0, (TARGET_RATIO_OFFLINE - offline_ratio) * 10)
+
+        fci_score = round(base_fci_score * log(days + 1), 2) if days > 0 else 0
+        offline_score = round(base_offline_score * log(days + 1), 2) if days > 0 else 0
+        total_score = round(fci_score + offline_score, 2)
 
         summary[inspector] = {
             "Total Days": days,
