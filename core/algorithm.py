@@ -146,7 +146,9 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
 
                 for candidate in eligible:
                     if candidate in available:
-                        if pos in ["FCI", "OFFLINE"] and fci_offline_count[candidate] >= 2:
+                        if pos == "FCI" and fci_offline_count.get((candidate, "FCI"), 0) >= 1:
+                            continue
+                        if pos == "OFFLINE" and fci_offline_count.get((candidate, "OFFLINE"), 0) >= 1:
                             continue
                         if same_day_block.get(day, {}).get(pos) == candidate:
                             continue
