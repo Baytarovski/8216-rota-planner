@@ -155,7 +155,7 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
                         assignments[pos] = candidate
                         used[candidate].append(pos)
                         if pos in ["FCI", "OFFLINE"]:
-                            fci_offline_count[candidate] += 1
+                            fci_offline_count[(candidate, pos)] += 1
                         available.remove(candidate)
                         if candidate in top3:
                             assigned_top3.add(candidate)
