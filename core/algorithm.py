@@ -60,11 +60,13 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
         fci_ratio = fci / days if days else 0
         offline_ratio = offline / days if days else 0
 
+        effort_multiplier = 1 + (days / 5)
+
         base_fci_score = max(0, (TARGET_RATIO_FCI - fci_ratio) * 10)
         base_offline_score = max(0, (TARGET_RATIO_OFFLINE - offline_ratio) * 10)
 
-        fci_score = round(base_fci_score * log(days + 1), 2) if days > 0 else 0
-        offline_score = round(base_offline_score * log(days + 1), 2) if days > 0 else 0
+        fci_score = round(base_fci_score * effort_multiplier, 2)
+        offline_score = round(base_offline_score * effort_multiplier, 2)
         total_score = round(fci_score + offline_score, 2)
 
         fairness_scores[inspector] = {
@@ -201,39 +203,6 @@ def calculate_fairness_summary(rotas, current_week_key, current_week_assignments
             if person and person != "Not Working":
                 past_day_count[person] += 1
                 if role == "FCI":
-                    past_fci_count[person] += 1
-                elif role == "OFFLINE":
-                    past_offline_count[person] += 1
+                    past_fci_
 
-    TARGET_RATIO_FCI = 0.2
-    TARGET_RATIO_OFFLINE = 0.2
-
-    summary = {}
-    all_inspectors = set(past_day_count) | set(past_fci_count) | set(past_offline_count)
-
-    for inspector in all_inspectors:
-        days = past_day_count[inspector]
-        fci = past_fci_count[inspector]
-        offline = past_offline_count[inspector]
-
-        fci_ratio = fci / days if days else 0
-        offline_ratio = offline / days if days else 0
-
-        base_fci_score = max(0, (TARGET_RATIO_FCI - fci_ratio) * 10)
-        base_offline_score = max(0, (TARGET_RATIO_OFFLINE - offline_ratio) * 10)
-
-        fci_score = round(base_fci_score * log(days + 1), 2) if days > 0 else 0
-        offline_score = round(base_offline_score * log(days + 1), 2) if days > 0 else 0
-        total_score = round(fci_score + offline_score, 2)
-
-        summary[inspector] = {
-            "Total Days": days,
-            "FCI": fci,
-            "OFFLINE": offline,
-            "FCI Score": fci_score,
-            "OFFLINE Score": offline_score,
-            "Total Weighted Score": total_score
-        }
-
-    return summary
 
