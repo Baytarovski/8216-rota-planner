@@ -21,40 +21,45 @@ Our rota planner uses a **smart rule-based engine** to fairly assign roles like 
 It considers:
 - 📆 Who is scheduled to work more days this week
 - 📊 Who worked more in the past 4 weeks
-- 🔁 Who recently had access to FCI or OFFLINE
+- ⛔ Who recently held FCI or OFFLINE
+- 🚫 Who worked **too little to qualify for reward roles**
 
 ---
 
 ### 📋 Weekly Assignment Rules
-- Each inspector can only hold **one position per day**
-- Each day must include **6 different inspectors**, including 1 **HEAD**
-- **HEAD** is manually assigned and not included in fairness calculations
+- Each inspector is assigned **only one role per day**
+- Each day must include **6 unique inspectors**, including one manually chosen **HEAD**
+- The **HEAD** is not factored into fairness calculations
 
 ---
 
 ### 🟢 FCI & OFFLINE – Rotated Reward Roles
 
-These roles are assigned based on effort, to ensure everyone receives a fair share over time:
+These roles are assigned based on overall effort:
 
-1. **This Week’s Schedule**  
-   → Inspectors working **more days this week** are more likely to receive FCI or OFFLINE as recognition of higher effort.
+1. **Current Week Contribution**  
+   → Inspectors working **more days this week** are more likely to receive FCI or OFFLINE.
 
-2. **Recent 4-Week Load**  
-   → Those who worked **more overall in the past month** are given priority for these roles.
+2. **4-Week Effort History**  
+   → Those who worked **more days in the past 4 weeks** are prioritized.
 
-3. **Recent Assignment Penalty**  
-   → If someone recently had FCI or OFFLINE multiple times, their chance temporarily decreases to ensure fair rotation.
+3. **Recent Role Cooldown**  
+   → Inspectors who recently held FCI or OFFLINE are temporarily deprioritized to ensure fair rotation.
+
+4. **Minimum Work Threshold**  
+   → Inspectors who worked **less than 3 total days in the past 4 weeks** are **excluded** from receiving FCI or OFFLINE.
 
 ---
 
-### 🚫 No Repeating Roles
-To keep things balanced:
+### 🚫 No Repeating Roles on Same Day
+
+To maintain variety:
 > Inspectors **won’t be assigned the same role on the same weekday** as in the previous week.  
-> _(e.g., if AK had CAR2 on Tuesday last week, they won’t get CAR2 on Tuesday this week.)_
+> _(e.g., If AK had CAR2 on Tuesday last week, they won’t get CAR2 on Tuesday this week.)_
 
 ---
 
-✅ The system ensures that FCI and OFFLINE roles are distributed based on **contribution, not chance**.
+✅ The system ensures that FCI and OFFLINE roles are distributed based on **real contribution — not luck**.
 """
 
 WHATS_NEW = """
