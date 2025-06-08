@@ -17,6 +17,9 @@ MIN_REQUIRED_DAYS_FOR_FCI_OFFLINE = 2
 
 # Fairness scores based on how many easy (reward) roles the person received relative to their total work days
 def calculate_fairness_scores(rotas, current_week_key, current_week_assignments):
+    from collections import defaultdict
+    from datetime import datetime
+
     past_fci_count = defaultdict(int)
     past_offline_count = defaultdict(int)
     past_day_count = defaultdict(int)
@@ -26,6 +29,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
     parsed_weeks = [w for w in all_weeks if datetime.strptime(w, "%Y-%m-%d") <= current_date]
     past_weeks = parsed_weeks[:4]
 
+    # 1️⃣ Geçmiş 4 haftalık günleri say
     for week_key in past_weeks:
         week_data = rotas.get(week_key, {})
         for day_data in week_data.values():
@@ -37,6 +41,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
                     elif role == "OFFLINE":
                         past_offline_count[person] += 1
 
+    # 2️⃣ Bu haftaki görevleri de dahil et
     for day, assignments in current_week_assignments.items():
         for role, person in assignments.items():
             if person and person != "Not Working":
@@ -84,6 +89,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
         }
 
     return fairness_scores
+
 
 
 # Prevents same-day repeat of role from last week
@@ -183,6 +189,9 @@ def generate_rota(daily_workers, daily_heads, rotas, inspectors, week_key):
     return {"error": f"Could not generate rota without conflicts after {DEFAULT_ATTEMPTS} attempts."}
 
 def calculate_fairness_summary(rotas, current_week_key, current_week_assignments):
+    from collections import defaultdict
+    from datetime import datetime
+
     past_fci_count = defaultdict(int)
     past_offline_count = defaultdict(int)
     past_day_count = defaultdict(int)
@@ -192,6 +201,7 @@ def calculate_fairness_summary(rotas, current_week_key, current_week_assignments
     parsed_weeks = [w for w in all_weeks if datetime.strptime(w, "%Y-%m-%d") <= current_date]
     past_weeks = parsed_weeks[:4]
 
+    # 1️⃣ Geçmiş 4 haftayı say
     for week_key in past_weeks:
         week_data = rotas.get(week_key, {})
         for day_data in week_data.values():
@@ -203,6 +213,7 @@ def calculate_fairness_summary(rotas, current_week_key, current_week_assignments
                     elif role == "OFFLINE":
                         past_offline_count[person] += 1
 
+    # 2️⃣ Bu haftayı da ekle
     for day, assignments in current_week_assignments.items():
         for role, person in assignments.items():
             if person and person != "Not Working":
@@ -250,3 +261,4 @@ def calculate_fairness_summary(rotas, current_week_key, current_week_assignments
         }
 
     return summary
+
