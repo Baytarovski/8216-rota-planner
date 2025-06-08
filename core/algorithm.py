@@ -57,7 +57,7 @@ def calculate_fairness_scores(rotas, current_week_key, current_week_assignments)
         fci = past_fci_count[inspector]
         offline = past_offline_count[inspector]
 
-        if days < 3:
+        if days < 4:
             fci_score = 0
             offline_score = 0
             total_score = 0
@@ -223,7 +223,7 @@ def calculate_fairness_summary(rotas, current_week_key, current_week_assignments
         fci = past_fci_count[inspector]
         offline = past_offline_count[inspector]
 
-        if days < 3:
+        if days < 4:
             fci_score = 0
             offline_score = 0
             total_score = 0
