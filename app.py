@@ -136,8 +136,6 @@ def display_latest_rota(rotas):
             file_name=f"rota_{latest_week}.png",
             mime="image/png"
         )
-        
-        st.markdown("</div>", unsafe_allow_html=True)
     else:
         st.info("📭 No rota available for this week or upcoming weeks.")
 
