@@ -170,24 +170,24 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
         # Monthly Summary Section
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
     st.markdown("<h4 style='margin-top:0;'>📊 Monthly Assignment Summary</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-    
+
     with st.expander("📈 Recent 4-Week FCI/OFFLINE Load", expanded=True):
         use_month_filter = st.checkbox("📅 View by specific month", value=False)
-    
+
         combined_assignments = defaultdict(dict)
-    
+
         if use_month_filter:
             available_months = sorted(
                 {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in rotas.keys()},
                 reverse=True
             )
             selected_month = st.selectbox("🗓️ Select a Month", available_months)
-    
+
             month_week_keys = [
                 wk for wk in rotas.keys()
                 if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month
             ]
-    
+
             if month_week_keys:
                 first_month_date = min(datetime.strptime(wk, "%Y-%m-%d") for wk in month_week_keys)
                 additional_weeks = [
@@ -198,22 +198,22 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
             else:
                 combined_weeks = []
         else:
-            combined_weeks = sorted(rotas.keys(), reverse=True)[:4]    
-    
+            combined_weeks = sorted(rotas.keys(), reverse=True)[:4]
+
         if combined_weeks:
             latest_week = max(combined_weeks)
             from core.algorithm import calculate_fairness_summary
-        
+
             fairness_summary = calculate_fairness_summary(rotas, latest_week, combined_assignments)
             df_summary = pd.DataFrame.from_dict(fairness_summary, orient="index")
             df_summary = df_summary.sort_values(by="Total Weighted Score", ascending=False)
             st.dataframe(df_summary, use_container_width=True)
 
-    
+
     # Logs Section
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)
     st.markdown("<h4 style='margin-top:0;'>🗓️ System Activity & Logs</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
-    
+
     logs = fetch_logs_from_google_sheet()
     if not logs:
         st.info("No manual edits recorded.")
