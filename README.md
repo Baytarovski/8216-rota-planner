@@ -43,3 +43,11 @@ cd 8216-rota-planner
 pip install -r requirements.txt
 streamlit run app.py
 ```
+
+## 🧪 Running Tests
+
+Run the test suite with:
+
+```bash
+pytest
+```
