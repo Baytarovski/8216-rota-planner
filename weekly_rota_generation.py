@@ -10,8 +10,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 from core.algorithm import generate_rota
 from core.data_utils import save_rotas
-import matplotlib.pyplot as plt
-from io import BytesIO
 from core.utils import generate_table_image
 
 
