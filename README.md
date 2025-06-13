@@ -15,7 +15,7 @@ A smart, fair, and fully automated rota management system designed for ABP Yetmi
 - 🗂️ **Editable & Collapsible Saved Weekly Rotas**
 - 🎨 **Modern UI with Auto Validation & Warnings**
 
-## 🚀 Version 1.2.0 (Stable)
+## 🚀 Version 1.3.5 (Stable)
 
 > Release Date: 25 May 2025
 
@@ -42,4 +42,4 @@ git clone https://github.com/YOUR_USERNAME/8216-rota-planner.git
 cd 8216-rota-planner
 pip install -r requirements.txt
 streamlit run app.py
-
+```
