@@ -10,9 +10,6 @@ import base64
 import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta
-import uuid
-import matplotlib.pyplot as plt
-from io import BytesIO
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
 from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT, WHATS_NEW, CHANGELOG_HISTORY
