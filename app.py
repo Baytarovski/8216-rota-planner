@@ -96,7 +96,7 @@ def display_latest_rota(rotas):
     from datetime import datetime, timedelta
     import pandas as pd
     import streamlit as st
-    
+
     rotas = cached_load_rotas()
 
     DAYS_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
@@ -116,14 +116,14 @@ def display_latest_rota(rotas):
 
         summary_df = pd.DataFrame.from_dict(future_rotas[latest_week], orient="index")
         saturday_exists = "Saturday" in summary_df.index and summary_df.loc["Saturday"].replace("", pd.NA).dropna().any()
-        
+
         display_days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         if saturday_exists:
             display_days.append("Saturday")
-        
+
         summary_df = summary_df.reindex(display_days)[POSITIONS].fillna("")
 
-        
+
               # 📸 PNG Image + Download Button
         image_buf = generate_table_image(summary_df, title=f"{week_label} Weekly Rota")
         st.image(image_buf, use_container_width=True)
