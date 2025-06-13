@@ -3,8 +3,6 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 
 def generate_table_image(df, title=None):
-    from io import BytesIO
-    import matplotlib.pyplot as plt
 
     fig_height = len(df) * 0.43 + 0.6
     fig, ax = plt.subplots(figsize=(12, fig_height))
