@@ -137,7 +137,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                             if old_val != new_val:
                                 append_to_google_sheet({
                                     "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                                    "admin_id": "admin",
+                                    "admin_id": st.session_state.get("admin_user", "admin"),
                                     "week_start": wk,
                                     "day": day,
                                     "position": pos,
@@ -154,7 +154,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                 if st.button("🗑️ Delete Rota", key=f"delete_{wk}_final_unique"):
                     append_to_google_sheet({
                         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
-                        "admin_id": "admin",
+                        "admin_id": st.session_state.get("admin_user", "admin"),
                         "week_start": wk,
                         "day": "-",
                         "position": "-",
