@@ -138,9 +138,11 @@ def check_existing_rota(week_key, rotas, selected_monday, is_admin, all_days, po
     rota_exists = False
     latest_week = max(rotas.keys()) if rotas else None
     latest_week_date = datetime.strptime(latest_week, "%Y-%m-%d").date() if latest_week else None
+    today = datetime.today().date()
 
     if week_key in rotas:
-        if selected_monday == latest_week_date:
+        latest_week_current = selected_monday == latest_week_date and (selected_monday + timedelta(days=4)) >= today
+        if latest_week_current:
             st.info("ℹ️ A rota already exists for the selected week and is displayed at the top.")
         else:
             st.warning(f"A rota already exists for the week starting {week_key}. Displaying saved rota:")
