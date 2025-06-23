@@ -28,6 +28,8 @@ from weekly_rota_generation import (
 # ─────────────────────────────────────────────
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
 
+st.session_state.setdefault("is_admin", False)
+
 st.markdown("""
 <div style='background-color:#e9f1f7; border:2px solid #c7d8e2; border-radius:12px; padding:1.5em; text-align:center; margin-bottom:2em;'>
     <h1 style='margin-bottom:0.2em; font-size:2.4em; color:#1a2b44;'>Weekly Rota Management</h1>
