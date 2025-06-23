@@ -14,6 +14,7 @@ A smart, fair, and fully automated rota management system designed for ABP Yetmi
 - 📈 **Monthly FCI/OFFLINE Overview**
 - 🗂️ **Editable & Collapsible Saved Weekly Rotas**
 - 🎨 **Modern UI with Auto Validation & Warnings**
+- 🔑 **Password-protected management features**
 
 ## 🚀 Version 1.3.5 (Stable)
 
@@ -43,6 +44,10 @@ cd 8216-rota-planner
 pip install -r requirements.txt
 streamlit run app.py
 ```
+
+The default management password is `8216`. Set the `APP_PASSWORD` environment
+variable to use a custom password. Viewing saved rotas does not require a
+password.
 
 ## 🧪 Running Tests
 

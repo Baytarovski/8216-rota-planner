@@ -28,6 +28,24 @@ from weekly_rota_generation import (
 # ─────────────────────────────────────────────
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
 
+APP_PASSWORD = os.getenv("APP_PASSWORD", "8216")
+
+
+def require_app_password():
+    if "authenticated" not in st.session_state:
+        st.session_state["authenticated"] = False
+
+    if not st.session_state["authenticated"]:
+        st.markdown("### 🔑 Enter password to manage rotas")
+        pwd = st.text_input("Password", type="password", key="app_password")
+        if st.button("Unlock"):
+            if pwd == APP_PASSWORD:
+                st.session_state["authenticated"] = True
+                st.experimental_rerun()
+            else:
+                st.error("Incorrect password.")
+        st.stop()
+
 st.markdown("""
 <div style='background-color:#e9f1f7; border:2px solid #c7d8e2; border-radius:12px; padding:1.5em; text-align:center; margin-bottom:2em;'>
     <h1 style='margin-bottom:0.2em; font-size:2.4em; color:#1a2b44;'>Weekly Rota Management</h1>
@@ -141,15 +159,18 @@ def display_latest_rota(rotas):
 # 🚀 App Entry
 # ─────────────────────────────────────────────
 render_sidebar()
-admin_login()
-
-if st.session_state.get("is_admin", False):
-    render_admin_panel(rotas, save_rotas, delete_rota)
 
 display_latest_rota(rotas)
 
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
+
+require_app_password()
+
+admin_login()
+
+if st.session_state.get("is_admin", False):
+    render_admin_panel(rotas, save_rotas, delete_rota)
 
 # 🔁 Weekly Rota Planning
 selected_monday, days = select_week()
