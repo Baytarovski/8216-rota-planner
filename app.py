@@ -79,14 +79,18 @@ def render_sidebar():
 # 🔐 Admin Login
 # ─────────────────────────────────────────────
 def admin_login():
-    with st.sidebar.expander("🔐 Admin Access", expanded=False):
-        admin_input = st.text_input("Enter admin password:", type="password", key="admin_password")
-        if admin_input == "17500#":
-            st.session_state["is_admin"] = True
-            st.success("Access granted. Admin panel is now visible.")
-        elif admin_input:
-            st.session_state["is_admin"] = False
-            st.error("Incorrect password.")
+    if st.session_state.get("is_admin"):
+        return
+
+    st.info("🔐 Enter the access code below to unlock rota planning tools.")
+    code_input = st.text_input("Access Code:", type="password", key="access_code")
+
+    if code_input == "17500#":
+        st.session_state["is_admin"] = True
+        st.success("Access granted. Planning tools unlocked.")
+    elif code_input:
+        st.session_state["is_admin"] = False
+        st.error("Incorrect code.")
 
 # ─────────────────────────────────────────────
 # 🔄 Display Latest Rota
@@ -143,10 +147,12 @@ def display_latest_rota(rotas):
 render_sidebar()
 admin_login()
 
-if st.session_state.get("is_admin", False):
-    render_admin_panel(rotas, save_rotas, delete_rota)
-
 display_latest_rota(rotas)
+
+if not st.session_state.get("is_admin", False):
+    st.stop()
+
+render_admin_panel(rotas, save_rotas, delete_rota)
 
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
