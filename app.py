@@ -29,7 +29,6 @@ from weekly_rota_generation import (
 st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
 
 st.session_state.setdefault("is_admin", False)
-st.session_state.setdefault("admin_user", None)
 
 st.markdown("""
 <div style='background-color:#e9f1f7; border:2px solid #c7d8e2; border-radius:12px; padding:1.5em; text-align:center; margin-bottom:2em;'>
@@ -81,34 +80,19 @@ def render_sidebar():
 # ─────────────────────────────────────────────
 # 🔐 Admin Login
 # ─────────────────────────────────────────────
-def load_users():
-    users_file = "users.json"
-    if os.path.exists(users_file):
-        with open(users_file, "r") as f:
-            return json.load(f)
-    return {}
-
-
 def admin_login():
     if st.session_state.get("is_admin"):
         return
 
-    st.info("🔐 Please enter your username and password to access rota planning tools.")
+    st.info("🔐 Enter the access code below to unlock rota planning tools.")
+    code_input = st.text_input("Access Code:", type="password", key="access_code")
 
-    with st.form("login_form"):
-        username = st.text_input("Username", key="login_user")
-        password = st.text_input("Password", type="password", key="login_pass")
-        submitted = st.form_submit_button("Login")
-
-    if submitted:
-        users = load_users()
-        if username in users and users[username] == password:
-            st.session_state["is_admin"] = True
-            st.session_state["admin_user"] = username
-            st.success("Access granted. Planning tools unlocked.")
-        else:
-            st.session_state["is_admin"] = False
-            st.error("Invalid username or password.")
+    if code_input == "17500#":
+        st.session_state["is_admin"] = True
+        st.success("Access granted. Planning tools unlocked.")
+    elif code_input:
+        st.session_state["is_admin"] = False
+        st.error("Incorrect code.")
 
 # ─────────────────────────────────────────────
 # 🔄 Display Latest Rota
