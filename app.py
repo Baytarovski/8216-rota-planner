@@ -147,9 +147,8 @@ def display_latest_rota(rotas):
 # 🚀 App Entry
 # ─────────────────────────────────────────────
 render_sidebar()
-admin_login()
-
 display_latest_rota(rotas)
+admin_login()
 
 if not st.session_state.get("is_admin", False):
     st.stop()
