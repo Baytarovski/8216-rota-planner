@@ -25,7 +25,8 @@ from weekly_rota_generation import (
 # ─────────────────────────────────────────────
 # 🌐 App Setup
 # ─────────────────────────────────────────────
-st.set_page_config(page_title="Homepage", layout="wide")
+st.set_page_config(page_title="📋 Weekly Rota", page_icon="📋")
+st.title("📋 Weekly Rota")
 
 st.session_state.setdefault("is_admin", False)
 
