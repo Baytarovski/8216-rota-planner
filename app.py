@@ -13,7 +13,6 @@ from datetime import datetime, timedelta
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
 from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT, WHATS_NEW, CHANGELOG_HISTORY
-from admin_panel import render_admin_panel
 from core.utils import generate_table_image
 from weekly_rota_generation import (
     select_week,
@@ -26,7 +25,7 @@ from weekly_rota_generation import (
 # ─────────────────────────────────────────────
 # 🌐 App Setup
 # ─────────────────────────────────────────────
-st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
+st.set_page_config(page_title="Homepage", layout="wide")
 
 st.session_state.setdefault("is_admin", False)
 
