@@ -51,7 +51,6 @@ def save_rotas(week_key: str, rota_dict: Dict[str, Dict[str, str]]):
         row = [week_key, day] + [roles.get(pos, "") for pos in POSITIONS]
         sheet.append_row(row)
 
-from datetime import datetime
 
 def load_rotas():
     sheet = get_sheet()
@@ -93,15 +92,37 @@ def delete_rota(week_key: str):
 
     return deleted_data
 
-def archive_deleted_rota(week_key: str, rota_dict: Dict[str, Dict[str, str]], admin_user: str):
+def archive_deleted_rota(week_key: str, rota_dict: Dict[str, Dict[str, str]]):
     sheet = get_deleted_sheet()
     existing = sheet.get_all_values()
-    header = ["week_start", "day"] + POSITIONS + ["admin_users"]
+    header = ["week_start", "day"] + POSITIONS
     if not existing:
         sheet.append_row(header)
     for day, roles in rota_dict.items():
-        row = [week_key, day] + [roles.get(pos, "") for pos in POSITIONS] + [admin_user]
+        row = [week_key, day] + [roles.get(pos, "") for pos in POSITIONS]
         sheet.append_row(row)
+
+def load_deleted_rotas():
+    sheet = get_deleted_sheet()
+    rows = sheet.get_all_values()
+    all_rotas = {}
+
+    if not rows or rows[0][:2] != ["week_start", "day"]:
+        return all_rotas
+
+    for row in rows[1:]:
+        if len(row) < 3:
+            continue
+        week, day, *assignments = row
+        try:
+            parsed_week = datetime.strptime(week.strip(), "%Y-%m-%d").strftime("%Y-%m-%d")
+        except Exception:
+            parsed_week = week.strip()
+        if parsed_week not in all_rotas:
+            all_rotas[parsed_week] = {}
+        all_rotas[parsed_week][day] = dict(zip(POSITIONS, assignments[:len(POSITIONS)]))
+
+    return all_rotas
 
 def get_saved_week_keys():
     rotas = load_rotas()
