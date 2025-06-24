@@ -176,8 +176,3 @@ if not rota_already_exists:
     if valid_days and not invalid_days:
         generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, inspectors, week_key, days)
 
-if st.session_state.get("is_admin", False):
-    render_admin_panel(rotas, save_rotas, delete_rota)
-
-    if "feedback" in st.session_state:
-        st.success(st.session_state.pop("feedback"))
