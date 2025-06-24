@@ -2,7 +2,7 @@
 # Unauthorized use, copying, modification, or distribution is strictly prohibited.
 # Contact: ticked.does-7c@icloud.com
 
-# app.py — Main Streamlit Application Entry Point
+# Homepage.py — Main Streamlit Application Entry Point
 
 import os
 import json
@@ -13,7 +13,6 @@ from datetime import datetime, timedelta
 from core.algorithm import generate_rota
 from core.data_utils import load_rotas, save_rotas, delete_rota, get_saved_week_keys
 from app_texts import HOW_TO_USE, FAIR_ASSIGNMENT, WHATS_NEW, CHANGELOG_HISTORY
-from admin_panel import render_admin_panel
 from core.utils import generate_table_image
 from weekly_rota_generation import (
     select_week,
@@ -26,7 +25,7 @@ from weekly_rota_generation import (
 # ─────────────────────────────────────────────
 # 🌐 App Setup
 # ─────────────────────────────────────────────
-st.set_page_config(page_title="8216 ABP Yetminster Weekly Rota Planner", layout="wide")
+st.set_page_config(page_title="Homepage", layout="wide")
 
 st.session_state.setdefault("is_admin", False)
 
@@ -176,8 +175,3 @@ if not rota_already_exists:
     if valid_days and not invalid_days:
         generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, inspectors, week_key, days)
 
-if st.session_state.get("is_admin", False):
-    render_admin_panel(rotas, save_rotas, delete_rota)
-
-    if "feedback" in st.session_state:
-        st.success(st.session_state.pop("feedback"))
