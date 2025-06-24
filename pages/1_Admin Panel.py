@@ -5,7 +5,10 @@ from core.data_utils import load_rotas, save_rotas, delete_rota
 st.set_page_config(page_title="Admin Panel", layout="wide")
 
 st.session_state.setdefault("is_admin", False)
-ADMIN_CREDENTIALS = {"admin": "17500#"}
+ADMIN_CREDENTIALS = {
+    "admin": "17500#",
+    "Marco": "429327",
+}
 
 
 def admin_login():

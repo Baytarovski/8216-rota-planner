@@ -134,7 +134,7 @@ def generate_and_display_rota(valid_days, daily_workers, daily_heads, rotas, ins
         st.cache_data.clear()
         st.rerun()
 
-def check_existing_rota(week_key, rotas, selected_monday, is_admin, all_days, positions):
+def check_existing_rota(week_key, rotas, selected_monday, has_planner_access, all_days, positions):
     rota_exists = False
     latest_week = max(rotas.keys()) if rotas else None
     latest_week_date = datetime.strptime(latest_week, "%Y-%m-%d").date() if latest_week else None
@@ -157,7 +157,7 @@ def check_existing_rota(week_key, rotas, selected_monday, is_admin, all_days, po
             existing_df = existing_df[positions]
             st.dataframe(existing_df)
 
-        if not is_admin:
+        if not has_planner_access:
             st.stop()
         else:
             rota_exists = True

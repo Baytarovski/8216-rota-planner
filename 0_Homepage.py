@@ -27,7 +27,7 @@ from weekly_rota_generation import (
 # ─────────────────────────────────────────────
 st.set_page_config(page_title="8216 Weekly Rota")
 
-st.session_state.setdefault("is_admin", False)
+st.session_state.setdefault("is_planner", False)
 
 st.markdown("""
 <div style='background-color:#e9f1f7; border:2px solid #c7d8e2; border-radius:12px; padding:1.5em; text-align:center; margin-bottom:2em;'>
@@ -80,17 +80,17 @@ def render_sidebar():
 # 🔐 Admin Login
 # ─────────────────────────────────────────────
 def admin_login():
-    if st.session_state.get("is_admin"):
+    if st.session_state.get("is_planner"):
         return
 
     st.info("🔐 Enter the access code below to unlock rota planning tools.")
     code_input = st.text_input("Access Code:", type="password", key="access_code")
 
     if code_input == "17500#":
-        st.session_state["is_admin"] = True
+        st.session_state["is_planner"] = True
         st.success("Access granted. Planning tools unlocked.")
     elif code_input:
-        st.session_state["is_admin"] = False
+        st.session_state["is_planner"] = False
         st.error("Incorrect code.")
 
 # ─────────────────────────────────────────────
@@ -149,7 +149,7 @@ render_sidebar()
 display_latest_rota(rotas)
 admin_login()
 
-if not st.session_state.get("is_admin", False):
+if not st.session_state.get("is_planner", False):
     st.stop()
 
 # 🔁 Weekly Rota Planning
@@ -160,7 +160,7 @@ rota_already_exists = check_existing_rota(
     week_key=week_key,
     rotas=rotas,
     selected_monday=selected_monday,
-    is_admin=st.session_state.get("is_admin", False),
+    has_planner_access=st.session_state.get("is_planner", False),
     all_days=days,
     positions=POSITIONS
 )
