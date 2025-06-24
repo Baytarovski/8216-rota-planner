@@ -13,4 +13,4 @@ page_icon = "📋"
 
 [runner]
 # This tells Streamlit Cloud which file to run
-main_script = "0_📋 Weekly Rota.py"
+main_script = "0_Weekly Rota.py"
