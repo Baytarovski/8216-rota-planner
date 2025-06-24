@@ -1,8 +1,17 @@
 import streamlit as st
 from admin_panel import render_admin_panel
 from core.data_utils import load_rotas, save_rotas, delete_rota, archive_deleted_rota
+from app_texts import ADMIN_PANEL_HELP
 
 st.set_page_config(page_title="Admin Panel", layout="wide")
+
+
+def render_sidebar():
+    with st.sidebar.expander("📘 Admin Panel Guide", expanded=True):
+        st.markdown(ADMIN_PANEL_HELP)
+
+
+render_sidebar()
 
 st.session_state.setdefault("is_admin", False)
 ADMIN_CREDENTIALS = {
