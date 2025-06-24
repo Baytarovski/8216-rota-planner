@@ -1,4 +1,5 @@
 import types
+
 import builtins
 
 import sys
@@ -52,6 +53,8 @@ def test_delete_and_archive_rota():
         data_utils.get_deleted_sheet = original_get_deleted
 
     assert week_key not in [r[0] for r in sheet.rows if r]
+    assert deleted_sheet.rows[0] == ["week_start", "day"] + data_utils.POSITIONS + ["admin_users"]
+    assert deleted_sheet.rows[1][-1] == "admin"
     assert deleted_sheet.rows[0][:3] == ["week_start", "day", "deleted_by"]
     assert len(deleted_sheet.rows) == 1 + len(deleted)
 
