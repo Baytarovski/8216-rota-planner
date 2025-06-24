@@ -15,7 +15,7 @@ def admin_login():
     if st.session_state.get("is_admin"):
         return
 
-    st.info("🔐 Enter your admin credentials below to unlock admin tools.")
+    st.info("🔐 Enter your username and password below to unlock admin tools.")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
