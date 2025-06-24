@@ -75,7 +75,7 @@ def fetch_logs_from_google_sheet():
         return []
 
 # ─── Admin Panel ───
-def render_admin_panel(rotas, save_rotas, delete_rota):
+def render_admin_panel(rotas, save_rotas, delete_rota, archive_deleted_rota):
     if not st.session_state.get("is_admin", False):
         return
 
@@ -164,8 +164,13 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                         "new_value": "-",
                         "admin_users": st.session_state.get("admin_user", "admin")
                     })
+                    deleted_rota = delete_rota(wk)
+                    archive_deleted_rota(
+                        wk,
+                        deleted_rota,
+                        st.session_state.get("admin_user", "admin"),
+                    )
                     rotas.pop(wk)
-                    delete_rota(wk)
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
                     st.cache_data.clear()
                     st.rerun()
