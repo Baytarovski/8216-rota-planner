@@ -57,7 +57,8 @@ def append_to_google_sheet(log_entry):
             log_entry["day"],
             log_entry["position"],
             log_entry["old_value"],
-            log_entry["new_value"]
+            log_entry["new_value"],
+            log_entry["admin_users"]
         ])
     except Exception as e:
         st.warning(f"Google Sheets error: {e}")
@@ -142,7 +143,8 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                                     "day": day,
                                     "position": pos,
                                     "old_value": old_val,
-                                    "new_value": new_val
+                                    "new_value": new_val,
+                                    "admin_users": st.session_state.get("admin_user", "admin")
                                 })
                     rotas[wk] = new.to_dict(orient="index")
                     save_rotas(wk, rotas[wk])
@@ -159,7 +161,8 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
                         "day": "-",
                         "position": "-",
                         "old_value": "Full rota deleted",
-                        "new_value": "-"
+                        "new_value": "-",
+                        "admin_users": st.session_state.get("admin_user", "admin")
                     })
                     rotas.pop(wk)
                     delete_rota(wk)
@@ -222,7 +225,7 @@ def render_admin_panel(rotas, save_rotas, delete_rota):
         week_options = sorted(df["week_start"].unique(), reverse=True)
         selected_week = st.selectbox("Select Week", week_options)
         filtered = df[df["week_start"] == selected_week]
-        st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value"]])
+        st.dataframe(filtered[["timestamp", "day", "position", "old_value", "new_value", "admin_users"]])
 
     st.markdown("<hr style='margin-top:1; margin-bottom:1; border: 2px solid black;'>", unsafe_allow_html=True)
 
