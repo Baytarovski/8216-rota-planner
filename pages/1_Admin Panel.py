@@ -16,16 +16,17 @@ def admin_login():
         return
 
     st.info("🔐 Enter your username and password below to unlock admin tools.")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
+    username = st.text_input("Username", key="admin_username")
+    password = st.text_input("Password", type="password", key="admin_password")
 
-    if username in ADMIN_CREDENTIALS and password == ADMIN_CREDENTIALS[username]:
-        st.session_state["is_admin"] = True
-        st.session_state["admin_user"] = username
-        st.success("Access granted. Admin tools unlocked.")
-    elif username or password:
-        st.session_state["is_admin"] = False
-        st.error("Incorrect username or password.")
+    if st.button("Login"):
+        if username in ADMIN_CREDENTIALS and password == ADMIN_CREDENTIALS[username]:
+            st.session_state["is_admin"] = True
+            st.session_state["admin_user"] = username
+            st.success("Access granted. Admin tools unlocked.")
+        else:
+            st.session_state["is_admin"] = False
+            st.error("Incorrect username or password.")
 
 
 admin_login()
