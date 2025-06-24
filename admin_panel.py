@@ -75,7 +75,7 @@ def fetch_logs_from_google_sheet():
         return []
 
 # ─── Admin Panel ───
-def render_admin_panel(rotas, save_rotas, delete_rota, archive_deleted_rota):
+def render_admin_panel(rotas, deleted_rotas, save_rotas, delete_rota, archive_deleted_rota):
     if not st.session_state.get("is_admin", False):
         return
 
@@ -168,12 +168,44 @@ def render_admin_panel(rotas, save_rotas, delete_rota, archive_deleted_rota):
                     archive_deleted_rota(
                         wk,
                         deleted_rota,
-                        st.session_state.get("admin_user", "admin"),
                     )
                     rotas.pop(wk)
                     st.session_state["feedback"] = f"🗑️ Rota for {wk} deleted."
                     st.cache_data.clear()
                     st.rerun()
+
+    st.markdown("<h4 style='margin-top:0;'>🗑️ Deleted Weekly Rotas</h4><hr style='margin-top:0.3em; margin-bottom:1em;'>", unsafe_allow_html=True)
+    use_month_filter_deleted = st.checkbox("📅 View deleted by specific month", value=False, key="month_filter_deleted_rotas")
+
+    if use_month_filter_deleted:
+        available_months_deleted = sorted(
+            {datetime.strptime(w, "%Y-%m-%d").strftime("%B %Y") for w in deleted_rotas.keys()},
+            reverse=True
+        )
+        selected_month_deleted = st.selectbox("🗓️ Select a Month", available_months_deleted, key="select_month_deleted_rotas")
+        deleted_week_list = sorted([
+            wk for wk in deleted_rotas.keys()
+            if datetime.strptime(wk, "%Y-%m-%d").strftime("%B %Y") == selected_month_deleted
+        ])
+    else:
+        deleted_week_list = sorted(deleted_rotas.keys(), reverse=True)[:4]
+
+    for wk in deleted_week_list:
+        with st.expander(f"🗑️ {wk}"):
+            rota_data = deleted_rotas[wk]
+            rota_df = pd.DataFrame.from_dict(rota_data, orient="index")
+
+            saturday_exists = "Saturday" in rota_df.index and rota_df.loc["Saturday"].replace("", pd.NA).dropna().any()
+            display_days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+            if saturday_exists:
+                display_days.append("Saturday")
+
+            rota_df = rota_df.reindex(display_days)[POSITIONS].fillna("")
+
+            image_buf = generate_table_image(rota_df)
+            st.image(image_buf, caption=f"📸 Deleted rota for the week of {wk}", use_container_width=True)
+
+    # Monthly Summary Section
 
         # Monthly Summary Section
     st.markdown("<hr style='margin-top:2em; margin-bottom:2em; border: 2px solid #999;'>", unsafe_allow_html=True)

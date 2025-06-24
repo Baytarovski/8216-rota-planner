@@ -49,9 +49,16 @@ def cached_load_rotas():
     return load_rotas()
 
 
-rotas = cached_load_rotas()
+@st.cache_data
+def cached_load_deleted_rotas():
+    from core.data_utils import load_deleted_rotas
+    return load_deleted_rotas()
 
-render_admin_panel(rotas, save_rotas, delete_rota, archive_deleted_rota)
+
+rotas = cached_load_rotas()
+deleted_rotas = cached_load_deleted_rotas()
+
+render_admin_panel(rotas, deleted_rotas, save_rotas, delete_rota, archive_deleted_rota)
 
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
