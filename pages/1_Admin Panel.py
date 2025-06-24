@@ -1,6 +1,6 @@
 import streamlit as st
 from admin_panel import render_admin_panel
-from core.data_utils import load_rotas, save_rotas, delete_rota
+from core.data_utils import load_rotas, save_rotas, delete_rota, archive_deleted_rota
 
 st.set_page_config(page_title="Admin Panel", layout="wide")
 
@@ -41,7 +41,7 @@ def cached_load_rotas():
 
 rotas = cached_load_rotas()
 
-render_admin_panel(rotas, save_rotas, delete_rota)
+render_admin_panel(rotas, save_rotas, delete_rota, archive_deleted_rota)
 
 if "feedback" in st.session_state:
     st.success(st.session_state.pop("feedback"))
