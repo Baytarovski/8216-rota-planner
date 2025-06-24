@@ -2,7 +2,7 @@
 # Unauthorized use, copying, modification, or distribution is strictly prohibited.
 # Contact: ticked.does-7c@icloud.com
 
-# Homepage.py — Main Streamlit Application Entry Point
+# app.py — Main Streamlit Application Entry Point
 
 import os
 import json

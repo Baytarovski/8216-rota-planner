@@ -41,7 +41,7 @@ A smart, fair, and fully automated rota management system designed for ABP Yetmi
 git clone https://github.com/YOUR_USERNAME/8216-rota-planner.git
 cd 8216-rota-planner
 pip install -r requirements.txt
-streamlit run Homepage.py
+streamlit run app.py
 ```
 
 ## 🧪 Running Tests
