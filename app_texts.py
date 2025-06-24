@@ -10,7 +10,15 @@ HOW_TO_USE = """
 1. Select the **Monday** of the week you want to plan.  
 2. For each weekday, choose exactly **6 unique inspectors**, one of whom is the **HEAD**.  
 3. Press **Generate Rota** to assign roles fairly and save the rota automatically.  
-4. You can view the current week's rota summary directly on the homepage.  
+4. You can view the current week's rota summary directly on the homepage.
+"""
+
+# Guidance for the admin panel sidebar
+ADMIN_PANEL_HELP = """
+1. **Log in** with your admin username and password.
+2. The **Saved Weekly Rotas** section lets you view, edit or delete any week.
+3. Use **Clear Cached Data** if updates don't show immediately.
+4. All changes are logged for accountability.
 """
 
 FAIR_ASSIGNMENT = """
