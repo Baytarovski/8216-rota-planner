@@ -75,7 +75,7 @@ def fetch_logs_from_google_sheet():
 
 # ─── Admin Panel ───
 def render_admin_panel(rotas, save_rotas, delete_rota):
-    if not st.session_state.get("is_admin", False):
+    if not st.session_state.get("is_admin_panel", False):
         return
 
     st.markdown("<h3 style='margin-bottom:0;'>🛠️ Admin Panel</h3>", unsafe_allow_html=True)

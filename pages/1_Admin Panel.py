@@ -4,25 +4,30 @@ from core.data_utils import load_rotas, save_rotas, delete_rota
 
 st.set_page_config(page_title="Admin Panel", layout="wide")
 
-st.session_state.setdefault("is_admin", False)
+st.session_state.setdefault("is_admin_panel", False)
+ADMIN_CREDENTIALS = {"admin": "17500#"}
 
 
 def admin_login():
-    if st.session_state.get("is_admin"):
+    if st.session_state.get("is_admin_panel"):
         return
-    st.info("🔐 Enter the access code below to unlock admin tools.")
-    code_input = st.text_input("Access Code:", type="password")
-    if code_input == "17500#":
-        st.session_state["is_admin"] = True
+
+    st.info("🔐 Enter your admin credentials below to unlock admin tools.")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if username in ADMIN_CREDENTIALS and password == ADMIN_CREDENTIALS[username]:
+        st.session_state["is_admin_panel"] = True
+        st.session_state["admin_user"] = username
         st.success("Access granted. Admin tools unlocked.")
-    elif code_input:
-        st.session_state["is_admin"] = False
-        st.error("Incorrect code.")
+    elif username or password:
+        st.session_state["is_admin_panel"] = False
+        st.error("Incorrect username or password.")
 
 
 admin_login()
 
-if not st.session_state.get("is_admin", False):
+if not st.session_state.get("is_admin_panel", False):
     st.stop()
 
 
