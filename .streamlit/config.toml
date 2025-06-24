@@ -1,16 +1,2 @@
 [theme]
 base = "light"
-
-[server]
-headless = true
-
-[theme]
-primaryColor = "#4CAF50"
-
-[general]
-page_title = "Rota Planner"
-page_icon = "📋"
-
-[runner]
-# This tells Streamlit Cloud which file to run
-main_script = "0_Weekly Rota.py"
