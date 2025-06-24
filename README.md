@@ -14,6 +14,7 @@ A smart, fair, and fully automated rota management system designed for ABP Yetmi
 - 📈 **Monthly FCI/OFFLINE Overview**
 - 🗂️ **Editable & Collapsible Saved Weekly Rotas**
 - 🎨 **Modern UI with Auto Validation & Warnings**
+- 🗑️ **Deleted Rotas Archived to Google Sheets**
 
 ## 🚀 Version 1.3.5 (Stable)
 

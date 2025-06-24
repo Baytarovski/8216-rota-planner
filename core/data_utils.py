@@ -96,11 +96,11 @@ def delete_rota(week_key: str):
 def archive_deleted_rota(week_key: str, rota_dict: Dict[str, Dict[str, str]], admin_user: str):
     sheet = get_deleted_sheet()
     existing = sheet.get_all_values()
-    header = ["week_start", "day", "deleted_by"] + POSITIONS
+    header = ["week_start", "day"] + POSITIONS + ["admin_users"]
     if not existing:
         sheet.append_row(header)
     for day, roles in rota_dict.items():
-        row = [week_key, day, admin_user] + [roles.get(pos, "") for pos in POSITIONS]
+        row = [week_key, day] + [roles.get(pos, "") for pos in POSITIONS] + [admin_user]
         sheet.append_row(row)
 
 def get_saved_week_keys():
