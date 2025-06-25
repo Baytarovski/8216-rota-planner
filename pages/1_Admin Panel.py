@@ -18,6 +18,9 @@ def render_sidebar():
     with st.sidebar.expander("📘 Admin Panel Guide", expanded=True):
         st.markdown(ADMIN_PANEL_HELP)
 
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("<span style='font-size:0.95rem;'>Version 1.3.5 Stable — © 2025 Doğukan Dağ</span>", unsafe_allow_html=True)
+
 
 render_sidebar()
 
