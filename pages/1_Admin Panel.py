@@ -1,4 +1,5 @@
 import streamlit as st
+import base64
 from admin_panel import render_admin_panel
 from core.data_utils import load_rotas, save_rotas, delete_rota, archive_deleted_rota
 from app_texts import ADMIN_PANEL_HELP
@@ -7,6 +8,13 @@ st.set_page_config(page_title="Admin Panel", layout="wide")
 
 
 def render_sidebar():
+    def get_base64_image(path):
+        with open(path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+
+    logo_b64 = get_base64_image("assets/logo.png")
+    st.sidebar.markdown(f"<div style='text-align:center; padding:0.5em 0;'><img src='data:image/png;base64,{logo_b64}' width='160'></div>", unsafe_allow_html=True)
+    st.sidebar.markdown("---")
     with st.sidebar.expander("📘 Admin Panel Guide", expanded=True):
         st.markdown(ADMIN_PANEL_HELP)
 
